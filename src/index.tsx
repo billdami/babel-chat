@@ -1,10 +1,11 @@
+import './setupFirebase';
+import './index.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-import './setupFirebase';
-import './index.css';
-import App from './App/App';
 
 ReactDOM.render(
   <React.StrictMode>

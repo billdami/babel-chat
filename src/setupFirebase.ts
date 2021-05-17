@@ -1,6 +1,7 @@
-import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
+
+import firebase from 'firebase/app';
 
 // TODO move values to env vars/github secrets
 export const FIREBASE_CONFIG = {

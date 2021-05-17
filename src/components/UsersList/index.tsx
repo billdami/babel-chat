@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
-import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
+
+import firebase from 'firebase/app';
+import React, { FC } from 'react';
 import { useListVals } from 'react-firebase-hooks/database';
 
 const db = firebase.database();
@@ -15,14 +16,13 @@ interface User {
   email: string;
 }
 
-interface AppProps {}
+interface UsersListProps {}
 
-const App: FC<AppProps> = () => {
+const UsersList: FC<UsersListProps> = () => {
   const [users, isLoading /*error*/] = useListVals<User>(usersRef, { keyField: 'id', refField: 'ref' });
 
   return (
-    <div className="App">
-      <p>welcome to babel chat!</p>
+    <div className="UsersList">
       <ul>
         {users?.map((user) => (
           <li key={user.id}>
@@ -36,4 +36,4 @@ const App: FC<AppProps> = () => {
   );
 };
 
-export default App;
+export default UsersList;
