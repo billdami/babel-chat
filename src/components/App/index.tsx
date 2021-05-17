@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
+import { ProvideAuth } from '../../hooks/useAuth';
 import Main from '../../routes/Main';
 import PageNotFound from '../../routes/PageNotFound';
 import SignIn from '../../routes/SignIn';
@@ -10,16 +11,10 @@ import ProtectedRoute from '../ProtectedRoute';
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  // TODO replace with real useAuth() hook
-  // https://usehooks.com/useAuth/
-  const auth = { user: null, isLoading: false };
-
   return (
-    <Router>
-      <div className="App">
-        {auth.isLoading ? (
-          <div>TODO loading splash...</div>
-        ) : (
+    <ProvideAuth>
+      <Router>
+        <div className="App h-full min-h-full max-h-full flex">
           <Switch>
             <Route exact path="/">
               <Redirect to="/main" />
@@ -37,9 +32,9 @@ const App: FC<AppProps> = () => {
               <PageNotFound />
             </Route>
           </Switch>
-        )}
-      </div>
-    </Router>
+        </div>
+      </Router>
+    </ProvideAuth>
   );
 };
 

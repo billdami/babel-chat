@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import { Redirect, Route, RouteProps } from 'react-router';
 
+import useAuth from '../../hooks/useAuth';
+
 interface ProtectedRouteProps extends RouteProps {}
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, ...rest }) => {
-  // TODO replace with real useAuth() hook
-  // https://usehooks.com/useAuth/
-  const auth = { user: null, isLoading: false };
+  const auth = useAuth();
 
   return (
     <Route
