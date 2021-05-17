@@ -18,26 +18,22 @@ interface User {
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const [users, isLoading, /*error*/] = useListVals<User>(usersRef, { keyField: 'id', refField: 'ref' });
+  const [users, isLoading /*error*/] = useListVals<User>(usersRef, { keyField: 'id', refField: 'ref' });
 
   return (
     <div className="App">
-      <p>
-        welcome to babel chat!
-      </p>
+      <p>welcome to babel chat!</p>
       <ul>
-        {users?.map(user => (
+        {users?.map((user) => (
           <li key={user.id}>
             <div>{user.username}</div>
             <div>{user.email}</div>
           </li>
         ))}
-        {isLoading && (
-          <div>Loading&hellip;</div>
-        )}
+        {isLoading && <div>Loading&hellip;</div>}
       </ul>
     </div>
   );
-}
+};
 
 export default App;

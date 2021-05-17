@@ -6,7 +6,6 @@ import './setupFirebase';
 import './index.css';
 import App from './App/App';
 
-
 ReactDOM.render(
   <React.StrictMode>
     <App />
