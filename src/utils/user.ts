@@ -20,11 +20,8 @@ export const createUser = async (uid: string, details: NewUserDetails): Promise<
   }
 
   const uuid = generateRandomUUID(takenUUIDs);
-  console.log('taken uuids', takenUUIDs);
-
   const userRef = db.ref(`users/${uid}`);
 
-  console.log('createUser()', details);
   await userRef.set({
     ...details,
     uuid,

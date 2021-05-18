@@ -39,7 +39,6 @@ const useProvideAuth = () => {
     const userCred = await firebase.auth().signInAnonymously();
 
     if (userCred.user) {
-      console.log('signIn()', details);
       await createUser(userCred.user.uid, details);
       setIsLoading(false);
       setUser(userCred.user);
