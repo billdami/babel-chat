@@ -5,11 +5,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/App';
+import { ProvideAuth } from './hooks/useAuth';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ProvideAuth>
+      <App />
+    </ProvideAuth>
   </React.StrictMode>,
   document.getElementById('root')
 );

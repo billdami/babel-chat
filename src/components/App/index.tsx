@@ -1,20 +1,26 @@
 import React, { FC } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
-import { ProvideAuth } from '../../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import Main from '../../routes/Main';
 import PageNotFound from '../../routes/PageNotFound';
 import SignIn from '../../routes/SignIn';
 import TermsOfService from '../../routes/TermsOfService';
 import ProtectedRoute from '../ProtectedRoute';
+import Splash from '../Splash';
+import UnprotectedRoute from '../UnprotectedRoute';
 
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
+  const auth = useAuth();
+
   return (
-    <ProvideAuth>
-      <Router>
-        <div className="App h-full min-h-full max-h-full flex">
+    <Router>
+      <div className="App h-full min-h-full max-h-full flex">
+        {auth.isInitialLoading ? (
+          <Splash />
+        ) : (
           <Switch>
             <Route exact path="/">
               <Redirect to="/main" />
@@ -22,9 +28,9 @@ const App: FC<AppProps> = () => {
             <ProtectedRoute path="/main">
               <Main />
             </ProtectedRoute>
-            <Route path="/sign-in">
+            <UnprotectedRoute path="/sign-in">
               <SignIn />
-            </Route>
+            </UnprotectedRoute>
             <Route path="/terms-of-service">
               <TermsOfService />
             </Route>
@@ -32,9 +38,9 @@ const App: FC<AppProps> = () => {
               <PageNotFound />
             </Route>
           </Switch>
-        </div>
-      </Router>
-    </ProvideAuth>
+        )}
+      </div>
+    </Router>
   );
 };
 

@@ -3,19 +3,23 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 import React, { createContext, FC, useCallback, useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+
+import { NewUserDetails, User } from '../types/user';
+import { createUser, deleteUser } from '../utils/user';
+import { useUser } from './useUser';
 
 interface AuthContext {
-  user: firebase.User | null;
+  user?: firebase.User | null;
+  userRecord?: User | null;
   isInitialLoading: boolean;
   isLoading: boolean;
-  signIn: () => Promise<firebase.User | null> | void;
+  signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
   signOut: () => Promise<void> | void;
 }
 
 const authContext = createContext<AuthContext>({
   user: null,
-  // TODO might be able to get rid of this, if auth.currentUser is always synchronous on boot
+  userRecord: null,
   isInitialLoading: true,
   isLoading: true,
   signIn: () => {},
@@ -23,51 +27,75 @@ const authContext = createContext<AuthContext>({
 });
 
 const useProvideAuth = () => {
-  const history = useHistory();
-
   const [user, setUser] = useState<firebase.User | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // TODO take user details params (nickname, etc) to create db record
-  const signIn = useCallback(async () => {
+  const [userRecord /*isUserLoading, userError*/] = useUser(user?.uid);
+
+  const signIn = useCallback(async (details: NewUserDetails) => {
     // TODO catch/handle errors
     setIsLoading(true);
     const userCred = await firebase.auth().signInAnonymously();
-    // TODO create user db record
-    setUser(userCred.user);
-    setIsLoading(false);
-    return userCred.user;
+
+    if (userCred.user) {
+      console.log('signIn()', details);
+      await createUser(userCred.user.uid, details);
+      setIsLoading(false);
+      setUser(userCred.user);
+      return userCred.user;
+    } else {
+      // TODO custom error classes
+      throw new Error('could not create user on sign in');
+    }
   }, []);
 
   const signOut = useCallback(async () => {
     // TODO catch/handle errors
+    const uid = firebase.auth().currentUser?.uid;
+
     setIsLoading(true);
     await firebase.auth().signOut();
-    // TODO cleanup/delete user and related recs in db
+    if (uid) {
+      await deleteUser(uid);
+    }
+
     setUser(null);
     setIsLoading(false);
-    history.push('/sign-in');
-  }, [history]);
+  }, []);
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       setUser(user);
+
+      // TODO re-enable this once we can figure out how to ONLY trigger
+      // when auth changes OUTSIDE of the sign up flow
+
+      // if the user is logged in w/o an associated record, create one
+      // if (user) {
+      //   const userRec = await firebase.database().ref(`users/${user.uid}`).get();
+      //   if (!userRec.exists()) {
+      //     await createUser(user.uid, {
+      //       nickname: '',
+      //       country: Country.UNSPECIFIED,
+      //       age: 'UNSPECIFIED',
+      //       gender: Gender.UNSPECIFIED,
+      //       agreedToToS: true,
+      //     });
+      //   }
+      // }
+
       setIsInitialLoading(false);
     });
 
     setUser(firebase.auth().currentUser);
-    setIsInitialLoading(false);
-
-    if (firebase.auth().currentUser) {
-      // TODO if user is signed in with no matching db rec, create an empty one
-    }
 
     return () => unsubscribe();
   }, []);
 
   return {
     user,
+    userRecord,
     isInitialLoading,
     isLoading,
     signIn,
