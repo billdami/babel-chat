@@ -1,12 +1,18 @@
+import './setupFirebase';
+import './index.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App/App';
+
+import App from './components/App';
+import { ProvideAuth } from './hooks/useAuth';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ProvideAuth>
+      <App />
+    </ProvideAuth>
   </React.StrictMode>,
   document.getElementById('root')
 );
