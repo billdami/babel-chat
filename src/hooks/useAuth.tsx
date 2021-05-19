@@ -2,9 +2,10 @@ import 'firebase/database';
 import 'firebase/auth';
 
 import firebase from 'firebase/app';
-import React, { createContext, FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import { NewUserDetails, User } from '../types/user';
+import { Country } from '../types/country';
+import { Gender, NewUserDetails, User } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
 import { useUser } from './useUser';
 
@@ -27,6 +28,7 @@ const authContext = createContext<AuthContext>({
 });
 
 const useProvideAuth = () => {
+  const authChangeUnsub = useRef<null | firebase.Unsubscribe>(null);
   const [user, setUser] = useState<firebase.User | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -64,33 +66,40 @@ const useProvideAuth = () => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+    if (authChangeUnsub.current) {
+      authChangeUnsub.current();
+    }
+
+    authChangeUnsub.current = firebase.auth().onAuthStateChanged(async (user) => {
+      // update the firebase user when the user becomes logged in or out
       setUser(user);
 
-      // TODO re-enable this once we can figure out how to ONLY trigger
-      // when auth changes OUTSIDE of the sign up flow
+      // on the initial app boot only
+      if (isInitialLoading) {
+        setIsInitialLoading(false);
 
-      // if the user is logged in w/o an associated record, create one
-      // if (user) {
-      //   const userRec = await firebase.database().ref(`users/${user.uid}`).get();
-      //   if (!userRec.exists()) {
-      //     await createUser(user.uid, {
-      //       nickname: '',
-      //       country: Country.UNSPECIFIED,
-      //       age: 'UNSPECIFIED',
-      //       gender: Gender.UNSPECIFIED,
-      //       agreedToToS: true,
-      //     });
-      //   }
-      // }
-
-      setIsInitialLoading(false);
+        // if the user is logged in w/o an associated record, create one
+        if (user) {
+          const userRec = await firebase.database().ref(`users/${user.uid}`).get();
+          if (!userRec.exists()) {
+            await createUser(user.uid, {
+              nickname: '',
+              country: Country.UNSPECIFIED,
+              age: 'UNSPECIFIED',
+              gender: Gender.UNSPECIFIED,
+              agreedToToS: true,
+            });
+          }
+        }
+      }
     });
 
+    // set the firebase user from the current session
     setUser(firebase.auth().currentUser);
 
-    return () => unsubscribe();
-  }, []);
+    // unsubscribe from auth state changes on unmount
+    return () => authChangeUnsub.current?.();
+  }, [isInitialLoading]);
 
   return {
     user,
