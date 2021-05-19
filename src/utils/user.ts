@@ -21,13 +21,15 @@ export const createUser = async (uid: string, details: NewUserDetails): Promise<
 
   const uuid = generateRandomUUID(takenUUIDs);
   const userRef = db.ref(`users/${uid}`);
-
-  await userRef.set({
+  const userData = {
     ...details,
     uuid,
     nickname: details.nickname || generateRandomNickname(),
-  });
+    dateSignedIn: firebase.database.ServerValue.TIMESTAMP,
+    dateLastActive: firebase.database.ServerValue.TIMESTAMP,
+  };
 
+  await userRef.set(userData);
   await db.ref(`user_uuids/${uuid}`).set(true);
 
   return userRef;

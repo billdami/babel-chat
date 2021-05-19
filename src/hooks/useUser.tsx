@@ -12,7 +12,8 @@ const options = {
   transform: (val: any) =>
     ({
       ...val,
-      //TODO apply any data transforms needed here (e.g. timestamps => Dates)
+      dateSignedIn: new Date(val?.dateSignedIn),
+      dateLastActive: new Date(val?.dateLastActive),
     } as User),
 };
 

@@ -24,4 +24,6 @@ export interface User {
   age: Age;
   gender: Gender;
   agreedToToS: boolean;
+  dateSignedIn: Date;
+  dateLastActive: Date;
 }
