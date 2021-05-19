@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import UsersList from '../../components/UsersList';
 import useAuth from '../../hooks/useAuth';
 
 interface MainListProps {}
@@ -11,6 +12,7 @@ const Main: FC<MainListProps> = () => {
     <div className="Main">
       {!!auth.userRecord && (
         <>
+          <UsersList />
           <p>
             Logged in as <span className="font-bold">{auth.userRecord.nickname}</span>
             <span className="text-gray-400 tracking-tighter">#{auth.userRecord.uuid}</span>
