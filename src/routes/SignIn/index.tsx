@@ -58,12 +58,12 @@ const SignIn: FC<SignInListProps> = () => {
   return (
     <div className="mx-auto my-auto p-4">
       <div className="w-full sm:w-116">
-        <h1 className="text-4xl font-extrabold text-gray-500 mb-3">babel chat</h1>
+        <h1 className="text-4xl font-extrabold text-gray-500 mb-1">babel chat</h1>
         <h2 className="text-lg text-gray-500 mb-6">
           Meet and chat with people from around the world.
         </h2>
         <form onSubmit={onSubmit} className="p-6 bg-white rounded-sm text-gray-700">
-          <p className="mb-8">
+          <p className="mb-6">
             babel chat is free and completely anonymous. If you’d like, you can provide some basic
             info below, but it is <span className="font-bold">100% optional.</span>
           </p>
@@ -180,7 +180,7 @@ const SignIn: FC<SignInListProps> = () => {
           {/* TODO Create <Button> */}
           <button
             type="submit"
-            className="block w-full text-center font-bold text-white bg-green-400 rounded-sm px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="block w-full text-center font-bold text-white bg-green-400 rounded px-5 py-3 shadow active:shadow-none disabled:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!isFormValid || auth.isLoading}
           >
             {auth.isLoading ? 'Signing in...' : 'Start chatting'}

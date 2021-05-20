@@ -13,7 +13,8 @@ module.exports = {
   variants: {
     extend: {
       opacity: ['disabled'],
-      cursor: ['disabled']
+      cursor: ['disabled'],
+      boxShadow: ['disabled', 'active'],
     },
   },
   plugins: [],

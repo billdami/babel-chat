@@ -6,6 +6,7 @@ interface TabProps {
   activeTabId: any;
   className?: string;
   activeClassName?: string;
+  liClassName?: string;
   onClick?: (tabId: any, event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
@@ -15,10 +16,11 @@ const Tab: FC<TabProps> = ({
   onClick,
   className = '',
   activeClassName = '',
+  liClassName = '',
   children,
   ...rest
 }) => (
-  <li>
+  <li className={liClassName}>
     <button
       type="button"
       role="tab"

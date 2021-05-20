@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import PageNotFound from '../PageNotFound';
 import Chat from './Chat';
 import Sidebar from './components/Sidebar';
 import Index from './IndexRoute';
@@ -15,13 +16,16 @@ const Main: FC<MainListProps> = () => {
   return (
     <div className="Main flex w-full">
       <Sidebar />
-      <div className="Content flex-1 bg-white">
+      <div className="Content flex-1 flex bg-white">
         <Switch>
           <Route exact path={path}>
             <Index />
           </Route>
-          <Route path={`${path}/chat/:chatId`}>
+          <Route path={`${path}/chat/:userId`}>
             <Chat />
+          </Route>
+          <Route path={`${path}/*`}>
+            <PageNotFound />
           </Route>
         </Switch>
       </div>

@@ -38,7 +38,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
         </p>
         <button
           type="button"
-          className="text-center font-bold text-gray-500 bg-gray-100 border border-gray-200 rounded-sm px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-center font-bold text-gray-500 bg-gray-100 border border-gray-200 rounded px-5 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={auth.signOut}
           disabled={auth.isLoading}
         >
@@ -53,9 +53,10 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
           chats list
         </TabPanel>
       </div>
-      <TabList className="flex-shrink-0 flex bg-gray-200">
+      <TabList className="flex-shrink-0 flex bg-gray-200 border-b">
         <Tab
-          className="px-6 py-4"
+          className="block w-full px-6 py-4 text-center text-gray-800"
+          liClassName="w-1/2 flex-none"
           activeClassName="bg-gray-100"
           tabId="tab-users"
           activeTabId={activeSidebarTab}
@@ -69,7 +70,8 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
           )}
         </Tab>
         <Tab
-          className="px-6 py-4"
+          className="block w-full px-6 py-4 text-center text-gray-800"
+          liClassName="w-1/2 flex-none"
           activeClassName="bg-gray-100"
           tabId="tab-chats"
           activeTabId={activeSidebarTab}
