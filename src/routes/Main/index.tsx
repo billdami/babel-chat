@@ -1,32 +1,30 @@
 import React, { FC } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import UsersList from '../../components/UsersList';
-import useAuth from '../../hooks/useAuth';
+import Chat from './Chat';
+import Sidebar from './components/Sidebar';
+import Index from './IndexRoute';
 
 interface MainListProps {}
 
 const Main: FC<MainListProps> = () => {
-  const auth = useAuth();
+  // The `path` lets us build <Route> paths that are relative to the parent route,
+  // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>
+  const { path /*url*/ } = useRouteMatch();
 
   return (
-    <div className="Main">
-      {!!auth.userRecord && (
-        <>
-          <UsersList />
-          <p>
-            Logged in as <span className="font-bold">{auth.userRecord.nickname}</span>
-            <span className="text-gray-400 tracking-tighter">#{auth.userRecord.uuid}</span>
-          </p>
-          <button
-            type="button"
-            className="text-center font-bold text-white bg-green-400 rounded-sm px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={auth.signOut}
-            disabled={auth.isLoading}
-          >
-            {auth.isLoading ? 'Signing out...' : 'Sign out'}
-          </button>
-        </>
-      )}
+    <div className="Main flex w-full">
+      <Sidebar />
+      <div className="Content flex-1 bg-white">
+        <Switch>
+          <Route exact path={path}>
+            <Index />
+          </Route>
+          <Route path={`${path}/chat/:chatId`}>
+            <Chat />
+          </Route>
+        </Switch>
+      </div>
     </div>
   );
 };

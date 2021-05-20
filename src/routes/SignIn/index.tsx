@@ -26,7 +26,7 @@ const SignIn: FC<SignInListProps> = () => {
   );
 
   const isFormValid = useMemo<boolean>(
-    () => (nickname?.length === 0 || nickname?.length > 1) && agreedToToS,
+    () => (nickname?.trim().length === 0 || nickname?.trim().length > 1) && agreedToToS,
     [nickname, agreedToToS]
   );
 
@@ -40,7 +40,7 @@ const SignIn: FC<SignInListProps> = () => {
 
       try {
         await auth.signIn({
-          nickname,
+          nickname: nickname?.trim(),
           country,
           age,
           gender,
@@ -59,11 +59,13 @@ const SignIn: FC<SignInListProps> = () => {
     <div className="mx-auto my-auto p-4">
       <div className="w-full sm:w-116">
         <h1 className="text-4xl font-extrabold text-gray-500 mb-3">babel chat</h1>
-        <h2 className="text-lg text-gray-500 mb-6">Meet and chat with people from around the world.</h2>
+        <h2 className="text-lg text-gray-500 mb-6">
+          Meet and chat with people from around the world.
+        </h2>
         <form onSubmit={onSubmit} className="p-6 bg-white rounded-sm text-gray-700">
           <p className="mb-8">
-            babel chat is free and completely anonymous. If you’d like, you can provide some basic info below, but it is{' '}
-            <span className="font-bold">100% optional.</span>
+            babel chat is free and completely anonymous. If you’d like, you can provide some basic
+            info below, but it is <span className="font-bold">100% optional.</span>
           </p>
 
           {/* TODO create <FormControl> */}
@@ -78,7 +80,7 @@ const SignIn: FC<SignInListProps> = () => {
               placeholder="Leave blank for a random nickname"
               id="signup-nickname"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value?.trim())}
+              onChange={(e) => setNickname(e.target.value)}
             />
             {/* TODO error validation message/styles */}
           </div>
@@ -110,7 +112,9 @@ const SignIn: FC<SignInListProps> = () => {
               className="appearance-none block w-full px-3 py-2 rounded-sm border border-gray-300"
               id="signup-age"
               value={`${age}`}
-              onChange={(e) => setAge(e.target.value !== 'UNSPECIFIED' ? Number(e.target.value) : 'UNSPECIFIED')}
+              onChange={(e) =>
+                setAge(e.target.value !== 'UNSPECIFIED' ? Number(e.target.value) : 'UNSPECIFIED')
+              }
             >
               <option value="UNSPECIFIED">Prefer not to say</option>
               {ageOptions.map((age) => (
@@ -183,7 +187,9 @@ const SignIn: FC<SignInListProps> = () => {
           </button>
           {/* TODO better error handling */}
           {!!submitError && (
-            <div className="text-xs text-red-500 mt-2">Sorry, an error ocurred while attempting to sign in.</div>
+            <div className="text-xs text-red-500 mt-2">
+              Sorry, an error ocurred while attempting to sign in.
+            </div>
           )}
         </form>
       </div>

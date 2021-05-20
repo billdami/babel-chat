@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
+import { Val } from 'react-firebase-hooks/database/dist/database/types';
 
-import { useUsers } from '../../hooks/useUser';
+import { User } from '../../types/user';
 
-interface UsersListProps {}
+interface UsersListProps {
+  users?: Val<User, 'id', 'ref'>[];
+  isLoading: boolean;
+}
 
-const UsersList: FC<UsersListProps> = () => {
-  const [users, isLoading /*error*/] = useUsers();
-
+const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
   return (
     <div className="UsersList">
       <ul>

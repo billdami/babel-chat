@@ -20,11 +20,11 @@ const options = {
 export const useUser = (id: string | undefined) => {
   const db = firebase.database();
   const ref = id ? db.ref(`users/${id}`) : null;
-  return useObjectVal<User>(ref, options);
+  return useObjectVal<User, 'id', 'ref'>(ref, options);
 };
 
 export const useUsers = () => {
   const db = firebase.database();
   const ref = db.ref(`users`);
-  return useListVals<User>(ref, options);
+  return useListVals<User, 'id', 'ref'>(ref, options);
 };
