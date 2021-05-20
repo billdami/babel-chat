@@ -1,0 +1,126 @@
+{
+  "user_uuids": {
+    "1234": true
+  },
+  "user_ips": {
+    "user1": "0.0.0.0",
+    "user5": "1.1.1.1"
+  },
+  "blocked_ips": {
+    "1.1.1.1": {
+      "dateBlocked": 123456789,
+      "dateExpires": 123456789
+    }
+  },
+  "user_super_admins": {
+    "user1": true
+  },
+  "users": {
+    "user1": {
+      "age": 99,
+      "agreedToToS": true,
+      "country": "USA",
+      "dateLastActive": 123456789,
+      "dateLastMessage": 123456789,
+      "dateSignedIn": 123456789,
+      "gender": "MALE",
+      "nickname": "Bill",
+      "uuid": 1234,
+      "blockedUsers": {
+        "user2": {
+          "dateBlocked": 123456789
+        },
+        "userr5": {
+          "dateBlocked": 123456789
+        }
+      },
+      "spamReportedUsers": {
+        "user5": {
+          "dateReported": 123456789
+        }
+      }
+    },
+    "user5": {
+      "age": "UNSPECIFIED",
+      "agreedToToS": true,
+      "country": "UNSPECIFIED",
+      "dateLastActive": 123456789,
+      "dateLastMessage": 123456789,
+      "dateSignedIn": 123456789,
+      "gender": "UNSPECIFIED",
+      "nickname": "Anonymous user",
+      "uuid": 456779
+    }
+  },
+  "chats": {
+    "chat1": {
+      "user": "user1",
+      "messages": "chat_messages1",
+      "to": {
+        "age": "UNSPECIFIED",
+        "country": "UNSPECIFIED",
+        "dateLastActive": 123456789,
+        "dateLastMessage": 123456789,
+        "dateSignedIn": 123456789,
+        "gender": "UNSPECIFIED",
+        "nickname": "User 2",
+        "uuid": 456779
+      },
+      "startedByUser": "user1",
+      "isTyping": false,
+      "dateStarted": 123456789,
+      "dateLastSeen": 123456789,
+      "dateLastMessage": 123456789
+    },
+    "chat2": {
+      "user": "user2",
+      "messages": "chat_messages1",
+      "to": {
+        "age": "UNSPECIFIED",
+        "country": "UNSPECIFIED",
+        "dateLastActive": 123456789,
+        "dateLastMessage": 123456789,
+        "dateSignedIn": 123456789,
+        "gender": "UNSPECIFIED",
+        "nickname": "Bill",
+        "uuid": 456779
+      },
+      "startedByUser": "user1",
+      "isTyping": true,
+      "dateStarted": 123456789,
+      "dateLastSeen": 123456789,
+      "dateLastMessage": 123456789
+    }
+  },
+  "chat_messages": {
+    "chat_messages1": {
+      "message1": {
+        "dateSent": 123456789,
+        "user": "user1",
+        "content": "Hai there!"
+      },
+      "message2": {
+        "dateSent": 123456789,
+        "user": "SYSTEM",
+        "content": "John doe has signed out."
+      },
+      "message3": {
+        "dateSent": 123456789,
+        "user": "user2",
+        "content": "Hello, chat."
+      }
+    }
+  },
+  "spam_reports": {
+    "user5": {
+      "spam_report1": {
+        "dateReported": 123456789,
+        "user": "user1"
+      },
+      "spam_report2": {
+        "dateReported": 123456789,
+        "user": "user2"
+      }
+    }
+  }
+}
