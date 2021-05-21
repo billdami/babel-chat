@@ -1,11 +1,13 @@
 import React, { FC, useCallback, useState } from 'react';
 
+import ChatsList from './ChatsList';
 import { Link } from 'react-router-dom';
 import Tab from '../../../../components/Tab/TabList/Tab';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import UsersList from '../../../../components/UsersList';
+import UsersList from './UsersList';
 import useAuth from '../../../../hooks/useAuth';
+import { useChats } from '../../../../hooks/useChatRecord';
 import { useUsers } from '../../../../hooks/useUserRecord';
 
 type SidebarTab = 'tab-users' | 'tab-chats';
@@ -18,15 +20,15 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
   const auth = useAuth();
 
   const [activeSidebarTab, setActiveSidebarTab] = useState<SidebarTab>('tab-users');
-  const [users, isLoading /*error*/] = useUsers();
-  const chats = []; // TODO
+  const [users, isLoadingUsers /*error*/] = useUsers();
+  const [chats, isLoadingChats] = useChats(auth.user?.uid);
 
   const updateSidebarTab = useCallback((tabId: SidebarTab) => {
     setActiveSidebarTab(tabId);
   }, []);
 
   return (
-    <div className="SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100">
+    <div className="SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100" {...rest}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
         <Link to="/main">
           <img
@@ -51,8 +53,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
         activeTabId={activeSidebarTab}
         unmountWhenHidden={false}
       >
-        {/* TODO maintain scroll position when reactivating tab */}
-        <UsersList users={users} isLoading={isLoading} />
+        <UsersList users={users} isLoading={isLoadingUsers} />
       </TabPanel>
       <TabPanel
         id="tab-chats"
@@ -60,7 +61,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
         activeTabId={activeSidebarTab}
         unmountWhenHidden={false}
       >
-        chats list
+        <ChatsList chats={chats} isLoading={isLoadingChats} />
       </TabPanel>
       <TabList className="flex-shrink-0 flex bg-gray-200 border-gray-100 border-b border-t">
         <Tab

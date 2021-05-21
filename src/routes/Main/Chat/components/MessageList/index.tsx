@@ -45,11 +45,13 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
         messages?.length &&
         (!isScrolledUp || isFirstMount.current)
       ) {
-        isFirstMount.current = false;
         el.scrollTo({
           top: el.scrollHeight - el.clientHeight,
-          behavior: 'smooth',
+          // TODO when transitioning between chats, make the scroll to bottom immediate
+          behavior: isFirstMount.current ? 'auto' : 'smooth',
         });
+
+        isFirstMount.current = false;
       }
     }
   }, [prevMessages, messages]);

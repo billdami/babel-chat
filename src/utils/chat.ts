@@ -27,6 +27,7 @@ export const createChat = async (
     toUser: destUserId,
     startedByUser: isInitiator ? originUserId : destUserId,
     toUserDetails: destUser.val(),
+    isPinned: false,
     isTyping: false,
     dateStarted: getFirebaseTimestamp(),
     dateLastSeen: isInitiator ? getFirebaseTimestamp() : null,

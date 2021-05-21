@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Val } from 'react-firebase-hooks/database/dist/database/types';
-import { NavLink } from 'react-router-dom';
 
-import { User } from '../../types/user';
+import { NavLink } from 'react-router-dom';
+import { User } from '../../../../../types/user';
+import { Val } from 'react-firebase-hooks/database/dist/database/types';
 
 interface UsersListProps {
   users?: Val<User, 'id', 'ref'>[];
@@ -14,13 +14,13 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
   // TODO apply sorting
   // TODO apply filtering
   return (
-    <div className="UsersList">
+    <div className="UsersList py-2">
       <ul>
         {users?.map((user) => (
           <li key={user.id}>
             <NavLink
-              className="block w-full px-3 py-1 text-left"
-              activeClassName="bg-gray-200"
+              className="block w-full px-3 py-1 text-left hover:bg-opacity-50 hover:bg-gray-200"
+              activeClassName="bg-gray-200 hover:bg-opacity-100"
               to={`/main/chat/${user.id}`}
             >
               <div>

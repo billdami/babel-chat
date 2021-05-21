@@ -43,6 +43,7 @@
         "nickname": "User 2",
         "uuid": 456779
       },
+      "isPinned": false,
       "isTyping": false,
       "dateStarted": 123456789,
       "dateLastSeen": 123456789,
@@ -64,6 +65,7 @@
         "nickname": "Bill",
         "uuid": 456779
       },
+      "isPinned": true,
       "isTyping": true,
       "dateStarted": 123456789,
       "dateLastSeen": 123456789,
