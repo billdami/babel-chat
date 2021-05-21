@@ -1,20 +1,11 @@
-import React, {
-  ChangeEvent,
-  FC,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { ChangeEvent, FC, FormEvent, useCallback, useMemo, useRef, useState } from 'react';
 import { createChat, createChatMessage } from '../../../utils/chat';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { MAX_MESSAGE_LEN } from '../../../constants/chat';
+import MessageList from './components/MessageList';
 import useAuth from '../../../hooks/useAuth';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
-import { useChatMessages } from '../../../hooks/useChatMessageRecord';
 import { useUser } from '../../../hooks/useUserRecord';
 
 interface ChatRouteParams {
@@ -27,11 +18,9 @@ const Chat: FC<ChatProps> = () => {
   const { userId } = useParams<ChatRouteParams>();
   const history = useHistory();
   const auth = useAuth();
-  const [user] = useUser(userId);
+  const [destUser] = useUser(userId);
   const [chat] = useChatByMembers(auth.user?.uid, userId);
   const [destChat] = useChatByMembers(userId, auth.user?.uid);
-  // TODO create a usePagination() hook to allow for infinite paging of messages
-  const [messages, isMessagesLoading] = useChatMessages(auth.user?.uid, userId);
 
   const newMessageInput = useRef<HTMLInputElement>(null);
 
@@ -41,9 +30,9 @@ const Chat: FC<ChatProps> = () => {
     () =>
       newMessage?.trim().length > 0 &&
       newMessage?.trim().length <= MAX_MESSAGE_LEN &&
-      !!user?.id &&
+      !!destUser?.id &&
       !!auth.user,
-    [newMessage, user, auth.user]
+    [newMessage, destUser, auth.user]
   );
 
   const closeChat = useCallback(() => {
@@ -79,19 +68,6 @@ const Chat: FC<ChatProps> = () => {
     [newMessage, canSendMessage, chat, destChat, userId, auth.user]
   );
 
-  // TODO create useOnMountCallback hook
-  useEffect(() => {
-    if (chat?.id) {
-      //TODO update dateLastSeen of current user's chat record on mount
-    }
-  }, [chat]);
-
-  useEffect(() => {
-    // TODO unless pane is scrolled up beyond a threshold,
-    // smooth scroll list to bottom when new messages are added
-    console.log('messages changed!', messages);
-  }, [messages]);
-
   return (
     <div className="Chat flex flex-col flex-1">
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
@@ -99,12 +75,12 @@ const Chat: FC<ChatProps> = () => {
         <div>
           <h2 className="text-lg">
             {/* TODO create <UserNickname> to format/display user nickname */}
-            <span className="font-bold">{user?.nickname}</span>
-            <span className="tracking-tighter font-light text-gray-400">#{user?.uuid}</span>
+            <span className="font-bold">{destUser?.nickname}</span>
+            <span className="tracking-tighter font-light text-gray-400">#{destUser?.uuid}</span>
           </h2>
           <div className="text-sm leading-3 text-gray-400">
             {/* TODO create <UserDetailsLine> to format/display user details */}
-            {user?.age} {user?.gender}, {user?.country}
+            {destUser?.age} {destUser?.gender}, {destUser?.country}
           </div>
         </div>
         <button
@@ -115,20 +91,7 @@ const Chat: FC<ChatProps> = () => {
           &times;
         </button>
       </div>
-      {/* TODO create <MessagesList> */}
-      <div className="flex-1 flex flex-col overflow-y-auto">
-        <div className="py-1">
-          {messages?.map((message) => (
-            <div key={message.id} className="px-4">
-              {message.author}: {message.content}
-            </div>
-          ))}
-          {isMessagesLoading && (
-            // TODO create <LoadingSpinner />
-            <div className="px-4">Loading&hellip;</div>
-          )}
-        </div>
-      </div>
+      <MessageList originUser={auth.userRecord} originChat={chat} destUser={destUser} />
       {/* create <MessageForm> */}
       <form
         className="flex-shrink-0 flex py-2 px-4 border-t border-gray-200"

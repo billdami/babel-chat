@@ -1,10 +1,11 @@
 import 'firebase/database';
 import 'firebase/auth';
 
-import firebase from 'firebase/app';
-
 import { NewUserDetails, User } from '../types/user';
 import { generateRandomNickname, generateRandomUUID } from './random';
+
+import firebase from 'firebase/app';
+import { getFirebaseTimestamp } from './firebase';
 
 export const createUser = async (
   id: string,
@@ -28,8 +29,8 @@ export const createUser = async (
     ...details,
     uuid,
     nickname: details.nickname || generateRandomNickname(),
-    dateSignedIn: firebase.database.ServerValue.TIMESTAMP,
-    dateLastActive: firebase.database.ServerValue.TIMESTAMP,
+    dateSignedIn: getFirebaseTimestamp(),
+    dateLastActive: getFirebaseTimestamp(),
   };
 
   await userRef.set(userData);

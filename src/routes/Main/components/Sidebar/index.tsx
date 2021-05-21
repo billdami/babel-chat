@@ -1,7 +1,8 @@
 import React, { FC, useCallback, useState } from 'react';
 
-import TabList from '../../../../components/Tab/TabList';
+import { Link } from 'react-router-dom';
 import Tab from '../../../../components/Tab/TabList/Tab';
+import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
 import UsersList from '../../../../components/UsersList';
 import useAuth from '../../../../hooks/useAuth';
@@ -27,15 +28,14 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
   return (
     <div className="SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100">
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        <p>
-          Logged in as{' '}
-          {!!auth.userRecord && (
-            <>
-              <span className="font-bold">{auth.userRecord.nickname}</span>
-              <span className="text-gray-400 tracking-tighter">#{auth.userRecord.uuid}</span>
-            </>
-          )}
-        </p>
+        <Link to="/main">
+          <img
+            src="https://fakeimg.pl/42x42/4b5563/fff?text=BCO"
+            alt="babel chat"
+            width="42"
+            height="42"
+          />
+        </Link>
         <button
           type="button"
           className="text-center font-bold text-gray-500 bg-gray-100 border border-gray-200 rounded px-5 py-2 disabled:opacity-50 disabled:cursor-not-allowed"

@@ -2,6 +2,7 @@ import 'firebase/database';
 import 'firebase/auth';
 
 import firebase from 'firebase/app';
+import { getFirebaseTimestamp } from './firebase';
 
 export const getMessageListId = (userOneId?: string, userTwoId?: string) =>
   userOneId && userTwoId
@@ -27,8 +28,8 @@ export const createChat = async (
     startedByUser: isInitiator ? originUserId : destUserId,
     toUserDetails: destUser.val(),
     isTyping: false,
-    dateStarted: firebase.database.ServerValue.TIMESTAMP,
-    dateLastSeen: isInitiator ? firebase.database.ServerValue.TIMESTAMP : null,
+    dateStarted: getFirebaseTimestamp(),
+    dateLastSeen: isInitiator ? getFirebaseTimestamp() : null,
     dateLastMessage: null,
   });
 
@@ -43,7 +44,7 @@ export const createChatMessage = async (
 ): Promise<firebase.database.Reference> => {
   const db = firebase.database();
   const listId = getMessageListId(originUserId, destUserId);
-  const dateSent = firebase.database.ServerValue.TIMESTAMP;
+  const dateSent = getFirebaseTimestamp();
 
   const messageRef = db.ref(`chat_messages/${listId}`).push({
     author: originUserId,
