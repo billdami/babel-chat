@@ -37,6 +37,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
       // TODO [BUG] this is being calculated AFTER the new message is appended,
       // so the container is always scrolled up. need to calculate it before
       // the new messages render...
+      // POSSIBLE SOLUTION: get the height of the added message elements to add to the threshold
       // const isScrolledUp = el.scrollTop + SCROLLED_UP_THRESHOLD < el.scrollHeight - el.clientHeight;
       const isScrolledUp = false;
 
