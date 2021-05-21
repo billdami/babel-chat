@@ -11,6 +11,7 @@ import React, {
 import { createChat, createChatMessage } from '../../../utils/chat';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { MAX_MESSAGE_LEN } from '../../../constants/chat';
 import useAuth from '../../../hooks/useAuth';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
 import { useChatMessages } from '../../../hooks/useChatMessageRecord';
@@ -29,6 +30,7 @@ const Chat: FC<ChatProps> = () => {
   const [user] = useUser(userId);
   const [chat] = useChatByMembers(auth.user?.uid, userId);
   const [destChat] = useChatByMembers(userId, auth.user?.uid);
+  // TODO create a usePagination() hook to allow for infinite paging of messages
   const [messages, isMessagesLoading] = useChatMessages(auth.user?.uid, userId);
 
   const newMessageInput = useRef<HTMLInputElement>(null);
@@ -36,7 +38,11 @@ const Chat: FC<ChatProps> = () => {
   const [newMessage, setNewMessage] = useState<string>('');
 
   const canSendMessage = useMemo<boolean>(
-    () => newMessage?.trim().length > 0 && !!user?.id && !!auth.user,
+    () =>
+      newMessage?.trim().length > 0 &&
+      newMessage?.trim().length <= MAX_MESSAGE_LEN &&
+      !!user?.id &&
+      !!auth.user,
     [newMessage, user, auth.user]
   );
 
@@ -80,6 +86,12 @@ const Chat: FC<ChatProps> = () => {
     }
   }, [chat]);
 
+  useEffect(() => {
+    // TODO unless pane is scrolled up beyond a threshold,
+    // smooth scroll list to bottom when new messages are added
+    console.log('messages changed!', messages);
+  }, [messages]);
+
   return (
     <div className="Chat flex flex-col flex-1">
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
@@ -104,8 +116,7 @@ const Chat: FC<ChatProps> = () => {
         </button>
       </div>
       {/* TODO create <MessagesList> */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Push messages list to bottom of parent */}
+      <div className="flex-1 flex flex-col overflow-y-auto">
         <div className="py-1">
           {messages?.map((message) => (
             <div key={message.id} className="px-4">
@@ -132,6 +143,7 @@ const Chat: FC<ChatProps> = () => {
           value={newMessage}
           onChange={onNewMessageChange}
           ref={newMessageInput}
+          maxLength={MAX_MESSAGE_LEN}
         />
         <button
           type="submit"
