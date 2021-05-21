@@ -1,11 +1,20 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { createChat, createChatMessage } from '../../../utils/chat';
 import { useHistory, useParams } from 'react-router-dom';
 
 import useAuth from '../../../hooks/useAuth';
+import { useChatByMembers } from '../../../hooks/useChatRecord';
 import { useChatMessages } from '../../../hooks/useChatMessageRecord';
-import { useChatByUser } from '../../../hooks/useChatRecord';
 import { useUser } from '../../../hooks/useUserRecord';
-import { createChat, createChatMessage } from '../../../utils/chat';
 
 interface ChatRouteParams {
   userId: string;
@@ -18,8 +27,8 @@ const Chat: FC<ChatProps> = () => {
   const history = useHistory();
   const auth = useAuth();
   const [user] = useUser(userId);
-  const [chat, isChatLoading] = useChatByUser(auth.user?.uid, userId);
-  const [destChat] = useChatByUser(userId, auth.user?.uid);
+  const [chat, isChatLoading] = useChatByMembers(auth.user?.uid, userId);
+  const [destChat] = useChatByMembers(userId, auth.user?.uid);
   const [messages, isMessagesLoading] = useChatMessages(auth.user?.uid, userId);
 
   const newMessageInput = useRef<HTMLInputElement>(null);

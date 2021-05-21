@@ -26,14 +26,14 @@ export const useChat = (id: string | undefined) => {
   return useObjectVal<Chat, 'id', 'ref'>(ref, chatOptions);
 };
 
-export const useChatByUser = (userId: string | undefined, toUserId: string | undefined) => {
+export const useChatByMembers = (
+  originUserId: string | undefined,
+  destUserId: string | undefined
+) => {
   const db = firebase.database();
-  const query =
-    userId && toUserId
-      ? db.ref('chats').orderByChild('userToUser').equalTo(`${userId}_${toUserId}`).limitToFirst(1)
-      : null;
-  // TODO needs to use UseListVals()??
-  return useObjectVal<Chat, 'id', 'ref'>(query, chatOptions);
+  const id = originUserId && destUserId ? `${originUserId}_${destUserId}` : null;
+  const ref = id ? db.ref(`chats/${id}`) : null;
+  return useObjectVal<Chat, 'id', 'ref'>(ref, chatOptions);
 };
 
 export const useChats = (userId: string | undefined) => {
