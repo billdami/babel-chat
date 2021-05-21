@@ -6,7 +6,6 @@ export interface Chat {
   toUser: string;
   startedByUser: string;
   toUserDetails: User;
-  hasMessages: boolean;
   isTyping: boolean;
   dateStarted: Date;
   dateLastSeen: Date;

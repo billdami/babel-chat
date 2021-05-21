@@ -21,20 +21,18 @@ export const createChat = async (
     throw new Error('destination user does not exist');
   }
 
-  // create the chat record for the origin user
-  const originChatRef = await db.ref(`chats/${originUserId}_${destUserId}`).set({
+  const chatRef = db.ref(`chats/${originUserId}_${destUserId}`).set({
     user: originUserId,
     toUser: destUserId,
-    startedByUser: originUserId,
+    startedByUser: isInitiator ? originUserId : destUserId,
     toUserDetails: destUser.val(),
-    hasMessages: false,
     isTyping: false,
     dateStarted: firebase.database.ServerValue.TIMESTAMP,
     dateLastSeen: isInitiator ? firebase.database.ServerValue.TIMESTAMP : null,
     dateLastMessage: null,
   });
 
-  return originChatRef;
+  return chatRef;
 };
 
 export const createChatMessage = async (
@@ -42,14 +40,23 @@ export const createChatMessage = async (
   destUserId: string,
   content: string,
   isSystem: boolean = false
-) => {
+): Promise<firebase.database.Reference> => {
   const db = firebase.database();
   const listId = getMessageListId(originUserId, destUserId);
-  const messageRef = await db.ref(`chat_messages/${listId}`).push({
-    dateSent: firebase.database.ServerValue.TIMESTAMP,
+  const dateSent = firebase.database.ServerValue.TIMESTAMP;
+
+  const messageRef = db.ref(`chat_messages/${listId}`).push({
     author: originUserId,
+    dateSent,
     content,
     isSystem,
   });
+
+  // update both chats with the sent date of the new message
+  db.ref().update({
+    [`chats/${originUserId}_${destUserId}/dateLastMessage`]: dateSent,
+    [`chats/${destUserId}_${originUserId}/dateLastMessage`]: dateSent,
+  });
+
   return messageRef;
 };

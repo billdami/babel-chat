@@ -1,19 +1,7 @@
 {
   "user_uuids": {
-    "1234": true
-  },
-  "user_ips": {
-    "user1": "0.0.0.0",
-    "user5": "1.1.1.1"
-  },
-  "blocked_ips": {
-    "1.1.1.1": {
-      "dateBlocked": 123456789,
-      "dateExpires": 123456789
-    }
-  },
-  "user_super_admins": {
-    "user1": true
+    "1234": "user1",
+    "4567": "user5"
   },
   "users": {
     "user1": {
@@ -25,20 +13,7 @@
       "dateSignedIn": 123456789,
       "gender": "MALE",
       "nickname": "Bill",
-      "uuid": 1234,
-      "blockedUsers": {
-        "user2": {
-          "dateBlocked": 123456789
-        },
-        "userr5": {
-          "dateBlocked": 123456789
-        }
-      },
-      "spamReportedUsers": {
-        "user5": {
-          "dateReported": 123456789
-        }
-      }
+      "uuid": 1234
     },
     "user5": {
       "age": "UNSPECIFIED",
@@ -49,7 +24,7 @@
       "dateSignedIn": 123456789,
       "gender": "UNSPECIFIED",
       "nickname": "Anonymous user",
-      "uuid": 456779
+      "uuid": 4567
     }
   },
   "chats": {
@@ -117,16 +92,46 @@
       }
     }
   },
+  "user_spam_reports": {
+    "user1": {
+      "user5": {
+        "dateCreated": 123456789
+      }
+    }
+  },
+  "user_blocks": {
+    "user1": {
+      "user2": {
+        "dateCreated": 123456789
+      },
+      "user99": {
+        "dateCreated": 123456789
+      }
+    }
+  },
   "spam_reports": {
     "user5": {
       "spam_report1": {
-        "dateReported": 123456789,
+        "dateCreated": 123456789,
         "user": "user1"
       },
       "spam_report2": {
-        "dateReported": 123456789,
+        "dateCreated": 123456789,
         "user": "user2"
       }
     }
+  },
+  "user_ips": {
+    "user1": "0.0.0.0",
+    "user5": "1.1.1.1"
+  },
+  "blocked_ips": {
+    "1.1.1.1": {
+      "dateBlocked": 123456789,
+      "dateExpires": 123456789
+    }
+  },
+  "user_super_admins": {
+    "user1": true
   }
 }

@@ -52,7 +52,7 @@ const Chat: FC<ChatProps> = () => {
     (event: FormEvent) => {
       event.preventDefault();
 
-      if (!canSendMessage || !auth.user) {
+      if (!canSendMessage || !auth.user || !userId) {
         return;
       }
 
@@ -104,16 +104,20 @@ const Chat: FC<ChatProps> = () => {
       </div>
       {/* TODO create <MessagesList> */}
       <div className="flex-1 overflow-y-auto">
-        {messages?.map((message) => (
-          <div>
-            {message.author}: {message.content}
-          </div>
-        ))}
-        {isMessagesLoading && (
-          // TODO create <LoadingSpinner />
-          <div>Loading&hellip;</div>
-        )}
+        {/* Push messages list to bottom of parent */}
+        <div className="py-1">
+          {messages?.map((message) => (
+            <div key={message.id} className="px-4">
+              {message.author}: {message.content}
+            </div>
+          ))}
+          {isMessagesLoading && (
+            // TODO create <LoadingSpinner />
+            <div className="px-4">Loading&hellip;</div>
+          )}
+        </div>
       </div>
+      {/* create <MessageForm> */}
       <form
         className="flex-shrink-0 flex py-2 px-4 border-t border-gray-200"
         onSubmit={onMessageSubmit}
