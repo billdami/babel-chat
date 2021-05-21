@@ -5,7 +5,7 @@ import Tab from '../../../../components/Tab/TabList/Tab';
 import TabPanel from '../../../../components/Tab/TabPanel';
 import UsersList from '../../../../components/UsersList';
 import useAuth from '../../../../hooks/useAuth';
-import { useUsers } from '../../../../hooks/useUser';
+import { useUsers } from '../../../../hooks/useUserRecord';
 
 type SidebarTab = 'tab-users' | 'tab-chats';
 
@@ -45,14 +45,23 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
           {auth.isLoading ? 'Signing out...' : 'Sign out'}
         </button>
       </div>
-      <div className="SidebarContent flex-1 overflow-y-auto">
-        <TabPanel id="tab-users" activeTabId={activeSidebarTab}>
-          <UsersList users={users} isLoading={isLoading} />
-        </TabPanel>
-        <TabPanel id="tab-chats" activeTabId={activeSidebarTab}>
-          chats list
-        </TabPanel>
-      </div>
+      <TabPanel
+        id="tab-users"
+        className="flex-1 overflow-y-auto"
+        activeTabId={activeSidebarTab}
+        unmountWhenHidden={false}
+      >
+        {/* TODO maintain scroll position when reactivating tab */}
+        <UsersList users={users} isLoading={isLoading} />
+      </TabPanel>
+      <TabPanel
+        id="tab-chats"
+        className="flex-1 overflow-y-auto"
+        activeTabId={activeSidebarTab}
+        unmountWhenHidden={false}
+      >
+        chats list
+      </TabPanel>
       <TabList className="flex-shrink-0 flex bg-gray-200 border-b">
         <Tab
           className="block w-full px-6 py-4 text-center text-gray-800"

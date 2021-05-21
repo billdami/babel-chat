@@ -10,6 +10,9 @@ interface UsersListProps {
 }
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
+  // TODO hide current user in list
+  // TODO apply sorting
+  // TODO apply filtering
   return (
     <div className="UsersList">
       <ul>

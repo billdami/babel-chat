@@ -1,5 +1,13 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState
+} from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+
+import useAuth from '../../../hooks/useAuth';
+import { useChatMessages } from '../../../hooks/useChatMessageRecord';
+import { useChatByUser } from '../../../hooks/useChatRecord';
+import { useUser } from '../../../hooks/useUserRecord';
+import { createChat } from '../../../utils/chat';
 
 interface ChatRouteParams {
   userId: string;
@@ -7,38 +15,23 @@ interface ChatRouteParams {
 
 interface ChatProps {}
 
-const FIXTURE = {
-  user: 'user1',
-  messages: 'chat_messages1',
-  to: {
-    age: 'UNSPECIFIED',
-    country: 'UNSPECIFIED',
-    dateLastActive: 123456789,
-    dateLastMessage: 123456789,
-    dateSignedIn: 123456789,
-    gender: 'UNSPECIFIED',
-    nickname: 'User 2',
-    uuid: 456779,
-  },
-  startedByUser: 'user1',
-  isTyping: false,
-  dateStarted: 123456789,
-  dateLastSeen: 123456789,
-  dateLastMessage: 123456789,
-};
-
 const Chat: FC<ChatProps> = () => {
   const { userId } = useParams<ChatRouteParams>();
   const history = useHistory();
-  //TODO
-  const chat = FIXTURE;
+  const auth = useAuth();
+  const [user] = useUser(userId);
+  const [chat, isChatLoading] = useChatByUser(auth.user?.uid, userId);
+  const [messages, isMessagesLoading] = useChatMessages(chat?.messages);
 
   const newMessageInput = useRef<HTMLInputElement>(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
 
   // include checks for if user signed out, etc
-  const canSendMessage = useMemo<boolean>(() => newMessage?.trim().length > 0, [newMessage]);
+  const canSendMessage = useMemo<boolean>(
+    () => newMessage?.trim().length > 0 && !!user,
+    [newMessage, user]
+  );
 
   const closeChat = useCallback(() => {
     history.push('/main');
@@ -64,9 +57,14 @@ const Chat: FC<ChatProps> = () => {
   );
 
   useEffect(() => {
-    console.log(userId);
-    //TODO create `chats` records if they dont exist
-  }, [userId]);
+    if (!chat?.id && !isChatLoading && auth.user?.uid && userId) {
+      createChat(auth.user.uid, userId);
+    }
+  }, [chat, isChatLoading, auth.user, userId]);
+
+  useEffect(() => {
+    //TODO update dateLastSeen of current user's chat record
+  }, []);
 
   return (
     <div className="Chat flex flex-col flex-1">
@@ -75,13 +73,13 @@ const Chat: FC<ChatProps> = () => {
           <div>
             <h2 className="text-lg">
               {/* TODO create <UserNickname> to format/display user nickname */}
-              <span className="font-bold">{chat.to.nickname}</span>
-              <span className="tracking-tighter font-light text-gray-400">#{chat.to.uuid}</span>
+              <span className="font-bold">{user?.nickname}</span>
+              <span className="tracking-tighter font-light text-gray-400">#{user?.uuid}</span>
             </h2>
           </div>
           <div className="text-sm leading-3 text-gray-400">
             {/* TODO create <UserDetailsLine> to format/display user details */}
-            {chat.to.age} {chat.to.gender}, {chat.to.country}
+            {user?.age} {user?.gender}, {user?.country}
           </div>
         </div>
         <button
@@ -93,7 +91,17 @@ const Chat: FC<ChatProps> = () => {
         </button>
       </div>
       {/* TODO create <MessagesList> */}
-      <div className="flex-1 overflow-y-auto">user id: {userId}</div>
+      <div className="flex-1 overflow-y-auto">
+        {messages?.map((message) => (
+          <div>
+            {message.author}: {message.content}
+          </div>
+        ))}
+        {isMessagesLoading && (
+          // TODO create <LoadingSpinner />
+          <div>Loading&hellip;</div>
+        )}
+      </div>
       <form
         className="flex-shrink-0 flex py-2 px-4 border-t border-gray-200"
         onSubmit={onMessageSubmit}

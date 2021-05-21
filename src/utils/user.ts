@@ -7,7 +7,7 @@ import { NewUserDetails, User } from '../types/user';
 import { generateRandomNickname, generateRandomUUID } from './random';
 
 export const createUser = async (
-  uid: string,
+  id: string,
   details: NewUserDetails
 ): Promise<firebase.database.Reference> => {
   const db = firebase.database();
@@ -23,7 +23,7 @@ export const createUser = async (
   }
 
   const uuid = generateRandomUUID(takenUUIDs);
-  const userRef = db.ref(`users/${uid}`);
+  const userRef = db.ref(`users/${id}`);
   const userData = {
     ...details,
     uuid,
@@ -33,7 +33,7 @@ export const createUser = async (
   };
 
   await userRef.set(userData);
-  await db.ref(`user_uuids/${uuid}`).set(true);
+  await db.ref(`user_uuids/${uuid}`).set(id);
 
   return userRef;
 };

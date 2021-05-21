@@ -2,7 +2,7 @@ import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { COUNTRIES } from '../../constants/countries';
-import { MAX_AGE, MIN_AGE } from '../../constants/user';
+import { MAX_AGE, MAX_NICKNAME_LEN, MIN_AGE, MIN_NICKNAME_LEN } from '../../constants/user';
 import useAuth from '../../hooks/useAuth';
 import { Country } from '../../types/country';
 import { Age, Gender } from '../../types/user';
@@ -26,7 +26,11 @@ const SignIn: FC<SignInListProps> = () => {
   );
 
   const isFormValid = useMemo<boolean>(
-    () => (nickname?.trim().length === 0 || nickname?.trim().length > 1) && agreedToToS,
+    () =>
+      (nickname?.trim().length === 0 ||
+        (nickname?.trim().length >= MIN_NICKNAME_LEN &&
+          nickname?.trim().length <= MAX_NICKNAME_LEN)) &&
+      agreedToToS,
     [nickname, agreedToToS]
   );
 
@@ -79,6 +83,7 @@ const SignIn: FC<SignInListProps> = () => {
               className="block w-full px-3 py-2 rounded-sm border border-gray-300"
               placeholder="Leave blank for a random nickname"
               id="signup-nickname"
+              maxLength={MAX_NICKNAME_LEN}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />

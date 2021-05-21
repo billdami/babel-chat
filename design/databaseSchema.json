@@ -54,9 +54,13 @@
   },
   "chats": {
     "chat1": {
-      "user": "user1",
       "messages": "chat_messages1",
-      "to": {
+      "user": "user1",
+      "toUser": "user2",
+      "userToUser": "user1_user2",
+      "startedByUser": "user1",
+      "toUserDetails": {
+        "id": "user2",
         "age": "UNSPECIFIED",
         "country": "UNSPECIFIED",
         "dateLastActive": 123456789,
@@ -66,16 +70,19 @@
         "nickname": "User 2",
         "uuid": 456779
       },
-      "startedByUser": "user1",
       "isTyping": false,
       "dateStarted": 123456789,
       "dateLastSeen": 123456789,
       "dateLastMessage": 123456789
     },
     "chat2": {
-      "user": "user2",
       "messages": "chat_messages1",
-      "to": {
+      "user": "user2",
+      "toUser": "user1",
+      "userToUser": "user2_user1",
+      "startedByUser": "user1",
+      "toUserDetails": {
+        "id": "user1",
         "age": "UNSPECIFIED",
         "country": "UNSPECIFIED",
         "dateLastActive": 123456789,
@@ -85,7 +92,6 @@
         "nickname": "Bill",
         "uuid": 456779
       },
-      "startedByUser": "user1",
       "isTyping": true,
       "dateStarted": 123456789,
       "dateLastSeen": 123456789,
@@ -96,17 +102,20 @@
     "chat_messages1": {
       "message1": {
         "dateSent": 123456789,
-        "user": "user1",
+        "author": "user1",
+        "isSystem": true,
         "content": "Hai there!"
       },
       "message2": {
         "dateSent": 123456789,
-        "user": "SYSTEM",
+        "author": "SYSTEM",
+        "isSystem": true,
         "content": "John doe has signed out."
       },
       "message3": {
         "dateSent": 123456789,
-        "user": "user2",
+        "author": "user2",
+        "isSystem": true,
         "content": "Hello, chat."
       }
     }
