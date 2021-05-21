@@ -27,7 +27,7 @@ const Chat: FC<ChatProps> = () => {
   const history = useHistory();
   const auth = useAuth();
   const [user] = useUser(userId);
-  const [chat, isChatLoading] = useChatByMembers(auth.user?.uid, userId);
+  const [chat] = useChatByMembers(auth.user?.uid, userId);
   const [destChat] = useChatByMembers(userId, auth.user?.uid);
   const [messages, isMessagesLoading] = useChatMessages(auth.user?.uid, userId);
 
@@ -36,8 +36,8 @@ const Chat: FC<ChatProps> = () => {
   const [newMessage, setNewMessage] = useState<string>('');
 
   const canSendMessage = useMemo<boolean>(
-    () => newMessage?.trim().length > 0 && !!user?.id && !!chat?.id,
-    [newMessage, user, chat]
+    () => newMessage?.trim().length > 0 && !!user?.id && !!auth.user,
+    [newMessage, user, auth.user]
   );
 
   const closeChat = useCallback(() => {
@@ -56,6 +56,11 @@ const Chat: FC<ChatProps> = () => {
         return;
       }
 
+      // create chat for origin user, if it doesnt exist
+      if (!chat?.id) {
+        createChat(auth.user.uid, userId, true);
+      }
+
       // create chat for destination user, if it doesnt exist
       if (!destChat?.id) {
         createChat(userId, auth.user?.uid, false);
@@ -65,30 +70,26 @@ const Chat: FC<ChatProps> = () => {
       setNewMessage('');
       newMessageInput.current?.focus();
     },
-    [newMessage, canSendMessage, destChat, userId, auth.user]
+    [newMessage, canSendMessage, chat, destChat, userId, auth.user]
   );
 
+  // TODO create useOnMountCallback hook
   useEffect(() => {
-    if (!isChatLoading && !chat?.id && auth.user?.uid && userId) {
-      createChat(auth.user.uid, userId, true);
+    if (chat?.id) {
+      //TODO update dateLastSeen of current user's chat record on mount
     }
-  }, [chat, isChatLoading, auth.user, userId]);
-
-  useEffect(() => {
-    //TODO update dateLastSeen of current user's chat record
-  }, []);
+  }, [chat]);
 
   return (
     <div className="Chat flex flex-col flex-1">
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
+        {/* TODO handle when user/chat.toUserDetails don't exist ("user not found" message) */}
         <div>
-          <div>
-            <h2 className="text-lg">
-              {/* TODO create <UserNickname> to format/display user nickname */}
-              <span className="font-bold">{user?.nickname}</span>
-              <span className="tracking-tighter font-light text-gray-400">#{user?.uuid}</span>
-            </h2>
-          </div>
+          <h2 className="text-lg">
+            {/* TODO create <UserNickname> to format/display user nickname */}
+            <span className="font-bold">{user?.nickname}</span>
+            <span className="tracking-tighter font-light text-gray-400">#{user?.uuid}</span>
+          </h2>
           <div className="text-sm leading-3 text-gray-400">
             {/* TODO create <UserDetailsLine> to format/display user details */}
             {user?.age} {user?.gender}, {user?.country}
