@@ -2,10 +2,8 @@ import { User } from './user';
 
 export interface Chat {
   id: string;
-  messages: string;
   user: string;
   toUser: string;
-  userToUser: string;
   startedByUser: string;
   toUserDetails: User;
   hasMessages: boolean;

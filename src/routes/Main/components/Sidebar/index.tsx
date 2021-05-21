@@ -62,7 +62,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
       >
         chats list
       </TabPanel>
-      <TabList className="flex-shrink-0 flex bg-gray-200 border-b">
+      <TabList className="flex-shrink-0 flex bg-gray-200 border-gray-100 border-b border-t">
         <Tab
           className="block w-full px-6 py-4 text-center text-gray-800"
           liClassName="w-1/2 flex-none"

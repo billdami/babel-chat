@@ -4,7 +4,7 @@
     ".read": "now < 1623729600000", // 2021-6-15
     ".write": "now < 1623729600000", // 2021-6-15
     "chats": {
-      ".indexOn": ["user", "userToUser"]
+      ".indexOn": ["user"]
     }
   }
 }

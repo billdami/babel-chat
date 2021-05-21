@@ -53,11 +53,9 @@
     }
   },
   "chats": {
-    "chat1": {
-      "messages": "chat_messages1",
+    "user1_user2": {
       "user": "user1",
       "toUser": "user2",
-      "userToUser": "user1_user2",
       "startedByUser": "user1",
       "toUserDetails": {
         "id": "user2",
@@ -75,8 +73,7 @@
       "dateLastSeen": 123456789,
       "dateLastMessage": 123456789
     },
-    "chat2": {
-      "messages": "chat_messages1",
+    "user2_user1": {
       "user": "user2",
       "toUser": "user1",
       "userToUser": "user2_user1",
@@ -99,7 +96,7 @@
     }
   },
   "chat_messages": {
-    "chat_messages1": {
+    "user1_user2": {
       "message1": {
         "dateSent": 123456789,
         "author": "user1",

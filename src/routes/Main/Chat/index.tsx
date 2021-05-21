@@ -1,13 +1,11 @@
-import React, {
-  ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState
-} from 'react';
+import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import useAuth from '../../../hooks/useAuth';
 import { useChatMessages } from '../../../hooks/useChatMessageRecord';
 import { useChatByUser } from '../../../hooks/useChatRecord';
 import { useUser } from '../../../hooks/useUserRecord';
-import { createChat } from '../../../utils/chat';
+import { createChat, createChatMessage } from '../../../utils/chat';
 
 interface ChatRouteParams {
   userId: string;
@@ -21,16 +19,16 @@ const Chat: FC<ChatProps> = () => {
   const auth = useAuth();
   const [user] = useUser(userId);
   const [chat, isChatLoading] = useChatByUser(auth.user?.uid, userId);
-  const [messages, isMessagesLoading] = useChatMessages(chat?.messages);
+  const [destChat] = useChatByUser(userId, auth.user?.uid);
+  const [messages, isMessagesLoading] = useChatMessages(auth.user?.uid, userId);
 
   const newMessageInput = useRef<HTMLInputElement>(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
 
-  // include checks for if user signed out, etc
   const canSendMessage = useMemo<boolean>(
-    () => newMessage?.trim().length > 0 && !!user,
-    [newMessage, user]
+    () => newMessage?.trim().length > 0 && !!user?.id && !!chat?.id,
+    [newMessage, user, chat]
   );
 
   const closeChat = useCallback(() => {
@@ -45,20 +43,25 @@ const Chat: FC<ChatProps> = () => {
     (event: FormEvent) => {
       event.preventDefault();
 
-      if (!canSendMessage) {
+      if (!canSendMessage || !auth.user) {
         return;
       }
 
-      console.log('TODO: send message!', newMessage);
+      // create chat for destination user, if it doesnt exist
+      if (!destChat?.id) {
+        createChat(userId, auth.user?.uid, false);
+      }
+
+      createChatMessage(auth.user.uid, userId, newMessage.trim());
       setNewMessage('');
       newMessageInput.current?.focus();
     },
-    [newMessage, canSendMessage]
+    [newMessage, canSendMessage, destChat, userId, auth.user]
   );
 
   useEffect(() => {
-    if (!chat?.id && !isChatLoading && auth.user?.uid && userId) {
-      createChat(auth.user.uid, userId);
+    if (!isChatLoading && !chat?.id && auth.user?.uid && userId) {
+      createChat(auth.user.uid, userId, true);
     }
   }, [chat, isChatLoading, auth.user, userId]);
 
