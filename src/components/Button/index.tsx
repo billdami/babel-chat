@@ -16,6 +16,7 @@ interface ButtonProps
 const baseClasses = `text-center
 font-bold
 rounded
+transition-shadow
 active:shadow-inner
 focus:outline-none
 focus:ring-4

@@ -2,13 +2,13 @@ import React, { DetailedHTMLProps, FC } from 'react';
 
 import cn from 'classnames';
 
-interface RadioProps
+interface CheckboxProps
   extends DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   label?: string;
   labelClassName?: string;
 }
 
-const Radio: FC<RadioProps> = ({
+const Checkbox: FC<CheckboxProps> = ({
   className,
   labelClassName = '',
   label = '',
@@ -18,7 +18,7 @@ const Radio: FC<RadioProps> = ({
 }) => (
   <div className={cn('flex items-start', className)}>
     <input
-      type="radio"
+      type="checkbox"
       id={id}
       className="appearance-none
         flex-shrink-0
@@ -31,11 +31,11 @@ const Radio: FC<RadioProps> = ({
         bg-no-repeat
         bg-center
         bg-contain
-        rounded-full
+        rounded
         transition-shadow
         checked:bg-green-500
         checked:border-green-500
-        checked:bg-radio-active
+        checked:bg-check-active
         focus:outline-none
         focus:ring-4
         focus:ring-opacity-50
@@ -51,4 +51,4 @@ const Radio: FC<RadioProps> = ({
   </div>
 );
 
-export default Radio;
+export default Checkbox;

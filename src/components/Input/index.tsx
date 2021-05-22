@@ -14,6 +14,7 @@ py-2
 rounded-sm
 border
 border-gray-300
+transition-shadow
 focus:outline-none
 focus:ring-4
 focus:ring-opacity-50

@@ -27,6 +27,7 @@ bg-caret
 bg-no-repeat
 bg-4x3
 bg-right-3-center
+transition-shadow
 focus:outline-none
 focus:ring-4
 focus:ring-opacity-50

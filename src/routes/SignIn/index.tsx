@@ -11,6 +11,7 @@ import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 
 import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
+import Checkbox from '../../components/Checkbox';
 import { Country } from '../../types/country';
 import Input from '../../components/Input';
 import Radio from '../../components/Radio';
@@ -165,14 +166,13 @@ const SignIn: FC<SignInListProps> = () => {
             </div>
           </div>
 
-          <label className="block my-6">
-            {/* TODO create <Checkbox> */}
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={agreedToToS}
-              onChange={(e) => setAgreedToToS(e.target.checked)}
-            />
+          <Checkbox
+            type="checkbox"
+            id="agreed-to-tos"
+            className="my-6"
+            checked={agreedToToS}
+            onChange={(e) => setAgreedToToS(e.target.checked)}
+          >
             I am over 18 and agree to the{' '}
             <Link
               to="/terms-of-service"
@@ -181,7 +181,7 @@ const SignIn: FC<SignInListProps> = () => {
             >
               terms of service
             </Link>
-          </label>
+          </Checkbox>
 
           <Button type="submit" size="lg" disabled={!isFormValid || auth.isLoading} fullWidth>
             {auth.isLoading ? 'Signing in...' : 'Start chatting'}
