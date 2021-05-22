@@ -1,0 +1,139 @@
+{
+  "user_uuids": {
+    "1234": "user1",
+    "4567": "user5"
+  },
+  "users": {
+    "user1": {
+      "age": 99,
+      "agreedToToS": true,
+      "country": "USA",
+      "dateLastActive": 123456789,
+      "dateLastMessage": 123456789,
+      "dateSignedIn": 123456789,
+      "gender": "MALE",
+      "nickname": "Bill",
+      "uuid": 1234
+    },
+    "user5": {
+      "age": "UNSPECIFIED",
+      "agreedToToS": true,
+      "country": "UNSPECIFIED",
+      "dateLastActive": 123456789,
+      "dateLastMessage": 123456789,
+      "dateSignedIn": 123456789,
+      "gender": "UNSPECIFIED",
+      "nickname": "Anonymous user",
+      "uuid": 4567
+    }
+  },
+  "chats": {
+    "user1_user2": {
+      "user": "user1",
+      "toUser": "user2",
+      "startedByUser": "user1",
+      "toUserDetails": {
+        "id": "user2",
+        "age": "UNSPECIFIED",
+        "country": "UNSPECIFIED",
+        "dateLastActive": 123456789,
+        "dateLastMessage": 123456789,
+        "dateSignedIn": 123456789,
+        "gender": "UNSPECIFIED",
+        "nickname": "User 2",
+        "uuid": 456779
+      },
+      "isPinned": false,
+      "isTyping": false,
+      "dateStarted": 123456789,
+      "dateLastSeen": 123456789,
+      "dateLastMessage": 123456789
+    },
+    "user2_user1": {
+      "user": "user2",
+      "toUser": "user1",
+      "userToUser": "user2_user1",
+      "startedByUser": "user1",
+      "toUserDetails": {
+        "id": "user1",
+        "age": "UNSPECIFIED",
+        "country": "UNSPECIFIED",
+        "dateLastActive": 123456789,
+        "dateLastMessage": 123456789,
+        "dateSignedIn": 123456789,
+        "gender": "UNSPECIFIED",
+        "nickname": "Bill",
+        "uuid": 456779
+      },
+      "isPinned": true,
+      "isTyping": true,
+      "dateStarted": 123456789,
+      "dateLastSeen": 123456789,
+      "dateLastMessage": 123456789
+    }
+  },
+  "chat_messages": {
+    "user1_user2": {
+      "message1": {
+        "dateSent": 123456789,
+        "author": "user1",
+        "isSystem": true,
+        "content": "Hai there!"
+      },
+      "message2": {
+        "dateSent": 123456789,
+        "author": "SYSTEM",
+        "isSystem": true,
+        "content": "John doe has signed out."
+      },
+      "message3": {
+        "dateSent": 123456789,
+        "author": "user2",
+        "isSystem": true,
+        "content": "Hello, chat."
+      }
+    }
+  },
+  "user_spam_reports": {
+    "user1": {
+      "user5": {
+        "dateCreated": 123456789
+      }
+    }
+  },
+  "user_blocks": {
+    "user1": {
+      "user2": {
+        "dateCreated": 123456789
+      },
+      "user99": {
+        "dateCreated": 123456789
+      }
+    }
+  },
+  "spam_reports": {
+    "user5": {
+      "spam_report1": {
+        "dateCreated": 123456789,
+        "user": "user1"
+      },
+      "spam_report2": {
+        "dateCreated": 123456789,
+        "user": "user2"
+      }
+    }
+  },
+  "user_ips": {
+    "user1": "0.0.0.0",
+    "user5": "1.1.1.1"
+  },
+  "blocked_ips": {
+    "1.1.1.1": {
+      "dateBlocked": 123456789,
+      "dateExpires": 123456789
+    }
+  },
+  "user_super_admins": {
+    "user1": true
+  }
+}

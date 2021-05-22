@@ -1,6 +1,6 @@
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: 'media', // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
       width: {
@@ -13,7 +13,8 @@ module.exports = {
   variants: {
     extend: {
       opacity: ['disabled'],
-      cursor: ['disabled']
+      cursor: ['disabled'],
+      boxShadow: ['disabled', 'active'],
     },
   },
   plugins: [],

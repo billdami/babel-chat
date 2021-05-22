@@ -1,12 +1,16 @@
 import 'firebase/database';
 import 'firebase/auth';
 
-import firebase from 'firebase/app';
-
 import { NewUserDetails, User } from '../types/user';
 import { generateRandomNickname, generateRandomUUID } from './random';
 
-export const createUser = async (uid: string, details: NewUserDetails): Promise<firebase.database.Reference> => {
+import firebase from 'firebase/app';
+import { getFirebaseTimestamp } from './firebase';
+
+export const createUser = async (
+  id: string,
+  details: NewUserDetails
+): Promise<firebase.database.Reference> => {
   const db = firebase.database();
   const takenUUIDs: number[] = [];
   const userUUIDs = await db.ref('user_uuids').get();
@@ -20,15 +24,17 @@ export const createUser = async (uid: string, details: NewUserDetails): Promise<
   }
 
   const uuid = generateRandomUUID(takenUUIDs);
-  const userRef = db.ref(`users/${uid}`);
-
-  await userRef.set({
+  const userRef = db.ref(`users/${id}`);
+  const userData = {
     ...details,
     uuid,
     nickname: details.nickname || generateRandomNickname(),
-  });
+    dateSignedIn: getFirebaseTimestamp(),
+    dateLastActive: getFirebaseTimestamp(),
+  };
 
-  await db.ref(`user_uuids/${uuid}`).set(true);
+  await userRef.set(userData);
+  await db.ref(`user_uuids/${uuid}`).set(id);
 
   return userRef;
 };
