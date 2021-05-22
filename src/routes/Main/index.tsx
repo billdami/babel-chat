@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import PageNotFound from '../PageNotFound';
 import Chat from './Chat';
-import Sidebar from './components/Sidebar';
 import Index from './IndexRoute';
+import PageNotFound from '../PageNotFound';
+import Sidebar from './components/Sidebar';
 
 interface MainListProps {}
 

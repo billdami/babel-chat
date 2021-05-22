@@ -1,15 +1,31 @@
 import { Age, Gender } from '../../types/user';
 import { Link, useHistory } from 'react-router-dom';
-import { MAX_AGE, MAX_NICKNAME_LEN, MIN_AGE, MIN_NICKNAME_LEN } from '../../constants/user';
+import {
+  MAX_AGE,
+  MAX_NICKNAME_LEN,
+  MIN_AGE,
+  MIN_NICKNAME_LEN,
+  UNSPECIFIED,
+} from '../../constants/user';
 import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 
 import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
 import { Country } from '../../types/country';
 import Input from '../../components/Input';
+import Radio from '../../components/Radio';
+import Select from '../../components/Select';
 import useAuth from '../../hooks/useAuth';
 
 interface SignInListProps {}
+
+const ageOptions = [
+  { value: UNSPECIFIED, label: 'Prefer not to say' },
+  ...Array.from(new Array(MAX_AGE - MIN_AGE + 1)).map((v, i) => ({
+    value: `${MIN_AGE + i}`,
+    label: `${MIN_AGE + i}`,
+  })),
+];
 
 const SignIn: FC<SignInListProps> = () => {
   const auth = useAuth();
@@ -17,15 +33,10 @@ const SignIn: FC<SignInListProps> = () => {
 
   const [nickname, setNickname] = useState<string>('');
   const [country, setCountry] = useState<Country>(Country.UNSPECIFIED);
-  const [age, setAge] = useState<Age>('UNSPECIFIED');
+  const [age, setAge] = useState<Age>(UNSPECIFIED);
   const [gender, setGender] = useState<Gender>(Gender.UNSPECIFIED);
   const [agreedToToS, setAgreedToToS] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<Error | null>(null);
-
-  const ageOptions = useMemo<number[]>(
-    () => Array.from(new Array(MAX_AGE - MIN_AGE + 1)).map((v, i) => MIN_AGE + i),
-    []
-  );
 
   const isFormValid = useMemo<boolean>(
     () =>
@@ -98,81 +109,63 @@ const SignIn: FC<SignInListProps> = () => {
             <label htmlFor="signup-country" className="block mb-2 font-bold">
               Country
             </label>
-            {/* TODO create <Select> */}
-            <select
-              className="appearance-none block w-full px-3 py-2 rounded-sm border border-gray-300"
+            <Select
               id="signup-country"
               value={country}
+              options={COUNTRIES}
               onChange={(e) => setCountry(e.target.value as Country)}
-            >
-              {COUNTRIES.map((country) => (
-                <option key={country.value} value={country.value}>
-                  {country.label}
-                </option>
-              ))}
-            </select>
+              fullWidth
+            />
           </div>
 
           <div className="mb-3">
             <label htmlFor="signup-age" className="block mb-2 font-bold">
               Age
             </label>
-            <select
-              className="appearance-none block w-full px-3 py-2 rounded-sm border border-gray-300"
+            <Select
               id="signup-age"
               value={`${age}`}
+              options={ageOptions}
               onChange={(e) =>
-                setAge(e.target.value !== 'UNSPECIFIED' ? Number(e.target.value) : 'UNSPECIFIED')
+                setAge(e.target.value !== UNSPECIFIED ? Number(e.target.value) : UNSPECIFIED)
               }
-            >
-              <option value="UNSPECIFIED">Prefer not to say</option>
-              {ageOptions.map((age) => (
-                <option key={age} value={`${age}`}>
-                  {age}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           <div className="mb-3">
             <label className="block mb-2 font-bold">Gender</label>
-            {/* TODO create <Radio> */}
-            <label className="mr-3">
-              <input
-                type="radio"
-                className="mr-2"
+            <div className="flex">
+              <Radio
+                className="mr-3"
+                label="Unspecified"
                 name="gender"
+                id={`gender-${Gender.UNSPECIFIED}`}
                 value={Gender.UNSPECIFIED}
                 checked={gender === Gender.UNSPECIFIED}
                 onChange={(e) => setGender(e.target.value as Gender)}
               />
-              Prefer not to say
-            </label>
-            <label className="mr-3">
-              <input
-                type="radio"
-                className="mr-2"
+              <Radio
+                className="mr-3"
+                label="Female"
                 name="gender"
+                id={`gender-${Gender.FEMALE}`}
                 value={Gender.FEMALE}
                 checked={gender === Gender.FEMALE}
                 onChange={(e) => setGender(e.target.value as Gender)}
               />
-              Female
-            </label>
-            <label>
-              <input
-                type="radio"
-                className="mr-2"
+              <Radio
+                className="mr-3"
+                label="Male"
                 name="gender"
+                id={`gender-${Gender.MALE}`}
                 value={Gender.MALE}
                 checked={gender === Gender.MALE}
                 onChange={(e) => setGender(e.target.value as Gender)}
               />
-              Male
-            </label>
+            </div>
           </div>
 
-          <label className="block my-6 text-sm">
+          <label className="block my-6">
             {/* TODO create <Checkbox> */}
             <input
               type="checkbox"
@@ -180,7 +173,7 @@ const SignIn: FC<SignInListProps> = () => {
               checked={agreedToToS}
               onChange={(e) => setAgreedToToS(e.target.checked)}
             />
-            I am over 18 years of age and agree to the{' '}
+            I am over 18 and agree to the{' '}
             <Link
               to="/terms-of-service"
               target="_blank"
