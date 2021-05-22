@@ -31,7 +31,10 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
   return (
     <div className="SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100" {...rest}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        <Link to="/main">
+        <Link
+          to="/main"
+          className="focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
+        >
           <img
             src="https://fakeimg.pl/42x42/4b5563/fff?text=BCO"
             alt="babel chat"
@@ -61,7 +64,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <Tab
-          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800"
+          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
           liClassName="w-1/2 flex-none"
           activeClassName="bg-gray-100 border-transparent"
           tabId="tab-users"
@@ -76,7 +79,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
           )}
         </Tab>
         <Tab
-          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800"
+          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
           liClassName="w-1/2 flex-none"
           activeClassName="bg-gray-100 border-transparent"
           tabId="tab-chats"
