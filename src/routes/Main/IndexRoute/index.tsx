@@ -19,7 +19,7 @@ const Index: FC<IndexProps> = () => {
           </>
         )}
       </p>
-      <p>TODO main page content</p>
+      <p>[TODO] main page content</p>
     </div>
   );
 };
