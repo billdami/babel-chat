@@ -64,12 +64,14 @@ const SignIn: FC<SignInListProps> = () => {
   return (
     <div className="mx-auto my-auto p-4">
       <div className="w-full sm:w-116">
-        <h1 className="text-4xl font-extrabold text-gray-500 mb-1">babel chat</h1>
-        <h2 className="text-lg text-gray-500 mb-6">
+        <h1 className="text-3xl md:text-4xl mt-4 md:mt-0 font-extrabold text-gray-500 mb-1">
+          babel chat
+        </h1>
+        <h2 className="text-sm md:text-lg text-gray-500 mb-4 md:mb-6">
           Meet and chat with people from around the world.
         </h2>
-        <form onSubmit={onSubmit} className="p-6 bg-white rounded-sm text-gray-700">
-          <p className="mb-6">
+        <form onSubmit={onSubmit} className="p-4 md:p-6 bg-white rounded-sm text-gray-700">
+          <p className="mb-4 md:mb-6">
             babel chat is free and completely anonymous. If you’d like, you can provide some basic
             info below, but it is <span className="font-bold">100% optional.</span>
           </p>
@@ -188,7 +190,7 @@ const SignIn: FC<SignInListProps> = () => {
             </Link>
           </label>
 
-          <Button type="submit" disabled={!isFormValid || auth.isLoading} fullWidth>
+          <Button type="submit" size="lg" disabled={!isFormValid || auth.isLoading} fullWidth>
             {auth.isLoading ? 'Signing in...' : 'Start chatting'}
           </Button>
           {/* TODO better error handling */}

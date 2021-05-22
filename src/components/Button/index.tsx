@@ -3,17 +3,17 @@ import React, { DetailedHTMLProps, FC } from 'react';
 import cn from 'classnames';
 
 type ButtonVariant = 'primary' | 'secondary' | 'muted' | 'link';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps
   extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   variant?: ButtonVariant;
+  size?: ButtonSize;
   block?: boolean;
   fullWidth?: boolean;
 }
 
-const baseClasses = `px-5
-py-2
-text-center
+const baseClasses = `text-center
 font-bold
 rounded
 active:shadow-inner
@@ -34,17 +34,24 @@ const variants = {
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500',
 };
 
+const sizes = {
+  sm: 'px-3 py-1 text-sm',
+  md: 'px-5 py-2',
+  lg: 'px-6 py-4 text-lg',
+};
+
 const Button: FC<ButtonProps> = ({
   children,
   className,
   block = true,
   fullWidth = false,
   variant = 'primary',
+  size = 'md',
   ...rest
 }) => (
   <button
     type="button"
-    className={cn(baseClasses, variants[variant], className, {
+    className={cn(baseClasses, variants[variant], sizes[size], className, {
       block: block,
       'w-full': fullWidth,
     })}

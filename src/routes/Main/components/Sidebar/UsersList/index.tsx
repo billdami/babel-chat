@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import { User } from '../../../../../types/user';
 import { Val } from 'react-firebase-hooks/database/dist/database/types';
+import useAuth from '../../../../../hooks/useAuth';
 
 interface UsersListProps {
   users?: Val<User, 'id', 'ref'>[];
@@ -10,6 +11,7 @@ interface UsersListProps {
 }
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
+  const auth = useAuth();
   // TODO show icon/indicator on user's own list item
   // TODO apply sorting
   // TODO apply filtering
@@ -27,6 +29,9 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
                 {/* TODO create <UserNickname> to format/display user nickname */}
                 <span className="font-bold text-gray-800">{user.nickname}</span>
                 <span className="text-gray-400 font-light tracking-tighter">#{user.uuid}</span>
+                {user.id === auth.user?.uid && (
+                  <span className="ml-1 text-xs font-bold text-gray-400">(you)</span>
+                )}
               </div>
               <div className="text-gray-400 text-sm">
                 {/* TODO create <UserDetailsLine> to format/display user details */}
