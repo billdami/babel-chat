@@ -6,6 +6,7 @@ import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
 import { Country } from '../../types/country';
+import Input from '../../components/Input';
 import useAuth from '../../hooks/useAuth';
 
 interface SignInListProps {}
@@ -78,15 +79,15 @@ const SignIn: FC<SignInListProps> = () => {
             <label htmlFor="signup-nickname" className="block mb-2 font-bold">
               Nickname
             </label>
-            {/* TODO create <Input> */}
-            <input
+            <Input
               type="text"
-              className="block w-full px-3 py-2 rounded-sm border border-gray-300"
               placeholder="Leave blank for a random nickname"
               id="signup-nickname"
+              autoComplete="nickname"
               maxLength={MAX_NICKNAME_LEN}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
+              fullWidth
             />
             {/* TODO error validation message/styles */}
           </div>

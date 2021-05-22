@@ -20,17 +20,17 @@ active:shadow-inner
 focus:outline-none
 focus:ring-4
 focus:ring-opacity-50
+focus:ring-green-300
 disabled:shadow-none
 disabled:opacity-50
 disabled:cursor-not-allowed`;
 
 const variants = {
   primary:
-    'shadow hover:shadow-md text-white bg-green-400 border border-transparent hover:bg-green-500 focus:ring-green-300 disabled:bg-green-400',
+    'shadow hover:shadow-md text-white bg-green-400 border border-transparent hover:bg-green-500 disabled:bg-green-400',
   secondary:
-    'shadow hover:shadow-md text-gray-500 bg-white border border-gray-500 hover:bg-gray-100 focus:ring-green-300 disabled:bg-white',
-  muted:
-    'text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 focus:ring-green-300 disabled:bg-white',
+    'shadow hover:shadow-md text-gray-500 bg-white border border-gray-500 hover:bg-gray-100 disabled:bg-white',
+  muted: 'text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 disabled:bg-white',
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500',
 };
 
