@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FC, FormEvent, useCallback, useMemo, useRef, useState } from 'react';
 
+import Button from '../../../../../components/Button';
 import { MAX_MESSAGE_LEN } from '../../../../../constants/chat';
 
 interface MessageFormProps {
@@ -43,7 +44,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
     >
       <input
         type="text"
-        className="block flex-1 px-3 py-1 mr-4 rounded-sm border border-gray-300 disabled:opacity-50 disabled:bg-gray-200 disbled:cursor-not-allowed"
+        className="block flex-1 px-3 py-1 mr-3 rounded-sm border border-gray-300 disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed"
         placeholder="Type a message..."
         id="signup-nickname"
         autoComplete="off"
@@ -53,13 +54,9 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         maxLength={MAX_MESSAGE_LEN}
         disabled={!canSend}
       />
-      <button
-        type="submit"
-        className="block text-center font-bold text-white bg-green-400 rounded px-8 py-2 shadow active:shadow-none disabled:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={!isFormEnabled}
-      >
+      <Button type="submit" className="w-24" disabled={!isFormEnabled}>
         Send
-      </button>
+      </Button>
     </form>
   );
 };

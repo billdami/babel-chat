@@ -15,7 +15,7 @@ module.exports = {
       opacity: ['disabled'],
       cursor: ['disabled'],
       boxShadow: ['disabled', 'active'],
-      backgroundColor: ['disabled']
+      backgroundColor: ['disabled', 'active']
     },
   },
   plugins: [],

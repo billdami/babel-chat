@@ -2,6 +2,7 @@ import React, { FC, useCallback, useMemo } from 'react';
 import { createChat, createChatMessage } from '../../../utils/chat';
 import { useHistory, useParams } from 'react-router-dom';
 
+import Button from '../../../components/Button';
 import MessageForm from './components/MessageForm';
 import MessageList from './components/MessageList';
 import useAuth from '../../../hooks/useAuth';
@@ -69,13 +70,9 @@ const Chat: FC<ChatProps> = () => {
             {destUser?.age} {destUser?.gender}, {destUser?.country}
           </div>
         </div>
-        <button
-          type="button"
-          className="text-center font-bold text-gray-500 bg-white border border-gray-200 rounded px-5 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={closeChat}
-        >
+        <Button variant="muted" onClick={closeChat}>
           &times;
-        </button>
+        </Button>
       </div>
       <MessageList originUser={auth.userRecord} originChat={chat} destUser={destUser} />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />

@@ -1,11 +1,12 @@
-import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-
-import { COUNTRIES } from '../../constants/countries';
-import { MAX_AGE, MAX_NICKNAME_LEN, MIN_AGE, MIN_NICKNAME_LEN } from '../../constants/user';
-import useAuth from '../../hooks/useAuth';
-import { Country } from '../../types/country';
 import { Age, Gender } from '../../types/user';
+import { Link, useHistory } from 'react-router-dom';
+import { MAX_AGE, MAX_NICKNAME_LEN, MIN_AGE, MIN_NICKNAME_LEN } from '../../constants/user';
+import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
+
+import Button from '../../components/Button';
+import { COUNTRIES } from '../../constants/countries';
+import { Country } from '../../types/country';
+import useAuth from '../../hooks/useAuth';
 
 interface SignInListProps {}
 
@@ -168,7 +169,7 @@ const SignIn: FC<SignInListProps> = () => {
             </label>
           </div>
 
-          <label className="block mb-6 text-sm">
+          <label className="block my-6 text-sm">
             {/* TODO create <Checkbox> */}
             <input
               type="checkbox"
@@ -177,19 +178,18 @@ const SignIn: FC<SignInListProps> = () => {
               onChange={(e) => setAgreedToToS(e.target.checked)}
             />
             I am over 18 years of age and agree to the{' '}
-            <Link to="/terms-of-service" target="_blank" className="text-green-500">
+            <Link
+              to="/terms-of-service"
+              target="_blank"
+              className="text-green-500 rounded hover:underline hover:text-green-600 ring-green-300 focus:outline-none focus:ring-4 focus:ring-opacity-50"
+            >
               terms of service
             </Link>
           </label>
 
-          {/* TODO Create <Button> */}
-          <button
-            type="submit"
-            className="block w-full text-center font-bold text-white bg-green-400 rounded px-5 py-3 shadow active:shadow-none disabled:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!isFormValid || auth.isLoading}
-          >
+          <Button type="submit" disabled={!isFormValid || auth.isLoading} fullWidth>
             {auth.isLoading ? 'Signing in...' : 'Start chatting'}
-          </button>
+          </Button>
           {/* TODO better error handling */}
           {!!submitError && (
             <div className="text-xs text-red-500 mt-2">

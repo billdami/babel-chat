@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 
+import Button from '../../../../components/Button';
 import ChatsList from './ChatsList';
 import { Link } from 'react-router-dom';
 import Tab from '../../../../components/Tab/TabList/Tab';
@@ -38,14 +39,9 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
             height="42"
           />
         </Link>
-        <button
-          type="button"
-          className="text-center font-bold text-gray-500 bg-gray-100 border border-gray-200 rounded px-5 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={auth.signOut}
-          disabled={auth.isLoading}
-        >
+        <Button variant="muted" onClick={auth.signOut} disabled={auth.isLoading}>
           {auth.isLoading ? 'Signing out...' : 'Sign out'}
-        </button>
+        </Button>
       </div>
       <TabPanel
         id="tab-users"
@@ -63,11 +59,11 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
       >
         <ChatsList chats={chats} isLoading={isLoadingChats} />
       </TabPanel>
-      <TabList className="flex-shrink-0 flex bg-gray-200 border-gray-100 border-b border-t">
+      <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <Tab
-          className="block w-full px-6 py-4 text-center text-gray-800"
+          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800"
           liClassName="w-1/2 flex-none"
-          activeClassName="bg-gray-100"
+          activeClassName="bg-gray-100 border-transparent"
           tabId="tab-users"
           activeTabId={activeSidebarTab}
           onClick={updateSidebarTab}
@@ -80,9 +76,9 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
           )}
         </Tab>
         <Tab
-          className="block w-full px-6 py-4 text-center text-gray-800"
+          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800"
           liClassName="w-1/2 flex-none"
-          activeClassName="bg-gray-100"
+          activeClassName="bg-gray-100 border-transparent"
           tabId="tab-chats"
           activeTabId={activeSidebarTab}
           onClick={updateSidebarTab}
