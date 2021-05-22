@@ -43,7 +43,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
     >
       <input
         type="text"
-        className="block flex-1 px-3 py-1 mr-4 rounded-sm border border-gray-300"
+        className="block flex-1 px-3 py-1 mr-4 rounded-sm border border-gray-300 disabled:opacity-50 disabled:bg-gray-200 disbled:cursor-not-allowed"
         placeholder="Type a message..."
         id="signup-nickname"
         autoComplete="off"
@@ -51,6 +51,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         onChange={onNewMessageChange}
         ref={newMessageInput}
         maxLength={MAX_MESSAGE_LEN}
+        disabled={!canSend}
       />
       <button
         type="submit"

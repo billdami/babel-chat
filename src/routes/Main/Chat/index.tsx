@@ -22,8 +22,9 @@ const Chat: FC<ChatProps> = () => {
   const [chat] = useChatByMembers(auth.user?.uid, userId);
   const [destChat] = useChatByMembers(userId, auth.user?.uid);
 
+  // can't send if: not logged in, dest user doesn't exist, or dest user is yourself
   const canSendMessage = useMemo<boolean>(
-    () => !!destUser?.id && !!auth.user && !!userId,
+    () => !!destUser?.id && !!auth.user && !!userId && destUser?.id !== auth.user?.uid,
     [destUser, auth.user, userId]
   );
 
@@ -56,7 +57,7 @@ const Chat: FC<ChatProps> = () => {
     <div className="Chat flex flex-col flex-1">
       {/* TODO create <MessageHeader> */}
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        {/* TODO handle when user/chat.toUserDetails don't exist ("user not found" message) */}
+        {/* TODO handle when destUser don't exist ("user not found" message) */}
         <div>
           <h2 className="text-lg">
             {/* TODO create <UserNickname> to format/display user nickname */}
