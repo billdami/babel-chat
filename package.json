@@ -11,8 +11,45 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "plugin:import/recommended",
+      "plugin:import/typescript"
+    ],
+    "plugins": [
+      "import"
+    ],
+    "rules": {
+      "import/order": [
+        "error",
+        {
+          "newlines-between": "always-and-inside-groups",
+          "groups": [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+            "object"
+          ]
+        }
+      ]
+    },
+    "settings": {
+      "import/extensions": [
+        ".js",
+        ".jsx",
+        ".ts",
+        ".tsx"
+      ]
+    }
+  },
+  "importSort": {
+    ".js, .jsx, .es6, .es, .ts, .tsx": {
+      "parser": "typescript",
+      "style": "module-scoped",
+      "options": {}
+    }
   },
   "browserslist": {
     "production": [
@@ -37,6 +74,8 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "autoprefixer": "^9",
+    "classnames": "^2.3.1",
+    "eslint-plugin-import": "^2.23.2",
     "firebase": "^8.6.1",
     "postcss": "^7",
     "prettier": "^2.3.0",

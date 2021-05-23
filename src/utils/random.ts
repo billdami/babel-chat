@@ -1,6 +1,6 @@
 export const generateRandomNickname = (): string => {
-  // TODO make cooler
-  return `Rando_User`;
+  // TODO make cooler 😎
+  return `Anonymous user`;
 };
 
 export const generateRandomUUID = (exclude: number[] = [], min = 1000, max = 9999): number => {
