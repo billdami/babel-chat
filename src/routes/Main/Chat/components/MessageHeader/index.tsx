@@ -16,7 +16,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser }) => {
   }, [history]);
 
   return (
-    <div className="flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
+    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 border-b border-gray-200">
       {/* TODO handle when destUser don't exist ("user not found" message) */}
       <div>
         <h2 className="text-lg">

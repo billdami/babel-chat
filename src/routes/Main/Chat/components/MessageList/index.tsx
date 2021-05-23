@@ -76,8 +76,13 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   return (
     <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
       <div className="py-1">
+        {originUser && destUser && originUser?.id === destUser?.id && (
+          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-yellow-600 font-semibold bg-yellow-100 rounded">
+            Sorry, you can't talk to yourself on babel chat. 😛
+          </div>
+        )}
         {messages?.map((message) => (
-          <div key={message.id} className="px-4">
+          <div key={message.id} className="px-2 md:px-4">
             <span
               className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
             >
@@ -88,7 +93,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
         ))}
         {isLoading && (
           // TODO create <LoadingSpinner isShown={isLoading} />
-          <div className="px-4">Loading&hellip;</div>
+          <div className="px-2 md:px-4">Loading&hellip;</div>
         )}
       </div>
     </div>
