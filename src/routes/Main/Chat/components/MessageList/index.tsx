@@ -1,11 +1,9 @@
-import { Chat, ChatMessage } from '../../../../../types/chat';
 import React, { FC, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
-
-// import { SCROLLED_UP_THRESHOLD } from '../../../../../constants/chat';
-import { User } from '../../../../../types/user';
-import { Val } from 'react-firebase-hooks/database/dist/database/types';
 import cn from 'classnames';
+
+import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
+import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
+import { User, UserRecord } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
@@ -15,16 +13,16 @@ interface AuthorsMap {
 }
 
 interface MessageListProps {
-  originUser?: User | null;
-  originChat?: Val<Chat, 'id', 'ref'> | null;
-  destUser?: User | null;
+  originUser?: UserRecord | null;
+  originChat?: ChatRecord | null;
+  destUser?: UserRecord | null;
 }
 
 const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser }) => {
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUser?.id);
-  const prevMessages = usePrevious<Val<ChatMessage, 'id', 'ref'>[] | undefined>(messages);
+  const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
 
   const isFirstMount = useRef<boolean>(true);
   const containerElement = useRef<HTMLDivElement>(null);
@@ -78,8 +76,13 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   return (
     <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
       <div className="py-1">
+        {originUser && destUser && originUser.id === destUser.id && (
+          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-yellow-600 font-semibold bg-yellow-100 rounded">
+            Sorry, you can't talk to yourself on babel chat. 😛
+          </div>
+        )}
         {messages?.map((message) => (
-          <div key={message.id} className="px-4">
+          <div key={message.id} className="px-2 md:px-4">
             <span
               className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
             >
@@ -90,7 +93,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
         ))}
         {isLoading && (
           // TODO create <LoadingSpinner isShown={isLoading} />
-          <div className="px-4">Loading&hellip;</div>
+          <div className="px-2 md:px-4">Loading&hellip;</div>
         )}
       </div>
     </div>

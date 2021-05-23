@@ -1,5 +1,18 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { useParams } from 'react-router-dom';
 
+import { ChatRouteParams } from '../..';
+import Button from '../../../../../components/Button';
+import Input from '../../../../../components/Input';
 import { MAX_MESSAGE_LEN } from '../../../../../constants/chat';
 
 interface MessageFormProps {
@@ -8,6 +21,8 @@ interface MessageFormProps {
 }
 
 const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
+  const { userId } = useParams<ChatRouteParams>();
+
   const [newMessage, setNewMessage] = useState<string>('');
 
   const newMessageInput = useRef<HTMLInputElement>(null);
@@ -36,14 +51,20 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
     [isFormEnabled, newMessage, onSubmit]
   );
 
+  useLayoutEffect(() => {
+    // when transitioning to a chat, focus the input
+    // TODO should this happen on mobile?
+    setTimeout(() => newMessageInput.current?.focus(), 100);
+  }, [userId]);
+
   return (
     <form
-      className="flex-shrink-0 flex py-2 px-4 border-t border-gray-200"
+      className="flex-shrink-0 flex py-2 px-2 md:px-4 border-t border-gray-200"
       onSubmit={onMessageSubmit}
     >
-      <input
+      <Input
         type="text"
-        className="block flex-1 px-3 py-1 mr-4 rounded-sm border border-gray-300"
+        className="flex-1 mr-3"
         placeholder="Type a message..."
         id="signup-nickname"
         autoComplete="off"
@@ -51,14 +72,12 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         onChange={onNewMessageChange}
         ref={newMessageInput}
         maxLength={MAX_MESSAGE_LEN}
+        disabled={!canSend}
       />
-      <button
-        type="submit"
-        className="block text-center font-bold text-white bg-green-400 rounded px-8 py-2 shadow active:shadow-none disabled:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={!isFormEnabled}
-      >
+      <Button type="submit" className="w-24" disabled={!isFormEnabled}>
+        {/* TODO make the send button an up arrow (or similar "send"-like) icon on mobile */}
         Send
-      </button>
+      </Button>
     </form>
   );
 };

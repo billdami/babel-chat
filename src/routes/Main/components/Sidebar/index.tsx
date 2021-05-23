@@ -1,14 +1,17 @@
 import React, { FC, useCallback, useState } from 'react';
-
-import ChatsList from './ChatsList';
+import classNames from 'classnames';
 import { Link } from 'react-router-dom';
+
+import Button from '../../../../components/Button';
 import Tab from '../../../../components/Tab/TabList/Tab';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import UsersList from './UsersList';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
 import { useUsers } from '../../../../hooks/useUserRecord';
+
+import ChatsList from './ChatsList';
+import UsersList from './UsersList';
 
 type SidebarTab = 'tab-users' | 'tab-chats';
 
@@ -16,7 +19,7 @@ interface SidebarProps {
   className?: string;
 }
 
-const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
+const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   const auth = useAuth();
 
   const [activeSidebarTab, setActiveSidebarTab] = useState<SidebarTab>('tab-users');
@@ -28,9 +31,12 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
   }, []);
 
   return (
-    <div className="SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100" {...rest}>
+    <div className={classNames('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        <Link to="/main">
+        <Link
+          to="/main"
+          className="focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
+        >
           <img
             src="https://fakeimg.pl/42x42/4b5563/fff?text=BCO"
             alt="babel chat"
@@ -38,14 +44,9 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
             height="42"
           />
         </Link>
-        <button
-          type="button"
-          className="text-center font-bold text-gray-500 bg-gray-100 border border-gray-200 rounded px-5 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={auth.signOut}
-          disabled={auth.isLoading}
-        >
+        <Button variant="muted" onClick={auth.signOut} disabled={auth.isLoading}>
           {auth.isLoading ? 'Signing out...' : 'Sign out'}
-        </button>
+        </Button>
       </div>
       <TabPanel
         id="tab-users"
@@ -63,11 +64,11 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
       >
         <ChatsList chats={chats} isLoading={isLoadingChats} />
       </TabPanel>
-      <TabList className="flex-shrink-0 flex bg-gray-200 border-gray-100 border-b border-t">
+      <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <Tab
-          className="block w-full px-6 py-4 text-center text-gray-800"
+          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
           liClassName="w-1/2 flex-none"
-          activeClassName="bg-gray-100"
+          activeClassName="bg-gray-100 border-transparent"
           tabId="tab-users"
           activeTabId={activeSidebarTab}
           onClick={updateSidebarTab}
@@ -80,9 +81,9 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
           )}
         </Tab>
         <Tab
-          className="block w-full px-6 py-4 text-center text-gray-800"
+          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
           liClassName="w-1/2 flex-none"
-          activeClassName="bg-gray-100"
+          activeClassName="bg-gray-100 border-transparent"
           tabId="tab-chats"
           activeTabId={activeSidebarTab}
           onClick={updateSidebarTab}

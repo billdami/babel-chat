@@ -3,16 +3,23 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 import React, {
-  createContext, FC, useCallback, useContext, useEffect, useRef, useState
+  FC,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 
-import { NewUserDetails, User } from '../types/user';
+import { NewUserDetails, UserRecord } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
+
 import { useUser } from './useUserRecord';
 
 interface AuthContext {
   user?: firebase.User | null;
-  userRecord?: User | null;
+  userRecord?: UserRecord | null;
   isInitialLoading: boolean;
   isLoading: boolean;
   signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
@@ -37,18 +44,24 @@ const useProvideAuth = () => {
   const [userRecord /*isUserLoading, userError*/] = useUser(user?.uid);
 
   const signIn = useCallback(async (details: NewUserDetails) => {
-    // TODO catch/handle errors
     setIsLoading(true);
-    const userCred = await firebase.auth().signInAnonymously();
 
-    if (userCred.user) {
-      await createUser(userCred.user.uid, details);
+    try {
+      const userCred = await firebase.auth().signInAnonymously();
+
+      if (userCred.user) {
+        await createUser(userCred.user.uid, details);
+        setIsLoading(false);
+        setUser(userCred.user);
+        return userCred.user;
+      } else {
+        // TODO custom error classes
+        throw new Error('could not create user on sign in');
+      }
+    } catch (err) {
       setIsLoading(false);
-      setUser(userCred.user);
-      return userCred.user;
-    } else {
       // TODO custom error classes
-      throw new Error('could not create user on sign in');
+      throw err;
     }
   }, []);
 

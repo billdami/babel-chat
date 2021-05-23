@@ -1,3 +1,5 @@
+import { Val } from 'react-firebase-hooks/database/dist/database/types';
+
 import { Country } from './country';
 
 export type Age = 'UNSPECIFIED' | number;
@@ -27,3 +29,5 @@ export interface User {
   dateSignedIn: Date;
   dateLastActive: Date;
 }
+
+export type UserRecord = Val<User, 'id', 'ref'>;

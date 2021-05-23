@@ -7,11 +7,14 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import { ProvideAuth } from './hooks/useAuth';
 import reportWebVitals from './reportWebVitals';
+import { ProvideDrawer } from './hooks/useDrawer';
 
 ReactDOM.render(
   <React.StrictMode>
     <ProvideAuth>
-      <App />
+      <ProvideDrawer>
+        <App />
+      </ProvideDrawer>
     </ProvideAuth>
   </React.StrictMode>,
   document.getElementById('root')
