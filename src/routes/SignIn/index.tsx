@@ -1,5 +1,4 @@
 import { Age, Gender } from '../../types/user';
-import { Link, useHistory } from 'react-router-dom';
 import {
   MAX_AGE,
   MAX_NICKNAME_LEN,
@@ -13,10 +12,14 @@ import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
 import Checkbox from '../../components/Checkbox';
 import { Country } from '../../types/country';
+import ErrorText from '../../components/FormControl/ErrorText';
+import FormControl from '../../components/FormControl';
 import Input from '../../components/Input';
+import Link from '../../components/Link';
 import Radio from '../../components/Radio';
 import Select from '../../components/Select';
 import useAuth from '../../hooks/useAuth';
+import { useHistory } from 'react-router-dom';
 
 interface SignInListProps {}
 
@@ -88,11 +91,7 @@ const SignIn: FC<SignInListProps> = () => {
             info below, but it is <span className="font-bold">100% optional.</span>
           </p>
 
-          {/* TODO create <FormControl> */}
-          <div className="mb-3">
-            <label htmlFor="signup-nickname" className="block mb-2 font-bold">
-              Nickname
-            </label>
+          <FormControl label="Nickname" htmlFor="signup-nickname">
             <Input
               type="text"
               placeholder="Leave blank for a random nickname"
@@ -103,13 +102,9 @@ const SignIn: FC<SignInListProps> = () => {
               onChange={(e) => setNickname(e.target.value)}
               fullWidth
             />
-            {/* TODO error validation message/styles */}
-          </div>
+          </FormControl>
 
-          <div className="mb-3">
-            <label htmlFor="signup-country" className="block mb-2 font-bold">
-              Country
-            </label>
+          <FormControl label="Country" htmlFor="signup-country">
             <Select
               id="signup-country"
               value={country}
@@ -117,12 +112,9 @@ const SignIn: FC<SignInListProps> = () => {
               onChange={(e) => setCountry(e.target.value as Country)}
               fullWidth
             />
-          </div>
+          </FormControl>
 
-          <div className="mb-3">
-            <label htmlFor="signup-age" className="block mb-2 font-bold">
-              Age
-            </label>
+          <FormControl label="Age" htmlFor="signup-age">
             <Select
               id="signup-age"
               value={`${age}`}
@@ -131,10 +123,9 @@ const SignIn: FC<SignInListProps> = () => {
                 setAge(e.target.value !== UNSPECIFIED ? Number(e.target.value) : UNSPECIFIED)
               }
             />
-          </div>
+          </FormControl>
 
-          <div className="mb-3">
-            <label className="block mb-2 font-bold">Gender</label>
+          <FormControl label="Gender">
             <div className="flex">
               <Radio
                 className="mr-3"
@@ -164,7 +155,7 @@ const SignIn: FC<SignInListProps> = () => {
                 onChange={(e) => setGender(e.target.value as Gender)}
               />
             </div>
-          </div>
+          </FormControl>
 
           <Checkbox
             type="checkbox"
@@ -174,11 +165,7 @@ const SignIn: FC<SignInListProps> = () => {
             onChange={(e) => setAgreedToToS(e.target.checked)}
           >
             I am over 18 and agree to the{' '}
-            <Link
-              to="/terms-of-service"
-              target="_blank"
-              className="text-green-500 rounded hover:underline hover:text-green-600 ring-green-300 focus:outline-none focus:ring-4 focus:ring-opacity-50"
-            >
+            <Link to="/terms-of-service" target="_blank">
               terms of service
             </Link>
           </Checkbox>
@@ -186,11 +173,11 @@ const SignIn: FC<SignInListProps> = () => {
           <Button type="submit" size="lg" disabled={!isFormValid || auth.isLoading} fullWidth>
             {auth.isLoading ? 'Signing in...' : 'Start chatting'}
           </Button>
-          {/* TODO better error handling */}
           {!!submitError && (
-            <div className="text-xs text-red-500 mt-2">
-              Sorry, an error ocurred while attempting to sign in.
-            </div>
+            <ErrorText
+              className="mt-2"
+              text="Sorry, an error ocurred while attempting to sign in."
+            />
           )}
         </form>
       </div>
