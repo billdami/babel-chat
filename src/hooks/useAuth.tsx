@@ -2,16 +2,24 @@ import 'firebase/database';
 import 'firebase/auth';
 
 import firebase from 'firebase/app';
-import React, { createContext, FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { Country } from '../types/country';
-import { Gender, NewUserDetails, User } from '../types/user';
+import { NewUserDetails, UserRecord } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
-import { useUser } from './useUser';
+
+import { useUser } from './useUserRecord';
 
 interface AuthContext {
   user?: firebase.User | null;
-  userRecord?: User | null;
+  userRecord?: UserRecord | null;
   isInitialLoading: boolean;
   isLoading: boolean;
   signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
@@ -36,18 +44,24 @@ const useProvideAuth = () => {
   const [userRecord /*isUserLoading, userError*/] = useUser(user?.uid);
 
   const signIn = useCallback(async (details: NewUserDetails) => {
-    // TODO catch/handle errors
     setIsLoading(true);
-    const userCred = await firebase.auth().signInAnonymously();
 
-    if (userCred.user) {
-      await createUser(userCred.user.uid, details);
+    try {
+      const userCred = await firebase.auth().signInAnonymously();
+
+      if (userCred.user) {
+        await createUser(userCred.user.uid, details);
+        setIsLoading(false);
+        setUser(userCred.user);
+        return userCred.user;
+      } else {
+        // TODO custom error classes
+        throw new Error('could not create user on sign in');
+      }
+    } catch (err) {
       setIsLoading(false);
-      setUser(userCred.user);
-      return userCred.user;
-    } else {
       // TODO custom error classes
-      throw new Error('could not create user on sign in');
+      throw err;
     }
   }, []);
 
@@ -76,21 +90,15 @@ const useProvideAuth = () => {
 
       // on the initial app boot only
       if (isInitialLoading) {
-        setIsInitialLoading(false);
-
-        // if the user is logged in w/o an associated record, create one
+        // if the user is logged in w/o an associated db record, sign them out
         if (user) {
           const userRec = await firebase.database().ref(`users/${user.uid}`).get();
           if (!userRec.exists()) {
-            await createUser(user.uid, {
-              nickname: '',
-              country: Country.UNSPECIFIED,
-              age: 'UNSPECIFIED',
-              gender: Gender.UNSPECIFIED,
-              agreedToToS: true,
-            });
+            await signOut();
           }
         }
+
+        setIsInitialLoading(false);
       }
     });
 
@@ -99,7 +107,7 @@ const useProvideAuth = () => {
 
     // unsubscribe from auth state changes on unmount
     return () => authChangeUnsub.current?.();
-  }, [isInitialLoading]);
+  }, [isInitialLoading, signOut]);
 
   return {
     user,
