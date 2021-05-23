@@ -19,7 +19,7 @@ interface ChatProps {}
 const Chat: FC<ChatProps> = () => {
   const { userId } = useParams<ChatRouteParams>();
   const auth = useAuth();
-  const [destUser] = useUser(userId);
+  const [destUser, isLoadingDestUser] = useUser(userId);
   const [chat] = useChatByMembers(auth.user?.uid, userId);
   const [destChat] = useChatByMembers(userId, auth.user?.uid);
 
@@ -52,7 +52,7 @@ const Chat: FC<ChatProps> = () => {
 
   return (
     <div className="Chat flex flex-col flex-1">
-      <MessageHeader destUser={destUser} />
+      <MessageHeader destUser={destUser} isLoading={isLoadingDestUser} />
       <MessageList originUser={auth.userRecord} originChat={chat} destUser={destUser} />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
     </div>

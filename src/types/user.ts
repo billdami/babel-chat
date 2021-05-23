@@ -10,6 +10,11 @@ export enum Gender {
   MALE = 'MALE',
 }
 
+export interface GenderOption {
+  value: Gender;
+  label: string;
+}
+
 export interface NewUserDetails {
   nickname: string;
   country: Country;

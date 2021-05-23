@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import PageNotFound from '../PageNotFound';
 import useDrawer from '../../hooks/useDrawer';
@@ -23,7 +23,7 @@ const Main: FC<MainListProps> = () => {
     <div className="Main flex w-full">
       <Sidebar className="z-0 md:z-auto" />
       <div
-        className={classNames(
+        className={cn(
           'Content flex-1 flex absolute inset-0 md:static transition-transform md:transition-none bg-white',
           { 'transform-gpu translate-x-80 md:transform-none md:translate-x-0': isDrawerOpen }
         )}

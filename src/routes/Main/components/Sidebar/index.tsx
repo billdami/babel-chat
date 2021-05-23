@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
 import Button from '../../../../components/Button';
@@ -26,7 +26,7 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   const [chats, isLoadingChats] = useChats(auth.user?.uid);
 
   return (
-    <div className={classNames('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
+    <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
         <Link
           to="/main"

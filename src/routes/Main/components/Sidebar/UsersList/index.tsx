@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { UserRecord } from '../../../../../types/user';
 import useAuth from '../../../../../hooks/useAuth';
 import useDrawer from '../../../../../hooks/useDrawer';
+import UserNickname from '../../../../../components/UserNickname';
+import UserDetails from '../../../../../components/UserDetails';
 
 interface UsersListProps {
   users?: UserRecord[];
@@ -26,18 +28,12 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
               to={`/main/chat/${user.id}`}
               onClick={closeDrawer}
             >
-              <div>
-                {/* TODO create <UserNickname> to format/display user nickname */}
-                <span className="font-bold text-gray-800">{user.nickname}</span>
-                <span className="text-gray-400 font-light tracking-tighter">#{user.uuid}</span>
-                {user.id === auth.user?.uid && (
-                  <span className="ml-1 text-xs font-bold text-gray-400">(you)</span>
-                )}
-              </div>
-              <div className="text-gray-400 text-sm">
-                {/* TODO create <UserDetailsLine> to format/display user details */}
-                {user.age} {user.gender}, {user.country}
-              </div>
+              <UserNickname
+                user={user}
+                isCurrentUser={user.id === auth.user?.uid}
+                className="text-gray-800"
+              />
+              <UserDetails user={user} className="text-gray-400 text-sm" />
             </NavLink>
           </li>
         ))}

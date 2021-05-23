@@ -1,4 +1,4 @@
-import { Gender, User } from '../types/user';
+import { Gender, GenderOption, User } from '../types/user';
 import { Country } from '../types/country';
 
 export const MIN_AGE = 18;
@@ -7,6 +7,7 @@ export const MIN_NICKNAME_LEN = 2;
 export const MAX_NICKNAME_LEN = 32;
 export const UNSPECIFIED = 'UNSPECIFIED';
 export const SYSTEM_ID = 'SYSTEM_USER';
+
 export const SYSTEM_USER_DETAILS: User = {
   id: SYSTEM_ID,
   uuid: 0,
@@ -18,3 +19,18 @@ export const SYSTEM_USER_DETAILS: User = {
   dateSignedIn: new Date(),
   dateLastActive: new Date(),
 };
+
+export const GENDERS: GenderOption[] = [
+  {
+    value: Gender.UNSPECIFIED,
+    label: 'Prefer not to say',
+  },
+  {
+    value: Gender.FEMALE,
+    label: 'Female',
+  },
+  {
+    value: Gender.MALE,
+    label: 'Male',
+  },
+];
