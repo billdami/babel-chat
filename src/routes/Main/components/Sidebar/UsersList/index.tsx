@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import { UserRecord } from '../../../../../types/user';
 import useAuth from '../../../../../hooks/useAuth';
+import useDrawer from '../../../../../hooks/useDrawer';
 
 interface UsersListProps {
   users?: UserRecord[];
@@ -11,7 +12,7 @@ interface UsersListProps {
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
   const auth = useAuth();
-  // TODO show icon/indicator on user's own list item
+  const { closeDrawer } = useDrawer();
   // TODO apply sorting
   // TODO apply filtering
   return (
@@ -23,6 +24,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
               className="block w-full px-3 py-1 text-left hover:bg-opacity-50 hover:bg-gray-200 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
               activeClassName="bg-gray-200 hover:bg-opacity-100"
               to={`/main/chat/${user.id}`}
+              onClick={closeDrawer}
             >
               <div>
                 {/* TODO create <UserNickname> to format/display user nickname */}
