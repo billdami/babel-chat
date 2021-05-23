@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-
 import { NavLink } from 'react-router-dom';
-import { User } from '../../../../../types/user';
 import { Val } from 'react-firebase-hooks/database/dist/database/types';
+
+import { User } from '../../../../../types/user';
 import useAuth from '../../../../../hooks/useAuth';
 
 interface UsersListProps {

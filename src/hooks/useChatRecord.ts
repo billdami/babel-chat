@@ -1,10 +1,11 @@
 import 'firebase/database';
 import 'firebase/auth';
 
+import firebase from 'firebase/app';
 import { useListVals, useObject, useObjectVal } from 'react-firebase-hooks/database';
 
 import { Chat } from '../types/chat';
-import firebase from 'firebase/app';
+
 import { userOptions } from './useUserRecord';
 
 export const chatOptions = {

@@ -1,5 +1,4 @@
 import { Gender, User } from '../types/user';
-
 import { Country } from '../types/country';
 
 export const MIN_AGE = 18;

@@ -2,6 +2,7 @@ import 'firebase/database';
 import 'firebase/auth';
 
 import firebase from 'firebase/app';
+
 import { getFirebaseTimestamp } from './firebase';
 
 export const getMessageListId = (userOneId?: string, userTwoId?: string) =>

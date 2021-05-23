@@ -1,15 +1,16 @@
 import React, { FC, useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Button from '../../../../components/Button';
-import ChatsList from './ChatsList';
-import { Link } from 'react-router-dom';
 import Tab from '../../../../components/Tab/TabList/Tab';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import UsersList from './UsersList';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
 import { useUsers } from '../../../../hooks/useUserRecord';
+
+import ChatsList from './ChatsList';
+import UsersList from './UsersList';
 
 type SidebarTab = 'tab-users' | 'tab-chats';
 

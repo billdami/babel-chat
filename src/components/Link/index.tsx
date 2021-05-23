@@ -1,6 +1,5 @@
-import { Link as RRLink, LinkProps as RRLinkProps } from 'react-router-dom';
 import React, { FC } from 'react';
-
+import { Link as RRLink, LinkProps as RRLinkProps } from 'react-router-dom';
 import cn from 'classnames';
 
 interface LinkProps extends RRLinkProps {}

@@ -1,10 +1,11 @@
 import 'firebase/database';
 import 'firebase/auth';
 
-import { NewUserDetails, User } from '../types/user';
-import { generateRandomNickname, generateRandomUUID } from './random';
-
 import firebase from 'firebase/app';
+
+import { NewUserDetails, User } from '../types/user';
+
+import { generateRandomNickname, generateRandomUUID } from './random';
 import { getFirebaseTimestamp } from './firebase';
 
 export const createUser = async (

@@ -1,3 +1,6 @@
+import { useHistory } from 'react-router-dom';
+import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
+
 import { Age, Gender } from '../../types/user';
 import {
   MAX_AGE,
@@ -6,8 +9,6 @@ import {
   MIN_NICKNAME_LEN,
   UNSPECIFIED,
 } from '../../constants/user';
-import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
-
 import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
 import Checkbox from '../../components/Checkbox';
@@ -19,7 +20,6 @@ import Link from '../../components/Link';
 import Radio from '../../components/Radio';
 import Select from '../../components/Select';
 import useAuth from '../../hooks/useAuth';
-import { useHistory } from 'react-router-dom';
 
 interface SignInListProps {}
 

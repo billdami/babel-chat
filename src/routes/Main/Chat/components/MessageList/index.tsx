@@ -1,11 +1,10 @@
-import { Chat, ChatMessage } from '../../../../../types/chat';
 import React, { FC, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
-
-// import { SCROLLED_UP_THRESHOLD } from '../../../../../constants/chat';
-import { User } from '../../../../../types/user';
 import { Val } from 'react-firebase-hooks/database/dist/database/types';
 import cn from 'classnames';
+
+import { Chat, ChatMessage } from '../../../../../types/chat';
+import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
+import { User } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';

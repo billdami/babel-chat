@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-
-import { Chat } from '../../../../../types/chat';
 import { NavLink } from 'react-router-dom';
 import { Val } from 'react-firebase-hooks/database/dist/database/types';
+
+import { Chat } from '../../../../../types/chat';
 
 interface ChatsListProps {
   chats?: Val<Chat, 'id', 'ref'>[];

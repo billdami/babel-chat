@@ -1,7 +1,7 @@
 import 'firebase/database';
 import 'firebase/auth';
 
-import { NewUserDetails, User } from '../types/user';
+import firebase from 'firebase/app';
 import React, {
   FC,
   createContext,
@@ -11,9 +11,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
+
+import { NewUserDetails, User } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
 
-import firebase from 'firebase/app';
 import { useUser } from './useUserRecord';
 
 interface AuthContext {

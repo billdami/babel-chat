@@ -1,13 +1,14 @@
 import React, { FC, useCallback, useMemo } from 'react';
-import { createChat, createChatMessage } from '../../../utils/chat';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { createChat, createChatMessage } from '../../../utils/chat';
 import Button from '../../../components/Button';
-import MessageForm from './components/MessageForm';
-import MessageList from './components/MessageList';
 import useAuth from '../../../hooks/useAuth';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
 import { useUser } from '../../../hooks/useUserRecord';
+
+import MessageForm from './components/MessageForm';
+import MessageList from './components/MessageList';
 
 interface ChatRouteParams {
   userId: string;

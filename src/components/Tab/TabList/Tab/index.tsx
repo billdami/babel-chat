@@ -1,5 +1,5 @@
-import cn from 'classnames';
 import React, { FC, MouseEvent as ReactMouseEvent } from 'react';
+import cn from 'classnames';
 
 interface TabProps {
   tabId: any;

@@ -1,5 +1,4 @@
 import React, { DetailedHTMLProps, FC } from 'react';
-
 import cn from 'classnames';
 
 interface CheckboxProps
