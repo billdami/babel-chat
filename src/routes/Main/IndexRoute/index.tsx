@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 
 import Button from '../../../components/Button';
 import useAuth from '../../../hooks/useAuth';
@@ -8,7 +8,17 @@ interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
   const auth = useAuth();
-  const { openDrawer, toggleDrawer } = useDrawer();
+  const { openDrawer, toggleDrawer, updateTab } = useDrawer();
+
+  const showAllUsers = useCallback(() => {
+    openDrawer();
+    updateTab('tab-users');
+  }, [openDrawer, updateTab]);
+
+  const showAllChats = useCallback(() => {
+    openDrawer();
+    updateTab('tab-chats');
+  }, [openDrawer, updateTab]);
 
   return (
     <div className="Index flex flex-col flex-1">
@@ -33,9 +43,16 @@ const Index: FC<IndexProps> = () => {
             [TODO] main page content (newest users, view all users link, recent chats, view all
             chats link, tips/help, etc)
           </p>
-          <Button variant="secondary" onClick={openDrawer}>
-            View all users
-          </Button>
+          <div className="mb-4">
+            <Button variant="secondary" className="md:hidden" onClick={showAllUsers}>
+              View all users
+            </Button>
+          </div>
+          <div className="mb-4">
+            <Button variant="secondary" className="md:hidden" onClick={showAllChats}>
+              View all chats
+            </Button>
+          </div>
         </div>
       </div>
     </div>

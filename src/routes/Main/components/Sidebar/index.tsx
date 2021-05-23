@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
@@ -9,11 +9,10 @@ import TabPanel from '../../../../components/Tab/TabPanel';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
 import { useUsers } from '../../../../hooks/useUserRecord';
+import useDrawer from '../../../../hooks/useDrawer';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
-
-type SidebarTab = 'tab-users' | 'tab-chats';
 
 interface SidebarProps {
   className?: string;
@@ -21,14 +20,10 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   const auth = useAuth();
+  const { activeTab, updateTab } = useDrawer();
 
-  const [activeSidebarTab, setActiveSidebarTab] = useState<SidebarTab>('tab-users');
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(auth.user?.uid);
-
-  const updateSidebarTab = useCallback((tabId: SidebarTab) => {
-    setActiveSidebarTab(tabId);
-  }, []);
 
   return (
     <div className={classNames('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
@@ -51,7 +46,7 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
       <TabPanel
         id="tab-users"
         className="flex-1 overflow-y-auto"
-        activeTabId={activeSidebarTab}
+        activeTabId={activeTab}
         unmountWhenHidden={false}
       >
         <UsersList users={users} isLoading={isLoadingUsers} />
@@ -59,7 +54,7 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
       <TabPanel
         id="tab-chats"
         className="flex-1 overflow-y-auto"
-        activeTabId={activeSidebarTab}
+        activeTabId={activeTab}
         unmountWhenHidden={false}
       >
         <ChatsList chats={chats} isLoading={isLoadingChats} />
@@ -70,8 +65,8 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
           liClassName="w-1/2 flex-none"
           activeClassName="bg-gray-100 border-transparent"
           tabId="tab-users"
-          activeTabId={activeSidebarTab}
-          onClick={updateSidebarTab}
+          activeTabId={activeTab}
+          onClick={updateTab}
         >
           Users
           {!!users?.length && (
@@ -85,8 +80,8 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
           liClassName="w-1/2 flex-none"
           activeClassName="bg-gray-100 border-transparent"
           tabId="tab-chats"
-          activeTabId={activeSidebarTab}
-          onClick={updateSidebarTab}
+          activeTabId={activeTab}
+          onClick={updateTab}
         >
           Chats
           <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-xs font-bold">
