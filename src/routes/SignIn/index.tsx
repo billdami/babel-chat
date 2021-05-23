@@ -93,7 +93,6 @@ const SignIn: FC<SignInListProps> = () => {
 
           <FormControl label="Nickname" htmlFor="signup-nickname">
             <Input
-              type="text"
               placeholder="Leave blank for a random nickname"
               id="signup-nickname"
               autoComplete="nickname"

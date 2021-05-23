@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Val } from 'react-firebase-hooks/database/dist/database/types';
 
-import { Chat } from '../../../../../types/chat';
+import { ChatRecord } from '../../../../../types/chat';
 
 interface ChatsListProps {
-  chats?: Val<Chat, 'id', 'ref'>[];
+  chats?: ChatRecord[];
   isLoading: boolean;
 }
 

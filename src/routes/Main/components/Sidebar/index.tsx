@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
+import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
 import Button from '../../../../components/Button';
@@ -18,7 +19,7 @@ interface SidebarProps {
   className?: string;
 }
 
-const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
+const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   const auth = useAuth();
 
   const [activeSidebarTab, setActiveSidebarTab] = useState<SidebarTab>('tab-users');
@@ -30,7 +31,7 @@ const Sidebar: FC<SidebarProps> = ({ children, ...rest }) => {
   }, []);
 
   return (
-    <div className="SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100" {...rest}>
+    <div className={classNames('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
         <Link
           to="/main"

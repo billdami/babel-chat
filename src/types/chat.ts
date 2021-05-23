@@ -1,3 +1,5 @@
+import { Val } from 'react-firebase-hooks/database/dist/database/types';
+
 import { User } from './user';
 
 export interface Chat {
@@ -20,3 +22,6 @@ export interface ChatMessage {
   isSystem: boolean;
   content: string;
 }
+
+export type ChatRecord = Val<Chat, 'id', 'ref'>;
+export type ChatMessageRecord = Val<ChatMessage, 'id', 'ref'>;

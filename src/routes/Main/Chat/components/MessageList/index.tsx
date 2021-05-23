@@ -1,10 +1,9 @@
 import React, { FC, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { Val } from 'react-firebase-hooks/database/dist/database/types';
 import cn from 'classnames';
 
-import { Chat, ChatMessage } from '../../../../../types/chat';
+import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
 import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
-import { User } from '../../../../../types/user';
+import { User, UserRecord } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
@@ -14,16 +13,16 @@ interface AuthorsMap {
 }
 
 interface MessageListProps {
-  originUser?: User | null;
-  originChat?: Val<Chat, 'id', 'ref'> | null;
-  destUser?: User | null;
+  originUser?: UserRecord | null;
+  originChat?: ChatRecord | null;
+  destUser?: UserRecord | null;
 }
 
 const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser }) => {
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUser?.id);
-  const prevMessages = usePrevious<Val<ChatMessage, 'id', 'ref'>[] | undefined>(messages);
+  const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
 
   const isFirstMount = useRef<boolean>(true);
   const containerElement = useRef<HTMLDivElement>(null);

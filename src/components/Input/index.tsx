@@ -1,4 +1,4 @@
-import React, { DetailedHTMLProps, FC } from 'react';
+import React, { DetailedHTMLProps, forwardRef } from 'react';
 import cn from 'classnames';
 
 interface InputProps
@@ -22,14 +22,17 @@ disabled:opacity-50
 disabled:bg-gray-200
 disabled:cursor-not-allowed`;
 
-const Input: FC<InputProps> = ({ className, fullWidth = false, ...rest }) => (
-  <input
-    type="text"
-    className={cn(baseClasses, className, {
-      'w-full': fullWidth,
-    })}
-    {...rest}
-  />
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, fullWidth = false, ...rest }, ref) => (
+    <input
+      ref={ref}
+      type="text"
+      className={cn(baseClasses, className, {
+        'w-full': fullWidth,
+      })}
+      {...rest}
+    />
+  )
 );
 
 export default Input;

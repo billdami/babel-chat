@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Val } from 'react-firebase-hooks/database/dist/database/types';
 
-import { User } from '../../../../../types/user';
+import { UserRecord } from '../../../../../types/user';
 import useAuth from '../../../../../hooks/useAuth';
 
 interface UsersListProps {
-  users?: Val<User, 'id', 'ref'>[];
+  users?: UserRecord[];
   isLoading: boolean;
 }
 

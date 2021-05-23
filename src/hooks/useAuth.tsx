@@ -12,14 +12,14 @@ import React, {
   useState,
 } from 'react';
 
-import { NewUserDetails, User } from '../types/user';
+import { NewUserDetails, UserRecord } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
 
 import { useUser } from './useUserRecord';
 
 interface AuthContext {
   user?: firebase.User | null;
-  userRecord?: User | null;
+  userRecord?: UserRecord | null;
   isInitialLoading: boolean;
   isLoading: boolean;
   signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;

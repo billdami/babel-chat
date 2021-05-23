@@ -16,8 +16,8 @@ const Main: FC<MainListProps> = () => {
 
   return (
     <div className="Main flex w-full">
-      <Sidebar />
-      <div className="Content flex-1 flex bg-white">
+      <Sidebar className="z-0 md:z-auto" />
+      <div className="Content flex-1 flex absolute inset-0 md:static bg-white">
         <Switch>
           <Route exact path={path}>
             <Index />
