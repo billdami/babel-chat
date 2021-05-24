@@ -14,7 +14,7 @@ interface UsersListProps {
 }
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
-  const auth = useAuth();
+  const { user: currentUser } = useAuth();
   const { closeDrawer } = useDrawer();
   // TODO apply sorting
   // TODO apply filtering
@@ -37,7 +37,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
               <div>
                 <UserNickname
                   user={user}
-                  isCurrentUser={user.id === auth.user?.uid}
+                  isCurrentUser={user.id === currentUser?.uid}
                   className="text-gray-800"
                 />
                 <UserDetails user={user} className="text-gray-400 text-sm" />

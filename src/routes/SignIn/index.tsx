@@ -32,7 +32,7 @@ const ageOptions = [
 ];
 
 const SignIn: FC<SignInListProps> = () => {
-  const auth = useAuth();
+  const { isLoading, signIn } = useAuth();
   const history = useHistory();
 
   const [nickname, setNickname] = useState<string>('');
@@ -60,7 +60,7 @@ const SignIn: FC<SignInListProps> = () => {
       }
 
       try {
-        await auth.signIn({
+        await signIn({
           nickname: nickname?.trim(),
           country,
           age,
@@ -73,7 +73,7 @@ const SignIn: FC<SignInListProps> = () => {
         setSubmitError(err);
       }
     },
-    [auth, history, isFormValid, nickname, country, age, gender, agreedToToS]
+    [signIn, history, isFormValid, nickname, country, age, gender, agreedToToS]
   );
 
   return (
@@ -169,8 +169,8 @@ const SignIn: FC<SignInListProps> = () => {
             </Link>
           </Checkbox>
 
-          <Button type="submit" size="lg" disabled={!isFormValid || auth.isLoading} fullWidth>
-            {auth.isLoading ? 'Signing in...' : 'Start chatting'}
+          <Button type="submit" size="lg" disabled={!isFormValid || isLoading} fullWidth>
+            {isLoading ? 'Signing in...' : 'Start chatting'}
           </Button>
           {!!submitError && (
             <ErrorText

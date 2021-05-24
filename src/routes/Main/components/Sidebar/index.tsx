@@ -19,11 +19,11 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
-  const auth = useAuth();
+  const { user, isLoading, signOut } = useAuth();
   const { activeTab, updateTab } = useDrawer();
 
   const [users, isLoadingUsers /*error*/] = useUsers();
-  const [chats, isLoadingChats] = useChats(auth.user?.uid);
+  const [chats, isLoadingChats] = useChats(user?.uid);
 
   return (
     <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
@@ -39,8 +39,8 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
             height="42"
           />
         </Link>
-        <Button variant="muted" onClick={auth.signOut} disabled={auth.isLoading}>
-          {auth.isLoading ? 'Signing out...' : 'Sign out'}
+        <Button variant="muted" onClick={signOut} disabled={isLoading}>
+          {isLoading ? 'Signing out...' : 'Sign out'}
         </Button>
       </div>
       <TabPanel

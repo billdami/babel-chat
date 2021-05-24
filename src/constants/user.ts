@@ -7,8 +7,9 @@ export const MIN_NICKNAME_LEN = 2;
 export const MAX_NICKNAME_LEN = 32;
 export const UNSPECIFIED = 'UNSPECIFIED';
 export const SYSTEM_ID = 'SYSTEM_USER';
-export const STATUS_THRESHOLD_IDLE = 1200000; //20min
-export const STATUS_THRESHOLD_AWAY = 3600000; //1hr
+export const STATUS_THRESHOLD_IDLE = 1200000; // 20min
+export const STATUS_THRESHOLD_AWAY = 3600000; // 1hr
+export const ACTIVE_TICK_INTERVAL = 10000; // 10sec
 
 export const SYSTEM_USER_DETAILS: User = {
   id: SYSTEM_ID,

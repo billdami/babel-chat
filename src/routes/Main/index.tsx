@@ -5,6 +5,10 @@ import cn from 'classnames';
 import PageNotFound from '../PageNotFound';
 import useDrawer from '../../hooks/useDrawer';
 import useBodyClass from '../../hooks/useBodyClass';
+import useInterval from '../../hooks/useInterval';
+import useAuth from '../../hooks/useAuth';
+import { getFirebaseTimestamp } from '../../utils/firebase';
+import { ACTIVE_TICK_INTERVAL } from '../../constants/user';
 
 import Chat from './Chat';
 import Index from './IndexRoute';
@@ -18,6 +22,10 @@ const Main: FC<MainListProps> = () => {
   // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>
   const { path /*url*/ } = useRouteMatch();
   const { isDrawerOpen, closeDrawer } = useDrawer();
+  const { updateUser } = useAuth();
+
+  // while the app is open, update the user's last active status every few seconds
+  useInterval(() => updateUser({ dateLastActive: getFirebaseTimestamp() }), ACTIVE_TICK_INTERVAL);
 
   return (
     <div className="Main flex w-full">

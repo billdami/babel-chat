@@ -7,7 +7,7 @@ import useDrawer from '../../../hooks/useDrawer';
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
-  const auth = useAuth();
+  const { userRecord } = useAuth();
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
 
   const showAllUsers = useCallback(() => {
@@ -33,10 +33,10 @@ const Index: FC<IndexProps> = () => {
           <h2 className="text-lg font-bold">Welcome to babel chat!</h2>
           <p>
             Logged in as{' '}
-            {!!auth.userRecord && (
+            {!!userRecord && (
               <>
-                <span className="font-bold">{auth.userRecord.nickname}</span>
-                <span className="text-gray-400 tracking-tighter">#{auth.userRecord.uuid}</span>
+                <span className="font-bold">{userRecord.nickname}</span>
+                <span className="text-gray-400 tracking-tighter">#{userRecord.uuid}</span>
               </>
             )}
           </p>

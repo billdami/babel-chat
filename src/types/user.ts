@@ -49,4 +49,16 @@ export interface User {
   dateLastActive: Date;
 }
 
+export interface UserFirebaseRecord {
+  id: string;
+  uuid: number;
+  nickname: string;
+  country: Country;
+  age: Age;
+  gender: Gender;
+  agreedToToS: boolean;
+  dateSignedIn: Object;
+  dateLastActive: Object;
+}
+
 export type UserRecord = Val<User, 'id', 'ref'>;
