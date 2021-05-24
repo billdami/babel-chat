@@ -39,6 +39,10 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
     return map;
   }, [originUser, destUser]);
 
+  // TODO use visibilitychange ('pagehide' on safari) events to create a hook to tell when
+  // the tab is not currently active. when its not active, DONT update the dateLastSeen
+  // @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
+  // @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
     if (messages !== prevMessages && originChat?.id && originChat?.ref) {
