@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import cn from 'classnames';
 
@@ -24,7 +24,14 @@ const Main: FC<MainListProps> = () => {
   const { isDrawerOpen, closeDrawer } = useDrawer();
   const { updateUser } = useAuth();
 
-  // while the app is open, update the user's last active status every few seconds
+  // when the app is first opened (or reopened), update the user's last active status
+  useEffect(() => {
+    updateUser({ dateLastActive: getFirebaseTimestamp() });
+    // only run once on initial mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // and while the app is open, update the user's last active status every few seconds
   useInterval(() => updateUser({ dateLastActive: getFirebaseTimestamp() }), ACTIVE_TICK_INTERVAL);
 
   return (
