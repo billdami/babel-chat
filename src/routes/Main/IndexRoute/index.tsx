@@ -23,6 +23,7 @@ const Index: FC<IndexProps> = () => {
   return (
     <div className="Index flex flex-col flex-1">
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 border-b border-gray-200 md:hidden">
+        {/* TODO show unread notification dot here too (for mobile) */}
         <Button variant="muted" className="mr-2 md:hidden" onClick={toggleDrawer}>
           ☰
         </Button>

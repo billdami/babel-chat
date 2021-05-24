@@ -4,6 +4,20 @@ import { Country } from './country';
 
 export type Age = 'UNSPECIFIED' | number;
 
+export enum Status {
+  ACTIVE = 'ACTIVE',
+  IDLE = 'IDLE',
+  AWAY = 'AWAY',
+  OFFLINE = 'OFFLINE',
+}
+
+export interface StatusOption {
+  value: Status;
+  label: string;
+  bgColor: string;
+  borderColor: string;
+}
+
 export enum Gender {
   UNSPECIFIED = 'UNSPECIFIED',
   FEMALE = 'FEMALE',

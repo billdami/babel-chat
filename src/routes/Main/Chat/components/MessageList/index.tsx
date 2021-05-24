@@ -40,10 +40,9 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   }, [originUser, destUser]);
 
   useEffect(() => {
-    if (messages !== prevMessages) {
-      if (messages !== prevMessages && originChat?.id && originChat?.ref) {
-        originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
-      }
+    // if new messages were added, update the user's dateLastSeen to mark them as "read"
+    if (messages !== prevMessages && originChat?.id && originChat?.ref) {
+      originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
     }
   }, [prevMessages, messages, originChat]);
 

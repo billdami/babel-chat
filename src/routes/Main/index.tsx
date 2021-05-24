@@ -24,7 +24,7 @@ const Main: FC<MainListProps> = () => {
       <Sidebar className="z-0 md:z-auto" />
       <div
         className={cn(
-          'Content flex-1 flex absolute inset-0 md:static transition-transform md:transition-none bg-white',
+          'Content flex-1 flex absolute md:static inset-0 transition-transform md:transition-none shadow-md md:shadow-none bg-white',
           { 'transform-gpu translate-x-80 md:transform-none md:translate-x-0': isDrawerOpen }
         )}
       >
