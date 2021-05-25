@@ -14,8 +14,11 @@
     "user_uuids": {
       // all authenticated users can read all user_uuids
       ".read": "auth != null",
-      // authenticated users can create a user_uuid, and delete only user_uuids that match their uid
-      ".write": "auth != null && (!data.exists() || (!newData.exists() && data.val() === auth.uid))"
+      // authenticated users can create or delete user_uuids that match their own user ID
+      ".write": "auth != null && (
+        (!data.exists() && newData.exists() && newData.val() === auth.uid) ||
+        (!newData.exists() && data.val() === auth.uid)
+      )"
     },
     "chats": {
       "$chats_user_id": {
@@ -40,7 +43,10 @@
         // authenticated users can read chat messages whose ID contains their own user ID
         ".read": "auth != null && $chat_messages_id.contains(auth.uid)",
         // authenticated users can only create chat messages whose ID contains their own user ID
-        ".write": "auth != null && $chat_messages_id.contains(auth.uid) && !data.exists() && newData.exists()",
+        ".write": "auth != null &&
+          $chat_messages_id.contains(auth.uid) &&
+          !data.exists() &&
+          newData.exists()",
         "$message_id": {
           "content": {
             ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 512"
