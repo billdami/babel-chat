@@ -7,7 +7,7 @@ import firebase from 'firebase/app';
 export const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyB8e36IB4hllGvW70k85-ScEbDSXXxghdc',
   authDomain: 'babel-chat-online.firebaseapp.com',
-  databaseURL: 'https://babel-chat-online-default-rtdb.firebaseio.com',
+  databaseURL: 'https://babel-chat-online-dev-rtdb.firebaseio.com/',
   projectId: 'babel-chat-online',
   storageBucket: 'babel-chat-online.appspot.com',
   messagingSenderId: '660337776646',

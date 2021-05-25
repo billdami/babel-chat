@@ -1,10 +1,52 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    ".read": "now < 1623729600000", // 2021-6-15
-    ".write": "now < 1623729600000", // 2021-6-15
+    "users": {
+      // all authenticateds users can read all users
+      ".read": "auth != null",
+      // authenticated users can only update/delete their own user
+      "$user_id": {
+        ".write": "auth != null && $user_id === auth.uid",
+        "nickname": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 32"
+        }
+      }
+    },
+    "user_uuids": {
+      // all authenticated users can read all user_uuids
+      ".read": "auth != null",
+      // authenticated users can create a user_uuid, and delete only user_uuids that match their uid
+      ".write": "auth != null && (!data.exists() || (!newData.exists() && data.val() === auth.uid))"
+    },
     "chats": {
-      ".indexOn": ["user"]
+      "$chats_user_id": {
+        // authenticated users can read chat lists whose ID matches their own user ID
+        ".read": "auth != null && $chats_user_id === auth.id",
+        "$chats_other_user_id": {
+          // authenticated users can create chats in ANY chat list
+          // authenticated users can update chats where the parent id or chat id matches their own user ID
+          // authenticated users can delete chats where the parent id matches their own user ID
+          // TODO make this more granular so user can only update certain properties on foreign chats (dateLastMessage, isTyping, etc)
+          ".write": "auth != null && (
+              !data.exists() ||
+              (data.exists() && newData.exists() && ($chats_user_id === auth.id || $chats_other_user_id === auth.id)) ||
+              (!newData.exists() && $chats_user_id === auth.id)
+          )"
+        }
+      }
+    },
+    "chat_messages": {
+      // (chat messages list ids are formatted: {USER1_ID}_{USER2_ID}) (the order of the id segments are alphanumeric sorted)
+      "$chat_messages_id": {
+        // authenticated users can read chat messages whose ID contains their own user ID
+        ".read": "auth != null && $chat_messages_id.contains(auth.uid)",
+        // authenticated users can only create chat messages whose ID contains their own user ID
+        ".write": "auth != null && $chat_messages_id.contains(auth.uid) && !data.exists() && newData.exists()",
+        "$message_id": {
+          "content": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 512"
+          }
+        }
+      }
     }
   }
 }
