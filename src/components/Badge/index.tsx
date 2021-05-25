@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import React, { DetailedHTMLProps, FC, HTMLAttributes } from 'react';
 
+import useDeferRender from '../../hooks/useDeferRender';
+
 type BadgeSizes = 'sm' | 'md' | 'lg';
 
 interface BadgeProps extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
@@ -8,6 +10,8 @@ interface BadgeProps extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, 
   tooltip?: string;
   pulse?: boolean;
   bordered?: boolean;
+  deferRender?: boolean;
+  renderDelay?: number;
 }
 
 const sizes = {
@@ -22,28 +26,34 @@ const Badge: FC<BadgeProps> = ({
   tooltip = '',
   pulse = true,
   bordered = false,
+  deferRender = true,
+  renderDelay = 250,
   ...rest
-}) => (
-  <span
-    className={classNames('flex', sizes[size], className)}
-    // TODO make this a popper.js tooltip
-    title={tooltip}
-    {...rest}
-  >
-    {pulse && (
-      <span
-        className={classNames(
-          'animate-ping absolute inline-flex rounded-full bg-red-400 opacity-75',
-          sizes[size]
-        )}
-      ></span>
-    )}
+}) => {
+  const shouldRender = useDeferRender(!deferRender, renderDelay);
+
+  return shouldRender ? (
     <span
-      className={classNames('relative inline-flex rounded-full border bg-red-500', sizes[size], {
-        'border border-red-500': bordered,
-      })}
-    ></span>
-  </span>
-);
+      className={classNames('flex', sizes[size], className)}
+      // TODO make this a popper.js tooltip
+      title={tooltip}
+      {...rest}
+    >
+      {pulse && (
+        <span
+          className={classNames(
+            'animate-ping absolute inline-flex rounded-full bg-red-400 opacity-75',
+            sizes[size]
+          )}
+        ></span>
+      )}
+      <span
+        className={classNames('relative inline-flex rounded-full border bg-red-500', sizes[size], {
+          'border border-red-500': bordered,
+        })}
+      ></span>
+    </span>
+  ) : null;
+};
 
 export default Badge;

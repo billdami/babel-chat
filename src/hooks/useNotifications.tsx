@@ -45,9 +45,9 @@ const useProvideNotifications = () => {
   const toggleMute = useCallback((muted: boolean) => setIsMuted(muted), []);
 
   useEffect(() => {
-    // TODO use setTimeout or something to wait a tick to see if there is still new unreads
-    // in case the user is viewing the chat w/unreads, in which case they will be marked
-    // read immediately after
+    // TODO use setTimeout or something to wait a few ms to see if there is still new unreads
+    // in case the user is currently viewing the chat w/new unreads (or is the one sending the message)
+    // in which case they will be marked read immediately after
 
     // notification sound should play only when the number of unread increases
     if (numUnread > prevNumUnread && !isMuted) {
