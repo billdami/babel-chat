@@ -23,9 +23,7 @@ export const createChat = async (
     throw new Error('destination user does not exist');
   }
 
-  const chatRef = db.ref(`chats/${originUserId}_${destUserId}`).set({
-    user: originUserId,
-    toUser: destUserId,
+  const chatRef = db.ref(`chats/${originUserId}/${destUserId}`).set({
     startedByUser: isInitiator ? originUserId : destUserId,
     toUserDetails: destUser.val(),
     isPinned: false,
@@ -58,9 +56,9 @@ export const createChatMessage = async (
   // update both chats with the sent date of the new message
   // and the date last seen for the sender's chat
   db.ref().update({
-    [`chats/${originUserId}_${destUserId}/dateLastMessage`]: dateSent,
-    [`chats/${destUserId}_${originUserId}/dateLastMessage`]: dateSent,
-    [`chats/${originUserId}_${destUserId}/dateLastSeen`]: dateSent,
+    [`chats/${originUserId}/${destUserId}/dateLastSeen`]: dateSent,
+    [`chats/${originUserId}/${destUserId}/dateLastMessage`]: dateSent,
+    [`chats/${destUserId}/${originUserId}/dateLastMessage`]: dateSent,
   });
 
   return messageRef;
