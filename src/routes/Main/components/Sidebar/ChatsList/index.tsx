@@ -34,7 +34,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
             >
               <div className="flex items-center justify-between">
                 <UserNickname user={chat.toUserDetails} className="text-gray-800" />
-                {chat.dateLastSeen < chat.dateLastMessage && (
+                {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
                   <Badge
                     className=""
                     tooltip="There are unread message(s)"

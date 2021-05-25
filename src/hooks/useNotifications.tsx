@@ -35,7 +35,7 @@ const useProvideNotifications = () => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
   const unreadChats = useMemo<ChatRecord[]>(
-    () => chats?.filter((c) => c.dateLastSeen < c.dateLastMessage) ?? [],
+    () => chats?.filter((c) => !c.dateLastSeen || c.dateLastSeen < c.dateLastMessage) ?? [],
     [chats]
   );
   const numUnread = unreadChats.length;
