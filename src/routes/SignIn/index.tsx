@@ -3,6 +3,7 @@ import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 
 import { Age, Gender } from '../../types/user';
 import {
+  GENDERS,
   MAX_AGE,
   MAX_NICKNAME_LEN,
   MIN_AGE,
@@ -126,33 +127,17 @@ const SignIn: FC<SignInListProps> = () => {
 
           <FormControl label="Gender">
             <div className="flex">
-              <Radio
-                className="mr-3"
-                label="Unspecified"
-                name="gender"
-                id={`gender-${Gender.UNSPECIFIED}`}
-                value={Gender.UNSPECIFIED}
-                checked={gender === Gender.UNSPECIFIED}
-                onChange={(e) => setGender(e.target.value as Gender)}
-              />
-              <Radio
-                className="mr-3"
-                label="Female"
-                name="gender"
-                id={`gender-${Gender.FEMALE}`}
-                value={Gender.FEMALE}
-                checked={gender === Gender.FEMALE}
-                onChange={(e) => setGender(e.target.value as Gender)}
-              />
-              <Radio
-                className="mr-3"
-                label="Male"
-                name="gender"
-                id={`gender-${Gender.MALE}`}
-                value={Gender.MALE}
-                checked={gender === Gender.MALE}
-                onChange={(e) => setGender(e.target.value as Gender)}
-              />
+              {GENDERS.map((g) => (
+                <Radio
+                  className="mr-3"
+                  label={g.label}
+                  name="gender"
+                  id={`gender-${g.value}`}
+                  value={g.value}
+                  checked={gender === g.value}
+                  onChange={(e) => setGender(e.target.value as Gender)}
+                />
+              ))}
             </div>
           </FormControl>
 

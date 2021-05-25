@@ -26,7 +26,7 @@ export const SYSTEM_USER_DETAILS: User = {
 export const GENDERS: GenderOption[] = [
   {
     value: Gender.UNSPECIFIED,
-    label: 'Prefer not to say',
+    label: 'Unspecified',
   },
   {
     value: Gender.FEMALE,
