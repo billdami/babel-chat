@@ -32,19 +32,16 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
               to={`/main/chat/${chat.toUser}`}
               onClick={closeDrawer}
             >
-              <div className="relative pl-4">
-                {chat.dateLastSeen < chat.dateLastMessage && (
-                  <div className="absolute inset-y-0 left-0 flex items-center">
-                    <Badge
-                      className=""
-                      tooltip="There are unread message(s)"
-                      size="sm"
-                      pulse={false}
-                      bordered
-                    />
-                  </div>
-                )}
+              <div className="flex items-center justify-between">
                 <UserNickname user={chat.toUserDetails} className="text-gray-800" />
+                {chat.dateLastSeen < chat.dateLastMessage && (
+                  <Badge
+                    className=""
+                    tooltip="There are unread message(s)"
+                    size="md"
+                    pulse={false}
+                  />
+                )}
               </div>
             </NavLink>
           </li>
