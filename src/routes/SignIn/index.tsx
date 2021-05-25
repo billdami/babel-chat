@@ -129,6 +129,7 @@ const SignIn: FC<SignInListProps> = () => {
             <div className="flex">
               {GENDERS.map((g) => (
                 <Radio
+                  key={g.value}
                   className="mr-3"
                   label={g.label}
                   name="gender"

@@ -47,10 +47,11 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
     // unless the browser window/tab is currently not visible/active
     // OR if the window/tab just became visible/active
     if (
-      (messages !== prevMessages && originChat?.id && originChat?.ref && isPageVisible) ||
-      (isPageVisible && !prevIsPageVisible)
+      originChat?.id &&
+      originChat?.ref &&
+      ((messages !== prevMessages && isPageVisible) || (isPageVisible && !prevIsPageVisible))
     ) {
-      originChat?.ref.update({ dateLastSeen: getFirebaseTimestamp() });
+      originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
     }
   }, [prevMessages, messages, originChat, isPageVisible, prevIsPageVisible]);
 
