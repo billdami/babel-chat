@@ -35,6 +35,7 @@ const Radio: FC<RadioProps> = ({
         checked:bg-green-500
         checked:border-green-500
         checked:bg-radio-active
+        focus:border-green-500
         focus:outline-none
         focus:ring-4
         focus:ring-opacity-50

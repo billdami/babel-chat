@@ -20,7 +20,7 @@
     ],
     "rules": {
       "import/order": [
-        "error",
+        "warn",
         {
           "newlines-between": "always-and-inside-groups",
           "groups": [
@@ -69,6 +69,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
+    "@types/luxon": "^1.26.5",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -77,6 +78,7 @@
     "classnames": "^2.3.1",
     "eslint-plugin-import": "^2.23.2",
     "firebase": "^8.6.1",
+    "luxon": "^1.27.0",
     "postcss": "^7",
     "prettier": "^2.3.0",
     "react": "^17.0.2",

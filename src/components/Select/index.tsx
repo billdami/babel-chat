@@ -27,6 +27,7 @@ bg-no-repeat
 bg-4x3
 bg-right-3-center
 transition-shadow
+focus:border-green-400
 focus:outline-none
 focus:ring-4
 focus:ring-opacity-50
