@@ -3,6 +3,7 @@ import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 
 import { Age, Gender } from '../../types/user';
 import {
+  GENDERS,
   MAX_AGE,
   MAX_NICKNAME_LEN,
   MIN_AGE,
@@ -32,7 +33,7 @@ const ageOptions = [
 ];
 
 const SignIn: FC<SignInListProps> = () => {
-  const auth = useAuth();
+  const { isLoading, signIn } = useAuth();
   const history = useHistory();
 
   const [nickname, setNickname] = useState<string>('');
@@ -60,7 +61,7 @@ const SignIn: FC<SignInListProps> = () => {
       }
 
       try {
-        await auth.signIn({
+        await signIn({
           nickname: nickname?.trim(),
           country,
           age,
@@ -73,7 +74,7 @@ const SignIn: FC<SignInListProps> = () => {
         setSubmitError(err);
       }
     },
-    [auth, history, isFormValid, nickname, country, age, gender, agreedToToS]
+    [signIn, history, isFormValid, nickname, country, age, gender, agreedToToS]
   );
 
   return (
@@ -126,33 +127,18 @@ const SignIn: FC<SignInListProps> = () => {
 
           <FormControl label="Gender">
             <div className="flex">
-              <Radio
-                className="mr-3"
-                label="Unspecified"
-                name="gender"
-                id={`gender-${Gender.UNSPECIFIED}`}
-                value={Gender.UNSPECIFIED}
-                checked={gender === Gender.UNSPECIFIED}
-                onChange={(e) => setGender(e.target.value as Gender)}
-              />
-              <Radio
-                className="mr-3"
-                label="Female"
-                name="gender"
-                id={`gender-${Gender.FEMALE}`}
-                value={Gender.FEMALE}
-                checked={gender === Gender.FEMALE}
-                onChange={(e) => setGender(e.target.value as Gender)}
-              />
-              <Radio
-                className="mr-3"
-                label="Male"
-                name="gender"
-                id={`gender-${Gender.MALE}`}
-                value={Gender.MALE}
-                checked={gender === Gender.MALE}
-                onChange={(e) => setGender(e.target.value as Gender)}
-              />
+              {GENDERS.map((g) => (
+                <Radio
+                  key={g.value}
+                  className="mr-3"
+                  label={g.label}
+                  name="gender"
+                  id={`gender-${g.value}`}
+                  value={g.value}
+                  checked={gender === g.value}
+                  onChange={(e) => setGender(e.target.value as Gender)}
+                />
+              ))}
             </div>
           </FormControl>
 
@@ -169,8 +155,8 @@ const SignIn: FC<SignInListProps> = () => {
             </Link>
           </Checkbox>
 
-          <Button type="submit" size="lg" disabled={!isFormValid || auth.isLoading} fullWidth>
-            {auth.isLoading ? 'Signing in...' : 'Start chatting'}
+          <Button type="submit" size="lg" disabled={!isFormValid || isLoading} fullWidth>
+            {isLoading ? 'Signing in...' : 'Start chatting'}
           </Button>
           {!!submitError && (
             <ErrorText

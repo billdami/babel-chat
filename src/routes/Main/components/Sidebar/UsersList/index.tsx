@@ -4,6 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { UserRecord } from '../../../../../types/user';
 import useAuth from '../../../../../hooks/useAuth';
 import useDrawer from '../../../../../hooks/useDrawer';
+import UserNickname from '../../../../../components/UserNickname';
+import UserDetails from '../../../../../components/UserDetails';
+import UserStatus from '../../../../../components/UserStatus';
 
 interface UsersListProps {
   users?: UserRecord[];
@@ -11,7 +14,7 @@ interface UsersListProps {
 }
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
-  const auth = useAuth();
+  const { user: currentUser } = useAuth();
   const { closeDrawer } = useDrawer();
   // TODO apply sorting
   // TODO apply filtering
@@ -21,22 +24,23 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
         {users?.map((user) => (
           <li key={user.id}>
             <NavLink
-              className="block w-full px-3 py-1 text-left hover:bg-opacity-50 hover:bg-gray-200 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+              className="flex items-baseline w-full
+                px-3 py-1
+                text-left
+                hover:bg-opacity-50 hover:bg-gray-200
+                focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
               activeClassName="bg-gray-200 hover:bg-opacity-100"
               to={`/main/chat/${user.id}`}
               onClick={closeDrawer}
             >
+              <UserStatus user={user} className="mr-2" />
               <div>
-                {/* TODO create <UserNickname> to format/display user nickname */}
-                <span className="font-bold text-gray-800">{user.nickname}</span>
-                <span className="text-gray-400 font-light tracking-tighter">#{user.uuid}</span>
-                {user.id === auth.user?.uid && (
-                  <span className="ml-1 text-xs font-bold text-gray-400">(you)</span>
-                )}
-              </div>
-              <div className="text-gray-400 text-sm">
-                {/* TODO create <UserDetailsLine> to format/display user details */}
-                {user.age} {user.gender}, {user.country}
+                <UserNickname
+                  user={user}
+                  isCurrentUser={user.id === currentUser?.uid}
+                  className="text-gray-800"
+                />
+                <UserDetails user={user} className="text-gray-400 text-sm" />
               </div>
             </NavLink>
           </li>
