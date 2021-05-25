@@ -7,6 +7,7 @@ import { User, UserRecord } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
+import usePageVisibility from '../../../../../hooks/usePageVisibility';
 
 interface AuthorsMap {
   [id: string]: User & { isSelf?: boolean };
@@ -22,6 +23,8 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUser?.id);
+  const isPageVisible = usePageVisibility();
+  const prevIsPageVisible = usePrevious<boolean>(isPageVisible);
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
 
   const isFirstMount = useRef<boolean>(true);
@@ -39,16 +42,17 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
     return map;
   }, [originUser, destUser]);
 
-  // TODO use visibilitychange ('pagehide' on safari) events to create a hook to tell when
-  // the tab is not currently active. when its not active, DONT update the dateLastSeen
-  // @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
-  // @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
-    if (messages !== prevMessages && originChat?.id && originChat?.ref) {
-      originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
+    // unless the browser window/tab is currently not visible/active
+    // OR if the window/tab just became visible/active
+    if (
+      (messages !== prevMessages && originChat?.id && originChat?.ref && isPageVisible) ||
+      (isPageVisible && !prevIsPageVisible)
+    ) {
+      originChat?.ref.update({ dateLastSeen: getFirebaseTimestamp() });
     }
-  }, [prevMessages, messages, originChat]);
+  }, [prevMessages, messages, originChat, isPageVisible, prevIsPageVisible]);
 
   useLayoutEffect(() => {
     const el = containerElement.current;
