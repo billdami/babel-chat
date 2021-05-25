@@ -3,16 +3,17 @@ import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
 import Button from '../../../../components/Button';
-import Tab from '../../../../components/Tab/TabList/Tab';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
 import { useUsers } from '../../../../hooks/useUserRecord';
 import useDrawer from '../../../../hooks/useDrawer';
+import useNotifications from '../../../../hooks/useNotifications';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
+import SidebarTab from './Tab';
 
 interface SidebarProps {
   className?: string;
@@ -20,7 +21,8 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   const { user, isLoading, signOut } = useAuth();
-  const { activeTab, updateTab } = useDrawer();
+  const { activeTab } = useDrawer();
+  const { numUnread } = useNotifications();
 
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(user?.uid);
@@ -60,34 +62,18 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
         <ChatsList chats={chats} isLoading={isLoadingChats} />
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
-        <Tab
-          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
-          liClassName="w-1/2 flex-none"
-          activeClassName="bg-gray-100 border-transparent"
-          tabId="tab-users"
-          activeTabId={activeTab}
-          onClick={updateTab}
-        >
-          Users
-          {!!users?.length && (
-            <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-xs font-bold">
-              {users?.length}
-            </span>
-          )}
-        </Tab>
-        <Tab
-          className="block w-full px-6 py-4 border-t border-b text-center text-gray-800 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
-          liClassName="w-1/2 flex-none"
-          activeClassName="bg-gray-100 border-transparent"
+        <SidebarTab tabId="tab-users" label="Users" count={users?.length} />
+        <SidebarTab
           tabId="tab-chats"
-          activeTabId={activeTab}
-          onClick={updateTab}
-        >
-          Chats
-          <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-xs font-bold">
-            {chats?.length}
-          </span>
-        </Tab>
+          label="Chats"
+          count={chats?.length}
+          numUnread={numUnread}
+          unreadTooltip={
+            numUnread
+              ? `You have ${numUnread} ${numUnread === 1 ? 'chat' : 'chats'} with new messages!`
+              : ''
+          }
+        />
       </TabList>
     </div>
   );

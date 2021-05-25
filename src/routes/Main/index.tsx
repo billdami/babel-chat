@@ -3,6 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import cn from 'classnames';
 
 import PageNotFound from '../PageNotFound';
+import { ProvideNotifications } from '../../hooks/useNotifications';
 import useDrawer from '../../hooks/useDrawer';
 import useBodyClass from '../../hooks/useBodyClass';
 import useInterval from '../../hooks/useInterval';
@@ -35,34 +36,36 @@ const Main: FC<MainListProps> = () => {
   useInterval(() => updateUser({ dateLastActive: getFirebaseTimestamp() }), ACTIVE_TICK_INTERVAL);
 
   return (
-    <div className="Main flex w-full">
-      <Sidebar className="z-0 md:z-auto" />
-      <div
-        className={cn(
-          'Content flex-1 flex absolute md:static inset-0 transition-transform md:transition-none shadow-md md:shadow-none bg-white',
-          { 'transform-gpu translate-x-80 md:transform-none md:translate-x-0': isDrawerOpen }
-        )}
-      >
-        {isDrawerOpen && (
-          <div
-            role="button"
-            className="absolute inset-0 z-50 md:hidden"
-            onClick={closeDrawer}
-          ></div>
-        )}
-        <Switch>
-          <Route exact path={path}>
-            <Index />
-          </Route>
-          <Route path={`${path}/chat/:userId`}>
-            <Chat />
-          </Route>
-          <Route path={`${path}/*`}>
-            <PageNotFound />
-          </Route>
-        </Switch>
+    <ProvideNotifications>
+      <div className="Main flex w-full">
+        <Sidebar className="z-0 md:z-auto" />
+        <div
+          className={cn(
+            'Content flex-1 flex absolute md:static inset-0 transition-transform md:transition-none shadow-md md:shadow-none bg-white',
+            { 'transform-gpu translate-x-80 md:transform-none md:translate-x-0': isDrawerOpen }
+          )}
+        >
+          {isDrawerOpen && (
+            <div
+              role="button"
+              className="absolute inset-0 z-50 md:hidden"
+              onClick={closeDrawer}
+            ></div>
+          )}
+          <Switch>
+            <Route exact path={path}>
+              <Index />
+            </Route>
+            <Route path={`${path}/chat/:userId`}>
+              <Chat />
+            </Route>
+            <Route path={`${path}/*`}>
+              <PageNotFound />
+            </Route>
+          </Switch>
+        </div>
       </div>
-    </div>
+    </ProvideNotifications>
   );
 };
 

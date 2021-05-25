@@ -1,6 +1,6 @@
 import React, { FC, createContext, useCallback, useContext, useState } from 'react';
 
-type DrawerTab = 'tab-users' | 'tab-chats';
+export type DrawerTab = 'tab-users' | 'tab-chats';
 
 interface DrawerContext {
   isDrawerOpen: boolean;

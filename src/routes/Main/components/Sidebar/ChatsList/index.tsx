@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import Badge from '../../../../../components/Badge';
+import UserNickname from '../../../../../components/UserNickname';
 import useDrawer from '../../../../../hooks/useDrawer';
 import { ChatRecord } from '../../../../../types/chat';
 
@@ -19,17 +21,30 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         {chats?.map((chat) => (
           <li key={chat.id}>
             <NavLink
-              className="block w-full px-3 py-1 text-left hover:bg-opacity-50 hover:bg-gray-200 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+              className="block
+                w-full
+                px-3 py-1
+                text-left
+                hover:bg-opacity-50 hover:bg-gray-200
+                focus:outline-none
+                focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
               activeClassName="bg-gray-200 hover:bg-opacity-100"
               to={`/main/chat/${chat.toUser}`}
               onClick={closeDrawer}
             >
-              <div>
-                {/* TODO create <UserNickname> to format/display user nickname */}
-                <span className="font-bold text-gray-800">{chat.toUserDetails.nickname}</span>
-                <span className="text-gray-400 font-light tracking-tighter">
-                  #{chat.toUserDetails.uuid}
-                </span>
+              <div className="relative pl-4">
+                {chat.dateLastSeen < chat.dateLastMessage && (
+                  <div className="absolute inset-y-0 left-0 flex items-center">
+                    <Badge
+                      className=""
+                      tooltip="There are unread message(s)"
+                      size="sm"
+                      pulse={false}
+                      bordered
+                    />
+                  </div>
+                )}
+                <UserNickname user={chat.toUserDetails} className="text-gray-800" />
               </div>
             </NavLink>
           </li>
