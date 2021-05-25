@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 
-import { NewUserDetails, UserRecord } from '../types/user';
+import { NewUserDetails, UserFirebaseRecord, UserRecord } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
 
 import { useUser } from './useUserRecord';
@@ -24,6 +24,7 @@ interface AuthContext {
   isLoading: boolean;
   signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
   signOut: () => Promise<void> | void;
+  updateUser: (values: Partial<UserFirebaseRecord>) => Promise<void> | void;
 }
 
 const authContext = createContext<AuthContext>({
@@ -33,6 +34,7 @@ const authContext = createContext<AuthContext>({
   isLoading: true,
   signIn: () => {},
   signOut: () => {},
+  updateUser: () => {},
 });
 
 const useProvideAuth = () => {
@@ -79,6 +81,13 @@ const useProvideAuth = () => {
     setIsLoading(false);
   }, []);
 
+  const updateUser = useCallback(
+    (values: Partial<UserFirebaseRecord>) => {
+      return userRecord?.ref.update(values);
+    },
+    [userRecord]
+  );
+
   useEffect(() => {
     if (authChangeUnsub.current) {
       authChangeUnsub.current();
@@ -116,6 +125,7 @@ const useProvideAuth = () => {
     isLoading,
     signIn,
     signOut,
+    updateUser,
   };
 };
 

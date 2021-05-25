@@ -9,4 +9,5 @@ export const COUNTRIES: CountryOption[] = [
     value: Country.USA,
     label: 'United States',
   },
+  // TODO add remaining countries
 ];

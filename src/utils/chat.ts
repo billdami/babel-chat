@@ -56,9 +56,11 @@ export const createChatMessage = async (
   });
 
   // update both chats with the sent date of the new message
+  // and the date last seen for the sender's chat
   db.ref().update({
     [`chats/${originUserId}_${destUserId}/dateLastMessage`]: dateSent,
     [`chats/${destUserId}_${originUserId}/dateLastMessage`]: dateSent,
+    [`chats/${originUserId}_${destUserId}/dateLastSeen`]: dateSent,
   });
 
   return messageRef;

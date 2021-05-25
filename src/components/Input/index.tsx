@@ -14,6 +14,7 @@ rounded-sm
 border
 border-gray-300
 transition-shadow
+focus:border-green-400
 focus:outline-none
 focus:ring-4
 focus:ring-opacity-50

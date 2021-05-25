@@ -6,13 +6,13 @@ import useAuth from '../../hooks/useAuth';
 interface ProtectedRouteProps extends RouteProps {}
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, ...rest }) => {
-  const auth = useAuth();
+  const { user } = useAuth();
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.user ? children : <Redirect to={{ pathname: '/sign-in', state: { from: location } }} />
+        user ? children : <Redirect to={{ pathname: '/sign-in', state: { from: location } }} />
       }
     />
   );

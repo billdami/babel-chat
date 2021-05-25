@@ -7,6 +7,7 @@ import { User, UserRecord } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
+import usePageVisibility from '../../../../../hooks/usePageVisibility';
 
 interface AuthorsMap {
   [id: string]: User & { isSelf?: boolean };
@@ -22,6 +23,8 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUser?.id);
+  const isPageVisible = usePageVisibility();
+  const prevIsPageVisible = usePrevious<boolean>(isPageVisible);
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
 
   const isFirstMount = useRef<boolean>(true);
@@ -40,12 +43,17 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   }, [originUser, destUser]);
 
   useEffect(() => {
-    if (messages !== prevMessages) {
-      if (messages !== prevMessages && originChat?.id && originChat?.ref) {
-        originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
-      }
+    // if new messages were added, update the user's dateLastSeen to mark them as "read"
+    // unless the browser window/tab is currently not visible/active
+    // OR if the window/tab just became visible/active
+    if (
+      originChat?.id &&
+      originChat?.ref &&
+      ((messages !== prevMessages && isPageVisible) || (isPageVisible && !prevIsPageVisible))
+    ) {
+      originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
     }
-  }, [prevMessages, messages, originChat]);
+  }, [prevMessages, messages, originChat, isPageVisible, prevIsPageVisible]);
 
   useLayoutEffect(() => {
     const el = containerElement.current;
