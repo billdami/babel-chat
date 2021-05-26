@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import cn from 'classnames';
-import { Link } from 'react-router-dom';
 
 import Button from '../../../../components/Button';
 import TabList from '../../../../components/Tab/TabList';
@@ -10,6 +9,8 @@ import { useChats } from '../../../../hooks/useChatRecord';
 import { useUsers } from '../../../../hooks/useUserRecord';
 import useDrawer from '../../../../hooks/useDrawer';
 import useNotifications from '../../../../hooks/useNotifications';
+import LogoIcon from '../../../../components/Svgs/Logos/Icon';
+import Link from '../../../../components/Link';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
@@ -30,16 +31,8 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   return (
     <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        <Link
-          to="/main"
-          className="focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
-        >
-          <img
-            src="https://fakeimg.pl/42x42/4b5563/fff?text=BCO"
-            alt="babel chat"
-            width="42"
-            height="42"
-          />
+        <Link to="/main" className="py-1 px-2 bg-gray-600 bg-opacity-10">
+          <LogoIcon className="h-8" />
         </Link>
         <Button variant="muted" onClick={signOut} disabled={isSigningOut}>
           {isSigningOut ? 'Signing out...' : 'Sign out'}
