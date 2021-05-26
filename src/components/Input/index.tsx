@@ -7,6 +7,7 @@ interface InputProps
 }
 
 const baseClasses = `
+appearance-none
 block
 px-3
 py-2

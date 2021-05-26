@@ -2,24 +2,29 @@ import React, { FC } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
 import useAuth from '../../hooks/useAuth';
+import { useIsAppOffline } from '../../hooks/useAppOffline';
 import Main from '../../routes/Main';
 import PageNotFound from '../../routes/PageNotFound';
 import SignIn from '../../routes/SignIn';
 import TermsOfService from '../../routes/TermsOfService';
 import ProtectedRoute from '../ProtectedRoute';
-import Splash from '../Splash';
 import UnprotectedRoute from '../UnprotectedRoute';
+import Splash from '../Splash';
+import AppOffline from '../AppOffline';
 
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const { isInitialLoading } = useAuth();
+  const { isSessionLoading } = useAuth();
+  const isAppOffline = useIsAppOffline();
 
   return (
     <Router>
       <div className="App h-full min-h-full max-h-full flex">
-        {isInitialLoading ? (
+        {isSessionLoading ? (
           <Splash />
+        ) : isAppOffline ? (
+          <AppOffline />
         ) : (
           <Switch>
             <Route exact path="/">

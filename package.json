@@ -6,7 +6,9 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:database": "firebase deploy --only database"
   },
   "eslintConfig": {
     "extends": [

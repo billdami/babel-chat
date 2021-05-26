@@ -20,7 +20,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
-  const { user, isLoading, signOut } = useAuth();
+  const { user, isSigningOut, signOut } = useAuth();
   const { activeTab } = useDrawer();
   const { numUnread } = useNotifications();
 
@@ -41,8 +41,8 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
             height="42"
           />
         </Link>
-        <Button variant="muted" onClick={signOut} disabled={isLoading}>
-          {isLoading ? 'Signing out...' : 'Sign out'}
+        <Button variant="muted" onClick={signOut} disabled={isSigningOut}>
+          {isSigningOut ? 'Signing out...' : 'Sign out'}
         </Button>
       </div>
       <TabPanel

@@ -7,7 +7,7 @@ import { ProvideNotifications } from '../../hooks/useNotifications';
 import useDrawer from '../../hooks/useDrawer';
 import useBodyClass from '../../hooks/useBodyClass';
 import useInterval from '../../hooks/useInterval';
-import useAuth from '../../hooks/useAuth';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import { getFirebaseTimestamp } from '../../utils/firebase';
 import { ACTIVE_TICK_INTERVAL } from '../../constants/user';
 
@@ -23,7 +23,7 @@ const Main: FC<MainListProps> = () => {
   // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>
   const { path /*url*/ } = useRouteMatch();
   const { isDrawerOpen, closeDrawer } = useDrawer();
-  const { updateUser } = useAuth();
+  const { updateUser } = useCurrentUser();
 
   // when the app is first opened (or reopened), update the user's last active status
   useEffect(() => {
