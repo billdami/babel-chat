@@ -62,7 +62,12 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
               <UserDetails user={user} className="text-xs md:text-sm leading-3 text-gray-400" />
             </div>
           ) : (
-            <h2 className="text-lg truncate font-bold text-gray-400">User not found</h2>
+            <div>
+              <h2 className="truncate md:leading-5 font-bold text-red-500">User not found</h2>
+              <h3 className="text-xs md:text-sm leading-3 text-gray-400">
+                This user no longer exists.
+              </h3>
+            </div>
           ))}
       </div>
       <Button variant="muted" onClick={closeChat}>
