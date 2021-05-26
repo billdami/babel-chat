@@ -25,7 +25,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   // use the main user record to display details, but fall back to the chat's copy (e.g. if they signed out)
   const isOffline = !destUser?.id;
   const user = isOffline ? originChat?.toUserDetails : destUser;
-  const userDetailsExist = !!user?.id;
+  const userDetailsExist = !!user?.nickname;
 
   const closeChat = useCallback(() => {
     history.push('/main');
