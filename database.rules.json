@@ -44,12 +44,12 @@
       "$chat_messages_id": {
         // authenticated users can read chat messages whose ID contains their own user ID
         ".read": "auth != null && $chat_messages_id.contains(auth.uid)",
-        // authenticated users can only create chat messages whose ID contains their own user ID
-        ".write": "auth != null &&
-          $chat_messages_id.contains(auth.uid) &&
-          !data.exists() &&
-          newData.exists()",
         "$message_id": {
+          // authenticated users can only create chat messages whose ID contains their own user ID
+          ".write": "auth != null &&
+            $chat_messages_id.contains(auth.uid) &&
+            !data.exists() &&
+            newData.exists()",
           "content": {
             ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 512"
           }
