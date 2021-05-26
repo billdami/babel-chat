@@ -38,23 +38,12 @@ export const useChatByMembers = (
   destUserId: string | undefined
 ) => {
   const db = firebase.database();
-  const id = originUserId && destUserId ? `${originUserId}_${destUserId}` : null;
-  const ref = id ? db.ref(`chats/${id}`) : null;
+  const ref = originUserId && destUserId ? db.ref(`chats/${originUserId}/${destUserId}`) : null;
   return useObjectVal<Chat, 'id', 'ref'>(ref, chatOptions);
-};
-
-export const useChatRefByMembers = (
-  originUserId: string | undefined,
-  destUserId: string | undefined
-) => {
-  const db = firebase.database();
-  const id = originUserId && destUserId ? `${originUserId}_${destUserId}` : null;
-  const ref = id ? db.ref(`chats/${id}`) : null;
-  return useObject(ref);
 };
 
 export const useChats = (userId: string | undefined) => {
   const db = firebase.database();
-  const query = userId ? db.ref('chats').orderByChild('user').equalTo(userId) : null;
-  return useListVals<Chat, 'id', 'ref'>(query, chatOptions);
+  const ref = userId ? db.ref(`chats/${userId}`) : null;
+  return useListVals<Chat, 'id', 'ref'>(ref, chatOptions);
 };

@@ -28,48 +28,66 @@
     }
   },
   "chats": {
-    "user1_user2": {
-      "user": "user1",
-      "toUser": "user2",
-      "startedByUser": "user1",
-      "toUserDetails": {
-        "id": "user2",
-        "age": "UNSPECIFIED",
-        "country": "UNSPECIFIED",
-        "dateLastActive": 123456789,
-        "dateLastMessage": 123456789,
-        "dateSignedIn": 123456789,
-        "gender": "UNSPECIFIED",
-        "nickname": "User 2",
-        "uuid": 456779
+    "user1": {
+      "user2": {
+        "startedByUser": "user1",
+        "toUserDetails": {
+          "id": "user2",
+          "age": "UNSPECIFIED",
+          "country": "UNSPECIFIED",
+          "dateLastActive": 123456789,
+          "dateLastMessage": 123456789,
+          "dateSignedIn": 123456789,
+          "gender": "UNSPECIFIED",
+          "nickname": "User 2",
+          "uuid": 4567
+        },
+        "isPinned": false,
+        "isTyping": false,
+        "dateStarted": 123456789,
+        "dateLastSeen": 123456789,
+        "dateLastMessage": 123456789
       },
-      "isPinned": false,
-      "isTyping": false,
-      "dateStarted": 123456789,
-      "dateLastSeen": 123456789,
-      "dateLastMessage": 123456789
+      "user5": {
+        "startedByUser": "user5",
+        "toUserDetails": {
+          "id": "user5",
+          "age": "UNSPECIFIED",
+          "country": "UNSPECIFIED",
+          "dateLastActive": 123456789,
+          "dateLastMessage": 123456789,
+          "dateSignedIn": 123456789,
+          "gender": "UNSPECIFIED",
+          "nickname": "User 5",
+          "uuid": 9999
+        },
+        "isPinned": false,
+        "isTyping": false,
+        "dateStarted": 123456789,
+        "dateLastSeen": 123456789,
+        "dateLastMessage": 123456789
+      }
     },
-    "user2_user1": {
-      "user": "user2",
-      "toUser": "user1",
-      "userToUser": "user2_user1",
-      "startedByUser": "user1",
-      "toUserDetails": {
-        "id": "user1",
-        "age": "UNSPECIFIED",
-        "country": "UNSPECIFIED",
-        "dateLastActive": 123456789,
-        "dateLastMessage": 123456789,
-        "dateSignedIn": 123456789,
-        "gender": "UNSPECIFIED",
-        "nickname": "Bill",
-        "uuid": 456779
-      },
-      "isPinned": true,
-      "isTyping": true,
-      "dateStarted": 123456789,
-      "dateLastSeen": 123456789,
-      "dateLastMessage": 123456789
+    "user2": {
+      "user1": {
+        "startedByUser": "user1",
+        "toUserDetails": {
+          "id": "user1",
+          "age": "UNSPECIFIED",
+          "country": "UNSPECIFIED",
+          "dateLastActive": 123456789,
+          "dateLastMessage": 123456789,
+          "dateSignedIn": 123456789,
+          "gender": "UNSPECIFIED",
+          "nickname": "Bill",
+          "uuid": 4567
+        },
+        "isPinned": true,
+        "isTyping": true,
+        "dateStarted": 123456789,
+        "dateLastSeen": 123456789,
+        "dateLastMessage": 123456789
+      }
     }
   },
   "chat_messages": {

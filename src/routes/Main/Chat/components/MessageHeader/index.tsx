@@ -25,6 +25,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   // use the main user record to display details, but fall back to the chat's copy (e.g. if they signed out)
   const isOffline = !destUser?.id;
   const user = isOffline ? originChat?.toUserDetails : destUser;
+  const userDetailsExist = !!user?.nickname;
 
   const closeChat = useCallback(() => {
     history.push('/main');
@@ -47,7 +48,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           )}
         </Button>
         {!isLoading &&
-          (user ? (
+          (userDetailsExist ? (
             <div>
               <div className="flex items-center">
                 {/* TODO fix text truncation so it works on mobile */}
@@ -61,7 +62,12 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
               <UserDetails user={user} className="text-xs md:text-sm leading-3 text-gray-400" />
             </div>
           ) : (
-            <h2 className="text-lg truncate font-bold text-gray-400">User not found</h2>
+            <div>
+              <h2 className="truncate md:leading-5 font-bold text-red-500">User not found</h2>
+              <h3 className="text-xs md:text-sm leading-3 text-gray-400">
+                This user no longer exists.
+              </h3>
+            </div>
           ))}
       </div>
       <Button variant="muted" onClick={closeChat}>

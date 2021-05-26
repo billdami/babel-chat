@@ -3,16 +3,17 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 
-// TODO move values to env vars/github secrets
+import { envVar } from './utils/env';
+
 export const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyB8e36IB4hllGvW70k85-ScEbDSXXxghdc',
-  authDomain: 'babel-chat-online.firebaseapp.com',
-  databaseURL: 'https://babel-chat-online-default-rtdb.firebaseio.com',
-  projectId: 'babel-chat-online',
-  storageBucket: 'babel-chat-online.appspot.com',
-  messagingSenderId: '660337776646',
-  appId: '1:660337776646:web:0f2e4f4d80899377140b87',
-  measurementId: 'G-7XEDS5SJ6C',
+  projectId: envVar('FB_PROJECT_ID'),
+  appId: envVar('FB_APP_ID'),
+  apiKey: envVar('FB_API_KEY'),
+  authDomain: envVar('FB_AUTH_DOMAIN'),
+  databaseURL: envVar('FB_DATABASE_URL'),
+  storageBucket: envVar('FB_STORAGE_BUCKET'),
+  messagingSenderId: envVar('FB_MESSAGING_SENDER_ID'),
+  measurementId: envVar('FB_MEASUREMENT_ID'),
 };
 
 const app = firebase.initializeApp(FIREBASE_CONFIG);

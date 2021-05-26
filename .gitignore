@@ -11,6 +11,10 @@
 # firebase
 /.firebase
 
+# environment variables
+.env
+.env.*
+
 # misc
 .DS_Store
 .env.local

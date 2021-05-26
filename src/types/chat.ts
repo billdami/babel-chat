@@ -4,8 +4,6 @@ import { User } from './user';
 
 export interface Chat {
   id: string;
-  user: string;
-  toUser: string;
   startedByUser: string;
   toUserDetails: User;
   isPinned: boolean;

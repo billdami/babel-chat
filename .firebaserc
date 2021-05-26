@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "babel-chat-online"
+  },
+  "targets": {
+    "babel-chat-online": {
+      "database": {
+        "main": [
+          "babel-chat-online-default-rtdb"
+        ],
+        "development": [
+          "babel-chat-online-dev-rtdb"
+        ]
+      }
+    }
   }
 }

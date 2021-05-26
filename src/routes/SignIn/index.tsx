@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom';
 import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
 
 import { Age, Gender } from '../../types/user';
@@ -33,8 +32,7 @@ const ageOptions = [
 ];
 
 const SignIn: FC<SignInListProps> = () => {
-  const { isLoading, signIn } = useAuth();
-  const history = useHistory();
+  const { isSigningIn, signIn } = useAuth();
 
   const [nickname, setNickname] = useState<string>('');
   const [country, setCountry] = useState<Country>(Country.UNSPECIFIED);
@@ -68,13 +66,11 @@ const SignIn: FC<SignInListProps> = () => {
           gender,
           agreedToToS,
         });
-
-        history.push('/main');
       } catch (err) {
         setSubmitError(err);
       }
     },
-    [signIn, history, isFormValid, nickname, country, age, gender, agreedToToS]
+    [signIn, isFormValid, nickname, country, age, gender, agreedToToS]
   );
 
   return (
@@ -155,8 +151,8 @@ const SignIn: FC<SignInListProps> = () => {
             </Link>
           </Checkbox>
 
-          <Button type="submit" size="lg" disabled={!isFormValid || isLoading} fullWidth>
-            {isLoading ? 'Signing in...' : 'Start chatting'}
+          <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
+            {isSigningIn ? 'Signing in...' : 'Start chatting'}
           </Button>
           {!!submitError && (
             <ErrorText
