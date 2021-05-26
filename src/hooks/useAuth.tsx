@@ -109,15 +109,19 @@ const useProvideAuth = () => {
       setUser(user);
 
       // on the initial app boot only
-      if (isSessionLoading) {
-        // if the user is logged in w/o an associated db record, sign them out
-        if (user) {
-          const userRec = await firebase.database().ref(`users/${user.uid}`).get();
-          if (!userRec.exists()) {
-            await signOut();
+      try {
+        if (isSessionLoading) {
+          // if the user is logged in w/o an associated db record, sign them out
+          if (user) {
+            const userRec = await firebase.database().ref(`users/${user.uid}`).get();
+            if (!userRec.exists()) {
+              await signOut();
+            }
           }
-        }
 
+          setIsSessionLoading(false);
+        }
+      } catch (err) {
         setIsSessionLoading(false);
       }
     });
