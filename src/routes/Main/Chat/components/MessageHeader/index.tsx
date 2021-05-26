@@ -25,6 +25,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   // use the main user record to display details, but fall back to the chat's copy (e.g. if they signed out)
   const isOffline = !destUser?.id;
   const user = isOffline ? originChat?.toUserDetails : destUser;
+  const userDetailsExist = !!user?.id;
 
   const closeChat = useCallback(() => {
     history.push('/main');
@@ -47,7 +48,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           )}
         </Button>
         {!isLoading &&
-          (user ? (
+          (userDetailsExist ? (
             <div>
               <div className="flex items-center">
                 {/* TODO fix text truncation so it works on mobile */}
