@@ -13,12 +13,12 @@ import UnprotectedRoute from '../UnprotectedRoute';
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const { isInitialLoading } = useAuth();
+  const { isSessionLoading } = useAuth();
 
   return (
     <Router>
       <div className="App h-full min-h-full max-h-full flex">
-        {isInitialLoading ? (
+        {isSessionLoading ? (
           <Splash />
         ) : (
           <Switch>

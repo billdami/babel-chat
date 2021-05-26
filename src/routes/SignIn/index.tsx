@@ -33,7 +33,7 @@ const ageOptions = [
 ];
 
 const SignIn: FC<SignInListProps> = () => {
-  const { isLoading, signIn } = useAuth();
+  const { isSigningIn, signIn } = useAuth();
   const history = useHistory();
 
   const [nickname, setNickname] = useState<string>('');
@@ -155,8 +155,8 @@ const SignIn: FC<SignInListProps> = () => {
             </Link>
           </Checkbox>
 
-          <Button type="submit" size="lg" disabled={!isFormValid || isLoading} fullWidth>
-            {isLoading ? 'Signing in...' : 'Start chatting'}
+          <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
+            {isSigningIn ? 'Signing in...' : 'Start chatting'}
           </Button>
           {!!submitError && (
             <ErrorText

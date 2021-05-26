@@ -20,8 +20,9 @@ import { useUser } from './useUserRecord';
 interface AuthContext {
   user?: firebase.User | null;
   userRecord?: UserRecord | null;
-  isInitialLoading: boolean;
-  isLoading: boolean;
+  isSessionLoading: boolean;
+  isSigningIn: boolean;
+  isSigningOut: boolean;
   signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
   signOut: () => Promise<void> | void;
   updateUser: (values: Partial<UserFirebaseRecord>) => Promise<void> | void;
@@ -30,8 +31,9 @@ interface AuthContext {
 const authContext = createContext<AuthContext>({
   user: null,
   userRecord: null,
-  isInitialLoading: true,
-  isLoading: true,
+  isSessionLoading: true,
+  isSigningIn: false,
+  isSigningOut: false,
   signIn: () => {},
   signOut: () => {},
   updateUser: () => {},
@@ -40,13 +42,14 @@ const authContext = createContext<AuthContext>({
 const useProvideAuth = () => {
   const authChangeUnsub = useRef<null | firebase.Unsubscribe>(null);
   const [user, setUser] = useState<firebase.User | null>(null);
-  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSessionLoading, setIsSessionLoading] = useState<boolean>(true);
+  const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
+  const [isSigningOut, setIsSigngingOut] = useState<boolean>(false);
 
   const [userRecord /*isUserLoading, userError*/] = useUser(user?.uid);
 
   const signIn = useCallback(async (details: NewUserDetails) => {
-    setIsLoading(true);
+    setIsSigningIn(true);
 
     try {
       const userCred = await firebase.auth().signInAnonymously();
@@ -54,7 +57,7 @@ const useProvideAuth = () => {
       if (userCred.user) {
         // TODO failing to create the user should reject this promise
         await createUser(userCred.user.uid, details);
-        setIsLoading(false);
+        setIsSigningIn(false);
         setUser(userCred.user);
         return userCred.user;
       } else {
@@ -62,7 +65,7 @@ const useProvideAuth = () => {
         throw new Error('could not create user on sign in');
       }
     } catch (err) {
-      setIsLoading(false);
+      setIsSigningIn(false);
       // TODO custom error classes
       throw err;
     }
@@ -72,19 +75,26 @@ const useProvideAuth = () => {
     // TODO catch/handle errors
     const uid = firebase.auth().currentUser?.uid;
 
-    setIsLoading(true);
-    await firebase.auth().signOut();
-    if (uid) {
-      await deleteUser(uid);
-    }
+    try {
+      setIsSigngingOut(true);
 
-    setUser(null);
-    setIsLoading(false);
+      if (uid) {
+        await deleteUser(uid);
+      }
+
+      await firebase.auth().signOut();
+
+      setUser(null);
+      setIsSigngingOut(false);
+    } catch (err) {
+      setUser(null);
+      setIsSigngingOut(false);
+    }
   }, []);
 
   const updateUser = useCallback(
     (values: Partial<UserFirebaseRecord>) => {
-      return userRecord?.ref.update(values);
+      return userRecord?.ref?.update(values);
     },
     [userRecord]
   );
@@ -99,7 +109,7 @@ const useProvideAuth = () => {
       setUser(user);
 
       // on the initial app boot only
-      if (isInitialLoading) {
+      if (isSessionLoading) {
         // if the user is logged in w/o an associated db record, sign them out
         if (user) {
           const userRec = await firebase.database().ref(`users/${user.uid}`).get();
@@ -108,7 +118,7 @@ const useProvideAuth = () => {
           }
         }
 
-        setIsInitialLoading(false);
+        setIsSessionLoading(false);
       }
     });
 
@@ -117,13 +127,14 @@ const useProvideAuth = () => {
 
     // unsubscribe from auth state changes on unmount
     return () => authChangeUnsub.current?.();
-  }, [isInitialLoading, signOut]);
+  }, [isSessionLoading, signOut]);
 
   return {
     user,
     userRecord,
-    isInitialLoading,
-    isLoading,
+    isSessionLoading,
+    isSigningIn,
+    isSigningOut,
     signIn,
     signOut,
     updateUser,
