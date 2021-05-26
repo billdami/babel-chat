@@ -12,31 +12,25 @@ import React, {
   useState,
 } from 'react';
 
-import { NewUserDetails, UserFirebaseRecord, UserRecord } from '../types/user';
+import { NewUserDetails } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
-
-import { useUser } from './useUserRecord';
 
 interface AuthContext {
   user?: firebase.User | null;
-  userRecord?: UserRecord | null;
   isSessionLoading: boolean;
   isSigningIn: boolean;
   isSigningOut: boolean;
   signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
   signOut: () => Promise<void> | void;
-  updateUser: (values: Partial<UserFirebaseRecord>) => Promise<void> | void;
 }
 
 const authContext = createContext<AuthContext>({
   user: null,
-  userRecord: null,
   isSessionLoading: true,
   isSigningIn: false,
   isSigningOut: false,
   signIn: () => {},
   signOut: () => {},
-  updateUser: () => {},
 });
 
 const useProvideAuth = () => {
@@ -45,8 +39,6 @@ const useProvideAuth = () => {
   const [isSessionLoading, setIsSessionLoading] = useState<boolean>(true);
   const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
   const [isSigningOut, setIsSigngingOut] = useState<boolean>(false);
-
-  const [userRecord /*isUserLoading, userError*/] = useUser(user?.uid);
 
   const signIn = useCallback(async (details: NewUserDetails) => {
     setIsSigningIn(true);
@@ -92,13 +84,6 @@ const useProvideAuth = () => {
     }
   }, []);
 
-  const updateUser = useCallback(
-    (values: Partial<UserFirebaseRecord>) => {
-      return userRecord?.ref?.update(values);
-    },
-    [userRecord]
-  );
-
   useEffect(() => {
     if (authChangeUnsub.current) {
       authChangeUnsub.current();
@@ -135,13 +120,11 @@ const useProvideAuth = () => {
 
   return {
     user,
-    userRecord,
     isSessionLoading,
     isSigningIn,
     isSigningOut,
     signIn,
     signOut,
-    updateUser,
   };
 };
 

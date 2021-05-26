@@ -2,14 +2,14 @@ import React, { FC, useCallback } from 'react';
 
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
-import useAuth from '../../../hooks/useAuth';
+import useCurrentUser from '../../../hooks/useCurrentUser';
 import useDrawer from '../../../hooks/useDrawer';
 import useNotifications from '../../../hooks/useNotifications';
 
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
-  const { userRecord } = useAuth();
+  const { user } = useCurrentUser();
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
   const { numUnread } = useNotifications();
 
@@ -45,10 +45,10 @@ const Index: FC<IndexProps> = () => {
           <h2 className="text-lg font-bold">Welcome to babel chat!</h2>
           <p>
             Logged in as{' '}
-            {!!userRecord && (
+            {!!user && (
               <>
-                <span className="font-bold">{userRecord.nickname}</span>
-                <span className="text-gray-400 tracking-tighter">#{userRecord.uuid}</span>
+                <span className="font-bold">{user.nickname}</span>
+                <span className="text-gray-400 tracking-tighter">#{user.uuid}</span>
               </>
             )}
           </p>
