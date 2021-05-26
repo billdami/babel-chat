@@ -85,7 +85,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
     <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
       <div className="py-1">
         {originUser && destUser && originUser.id === destUser.id && (
-          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-yellow-600 font-semibold bg-yellow-100 rounded">
+          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-600 bg-yellow-100 rounded">
             Sorry, you can't talk to yourself on babel chat. 😛
           </div>
         )}

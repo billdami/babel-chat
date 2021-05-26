@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { createChat, createChatMessage } from '../../../utils/chat';
 import useAuth from '../../../hooks/useAuth';
+import useCurrentUser from '../../../hooks/useCurrentUser';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
 import { useUser } from '../../../hooks/useUserRecord';
 import { getFirebaseTimestamp } from '../../../utils/firebase';
@@ -19,46 +20,47 @@ interface ChatProps {}
 
 const Chat: FC<ChatProps> = () => {
   const { userId } = useParams<ChatRouteParams>();
-  const { user, userRecord, updateUser } = useAuth();
+  const { user: authUser } = useAuth();
+  const { user, updateUser } = useCurrentUser();
   const [destUser, isLoadingDestUser] = useUser(userId);
-  const [chat] = useChatByMembers(user?.uid, userId);
-  const [destChat] = useChatByMembers(userId, user?.uid);
+  const [chat] = useChatByMembers(authUser?.uid, userId);
+  const [destChat] = useChatByMembers(userId, authUser?.uid);
 
   // can't send if: not logged in, dest user doesn't exist, or dest user is yourself
   const canSendMessage = useMemo<boolean>(
-    () => !!destUser?.id && !!user && !!userId && destUser?.id !== user?.uid,
-    [destUser, user, userId]
+    () => !!destUser?.id && !!authUser && !!userId && destUser?.id !== authUser?.uid,
+    [destUser, authUser, userId]
   );
 
   const onMessageSubmit = useCallback(
     (message: string) => {
-      if (!canSendMessage || !user || !userId) {
+      if (!canSendMessage || !authUser || !userId) {
         return;
       }
 
       // create chat for origin user, if it doesnt exist
       if (!chat?.id) {
-        createChat(user.uid, userId, true);
+        createChat(authUser.uid, userId, true);
       }
 
       // create chat for destination user, if it doesnt exist
       if (!destChat?.id) {
-        createChat(userId, user?.uid, false);
+        createChat(userId, authUser?.uid, false);
       }
 
       // create the message itself in the shared chat messages collection
-      createChatMessage(user.uid, userId, message);
+      createChatMessage(authUser.uid, userId, message);
 
       // update the last active date for the user
       updateUser({ dateLastActive: getFirebaseTimestamp() });
     },
-    [canSendMessage, chat, destChat, userId, user, updateUser]
+    [canSendMessage, chat, destChat, userId, authUser, updateUser]
   );
 
   return (
     <div className="Chat flex flex-col flex-1">
       <MessageHeader destUser={destUser} originChat={chat} isLoading={isLoadingDestUser} />
-      <MessageList originUser={userRecord} originChat={chat} destUser={destUser} />
+      <MessageList originUser={user} originChat={chat} destUser={destUser} />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
     </div>
   );
