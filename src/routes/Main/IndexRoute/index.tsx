@@ -25,8 +25,13 @@ const Index: FC<IndexProps> = () => {
 
   return (
     <div className="Index flex flex-col flex-1">
-      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 border-b border-gray-200 md:hidden">
-        <Button variant="muted" className="relative mr-2 md:hidden" onClick={toggleDrawer}>
+      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white md:hidden">
+        <Button
+          onClick={toggleDrawer}
+          variant="inverse"
+          className="relative mr-2 md:hidden"
+          outline
+        >
           ☰
           {!!numUnread && (
             <Badge
@@ -57,12 +62,12 @@ const Index: FC<IndexProps> = () => {
             chats link, tips/help, etc)
           </p>
           <div className="mb-4">
-            <Button variant="secondary" className="md:hidden" onClick={showAllUsers}>
+            <Button variant="secondary" className="md:hidden" onClick={showAllUsers} outline>
               View all users
             </Button>
           </div>
           <div className="mb-4">
-            <Button variant="secondary" className="md:hidden" onClick={showAllChats}>
+            <Button variant="secondary" className="md:hidden" onClick={showAllChats} outline>
               View all chats
             </Button>
           </div>

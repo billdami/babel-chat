@@ -20,6 +20,7 @@ import Link from '../../components/Link';
 import Radio from '../../components/Radio';
 import Select from '../../components/Select';
 import useAuth from '../../hooks/useAuth';
+import Logo from '../../components/Svgs/Logos/Logo';
 
 interface SignInListProps {}
 
@@ -76,16 +77,12 @@ const SignIn: FC<SignInListProps> = () => {
   return (
     <div className="mx-auto my-auto p-4">
       <div className="w-full sm:w-116">
-        <h1 className="text-3xl md:text-4xl mt-4 md:mt-0 font-extrabold text-gray-500 mb-1">
-          babel chat
-        </h1>
-        <h2 className="text-sm md:text-lg text-gray-500 mb-4 md:mb-6">
-          Meet and chat with people from around the world.
-        </h2>
+        <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:m-6 mt-2 md:mt-0" />
         <form onSubmit={onSubmit} className="p-4 md:p-6 bg-white rounded-sm text-gray-700">
           <p className="mb-4 md:mb-6">
-            babel chat is free and completely anonymous. If you’d like, you can provide some basic
-            info below, but it is <span className="font-bold">100% optional.</span>
+            <span className="text-gray-500 font-bold">babel chat</span> is free and completely
+            anonymous. If you’d like, you can provide some basic info below, but it is{' '}
+            <span className="font-bold">100% optional.</span>
           </p>
 
           <FormControl label="Nickname" htmlFor="signup-nickname">

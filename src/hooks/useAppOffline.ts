@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 export const useIsAppOffline = () => {
   const db = firebase.database();
   const ref = db.ref('APP_OFFLINE');
-  const [snapshot] = useObject(ref);
+  const [snapshot, isAppOfflineLoading] = useObject(ref);
   const isAppOffline = useMemo<boolean>(() => snapshot?.val() === true, [snapshot]);
-  return isAppOffline;
+  return { isAppOffline, isAppOfflineLoading };
 };

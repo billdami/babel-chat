@@ -8,6 +8,7 @@ interface UserNicknameProps {
   user?: User;
   isCurrentUser?: boolean;
   isOffline?: boolean;
+  mutedClassName?: string;
 }
 
 const UserNickname: FC<UserNicknameProps> = ({
@@ -15,12 +16,13 @@ const UserNickname: FC<UserNicknameProps> = ({
   user,
   isCurrentUser = false,
   isOffline = false,
+  mutedClassName = 'text-gray-400',
 }) => (
   <h2 className={cn('truncate', className)}>
     <span className="font-bold">{user?.nickname}</span>
-    <span className="tracking-tighter font-light text-gray-400">#{user?.uuid}</span>
-    {isCurrentUser && <span className="ml-1 text-xs font-bold text-gray-400">(you)</span>}
-    {isOffline && <span className="ml-1 text-xs italic text-gray-400">(offline)</span>}
+    <span className={cn('tracking-tighter font-light', mutedClassName)}>#{user?.uuid}</span>
+    {isCurrentUser && <span className={cn('ml-1 text-xs font-bold', mutedClassName)}>(you)</span>}
+    {isOffline && <span className={cn('ml-1 text-xs italic', mutedClassName)}>(offline)</span>}
   </h2>
 );
 
