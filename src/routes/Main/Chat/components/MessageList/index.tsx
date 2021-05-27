@@ -90,6 +90,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
             Sorry, you can't talk to yourself on babel chat. 😛
           </div>
         )}
+        {/* TODO show "welcome" CTA when there are no messages yet, e.g. "Nothing here yet... Introduce yourself and say hi!" */}
         {messages?.map((message) => (
           <div key={message.id} className="px-2 md:px-4">
             <span

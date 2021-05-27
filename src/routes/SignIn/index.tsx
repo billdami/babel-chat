@@ -34,6 +34,14 @@ const ageOptions = [
   })),
 ];
 
+const countryOptions = [
+  { value: UNSPECIFIED, label: 'Prefer not to say' },
+  { value: 'FREQUENTLY_USED', label: '-- Frequently used --', disabled: true },
+  ...COUNTRIES.filter((c) => c.prioritized),
+  { value: 'ALL', label: '-- All countries --', disabled: true },
+  ...COUNTRIES.filter((c) => !c.prioritized),
+];
+
 const SignIn: FC<SignInListProps> = () => {
   const { isSigningIn, signIn } = useAuth();
 
@@ -103,7 +111,7 @@ const SignIn: FC<SignInListProps> = () => {
             <Select
               id="signup-country"
               value={country}
-              options={COUNTRIES}
+              options={countryOptions}
               onChange={(e) => setCountry(e.target.value as Country)}
               fullWidth
             />
