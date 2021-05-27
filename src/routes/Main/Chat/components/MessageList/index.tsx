@@ -8,6 +8,7 @@ import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
 import usePageVisibility from '../../../../../hooks/usePageVisibility';
+import Spinner from '../../../../../components/Spinner';
 
 interface AuthorsMap {
   [id: string]: User & { isSelf?: boolean };
@@ -99,10 +100,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
             <span>{message.content}</span>
           </div>
         ))}
-        {isLoading && (
-          // TODO create <LoadingSpinner isShown={isLoading} />
-          <div className="px-2 md:px-4">Loading&hellip;</div>
-        )}
+        {isLoading && <Spinner className="mx-2 md:mx-4 my-1" />}
       </div>
     </div>
   );

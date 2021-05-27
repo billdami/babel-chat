@@ -33,11 +33,11 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
 
   return (
     <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white">
-      <div className="flex items-center">
+      <div className="flex items-center min-w-0">
         <Button
           onClick={toggleDrawer}
           variant="inverse"
-          className="mr-2 md:hidden relative"
+          className="mr-2 md:hidden relative flex-shrink-0"
           outline
         >
           &#9776;
@@ -54,21 +54,20 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
         </Button>
         {!isLoading &&
           (userDetailsExist ? (
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center">
-                {/* TODO fix text truncation so it works on mobile */}
                 <UserNickname
                   user={user}
                   isOffline={isOffline}
                   className="md:text-lg md:leading-5"
                   mutedClassName="text-green-200"
                 />
-                <UserStatus user={destUser} className="ml-2 shadow" />
+                <UserStatus user={destUser} className="ml-2 shadow flex-shrink-0" />
               </div>
               <UserDetails user={user} className="text-xs md:text-sm leading-3 text-green-200" />
             </div>
           ) : (
-            <div>
+            <div className="min-w-0">
               <h2 className="truncate md:leading-5 font-bold text-yellow-200">User not found</h2>
               <h3 className="text-xs md:text-sm leading-3 text-green-200">
                 This user no longer exists.
@@ -76,7 +75,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
             </div>
           ))}
       </div>
-      <Button onClick={closeChat} variant="inverse" outline>
+      <Button onClick={closeChat} variant="inverse" className="ml-2 flex-shrink-0" outline>
         &times;
       </Button>
     </div>

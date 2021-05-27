@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import Badge from '../../../../../components/Badge';
+import Spinner from '../../../../../components/Spinner';
 import UserNickname from '../../../../../components/UserNickname';
 import useDrawer from '../../../../../hooks/useDrawer';
 import { ChatRecord } from '../../../../../types/chat';
@@ -46,7 +47,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
             </NavLink>
           </li>
         ))}
-        {isLoading && <div>Loading&hellip;</div>}
+        {isLoading && <Spinner className="mx-3 my-2" />}
       </ul>
     </div>
   );
