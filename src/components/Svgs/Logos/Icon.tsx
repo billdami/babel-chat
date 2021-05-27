@@ -3,7 +3,14 @@ import React, { FC, SVGProps } from 'react';
 interface LogoIconProps extends SVGProps<SVGSVGElement> {}
 
 const LogoIcon: FC<LogoIconProps> = ({ ...rest }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 365.67 482.71" {...rest}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 365.67 482.71"
+    role="img"
+    aria-labelledby="logo-icon-title"
+    {...rest}
+  >
+    <title id="logo-icon-title">babel chat</title>
     <g>
       <g>
         <path d="M326.83,163.06l12,71.33S240.7,251.06,131.6,196.1l13.94-65.85S225.11,177.83,326.83,163.06Z" transform="translate(0)" fill="#10b981"/>
