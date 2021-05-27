@@ -16,12 +16,12 @@ interface AppProps {}
 
 const App: FC<AppProps> = () => {
   const { isSessionLoading } = useAuth();
-  const isAppOffline = useIsAppOffline();
+  const { isAppOffline, isAppOfflineLoading } = useIsAppOffline();
 
   return (
     <Router>
       <div className="App h-full min-h-full max-h-full flex">
-        {isSessionLoading ? (
+        {isSessionLoading || isAppOfflineLoading ? (
           <Splash />
         ) : isAppOffline ? (
           <AppOffline />

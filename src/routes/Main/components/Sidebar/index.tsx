@@ -30,11 +30,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
 
   return (
     <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
-      <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        <Link to="/main" className="py-1 px-2 border border-green-500">
+      <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 bg-green-600 text-white">
+        <Link to="/main" className="py-1 px-2 bg-white">
           <LogoIcon className="h-8" />
         </Link>
-        <Button variant="muted" onClick={signOut} disabled={isSigningOut}>
+        <Button variant="inverse" onClick={signOut} disabled={isSigningOut} outline>
           {isSigningOut ? 'Signing out...' : 'Sign out'}
         </Button>
       </div>

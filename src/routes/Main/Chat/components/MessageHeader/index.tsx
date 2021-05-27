@@ -32,9 +32,14 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   }, [history]);
 
   return (
-    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 border-b border-gray-200">
+    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white">
       <div className="flex items-center">
-        <Button variant="muted" className="mr-2 md:hidden relative" onClick={toggleDrawer}>
+        <Button
+          onClick={toggleDrawer}
+          variant="inverse"
+          className="mr-2 md:hidden relative"
+          outline
+        >
           ☰
           {!!numUnread && (
             <Badge
@@ -56,21 +61,22 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
                   user={user}
                   isOffline={isOffline}
                   className="md:text-lg md:leading-5"
+                  mutedClassName="text-green-200"
                 />
-                <UserStatus user={destUser} className="ml-2" />
+                <UserStatus user={destUser} className="ml-2 shadow" />
               </div>
-              <UserDetails user={user} className="text-xs md:text-sm leading-3 text-gray-400" />
+              <UserDetails user={user} className="text-xs md:text-sm leading-3 text-green-200" />
             </div>
           ) : (
             <div>
-              <h2 className="truncate md:leading-5 font-bold text-red-500">User not found</h2>
-              <h3 className="text-xs md:text-sm leading-3 text-gray-400">
+              <h2 className="truncate md:leading-5 font-bold text-yellow-200">User not found</h2>
+              <h3 className="text-xs md:text-sm leading-3 text-green-200">
                 This user no longer exists.
               </h3>
             </div>
           ))}
       </div>
-      <Button variant="muted" onClick={closeChat}>
+      <Button onClick={closeChat} variant="inverse" outline>
         &times;
       </Button>
     </div>
