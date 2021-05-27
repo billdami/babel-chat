@@ -48,7 +48,11 @@ const Index: FC<IndexProps> = () => {
           )}
         </Button>
         <Button variant="inverse" className="ml-auto" outline>
-          <UserNickname user={user} mutedClassName="text-green-300" className="inline" />
+          {user?.id ? (
+            <UserNickname user={user} mutedClassName="text-green-300" className="inline" />
+          ) : (
+            'User'
+          )}
         </Button>
       </div>
       <div className="flex-1 flex overflow-y-auto">
@@ -56,9 +60,9 @@ const Index: FC<IndexProps> = () => {
           <div className="flex-1">
             <div className="p-4">
               <h2 className="text-lg font-bold">Welcome to babel chat!</h2>
-              <p className="mb-4">
+              <div className="mb-4">
                 Logged in as {!!user && <UserNickname user={user} className="inline" />}
-              </p>
+              </div>
               <p className="mb-4">
                 <Button variant="secondary" onClick={signOut} disabled={isSigningOut} outline>
                   {isSigningOut ? 'Signing out...' : 'Sign out'}
