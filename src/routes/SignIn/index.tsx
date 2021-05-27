@@ -87,7 +87,7 @@ const SignIn: FC<SignInListProps> = () => {
   return (
     <div className="mx-auto my-auto p-4">
       <div className="w-full sm:w-116">
-        <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:m-6 mt-2 md:mt-0" />
+        <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:mb-6 mt-2 md:mt-0" />
         <form onSubmit={onSubmit} className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
           <p className="mb-4 md:mb-6">
             <span className="text-gray-500 font-bold">babel chat</span> is free and completely
