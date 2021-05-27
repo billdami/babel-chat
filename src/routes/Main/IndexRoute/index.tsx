@@ -3,6 +3,7 @@ import React, { FC, useCallback } from 'react';
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
 import UserNickname from '../../../components/UserNickname';
+import { copyrightLine } from '../../../constants/app';
 import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import useDrawer from '../../../hooks/useDrawer';
@@ -47,12 +48,9 @@ const Index: FC<IndexProps> = () => {
             />
           )}
         </Button>
+        {/* TODO update with a real button/menu */}
         <Button variant="inverse" className="ml-auto" outline>
-          {user?.id ? (
-            <UserNickname user={user} mutedClassName="text-green-300" className="inline" />
-          ) : (
-            'User'
-          )}
+          👤
         </Button>
       </div>
       <div className="flex-1 flex overflow-y-auto">
@@ -84,7 +82,7 @@ const Index: FC<IndexProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex-shrink-0 px-4 py-2 text-sm text-gray-400">legal stuff here.</div>
+          <div className="flex-shrink-0 px-4 py-4 text-sm text-gray-400">{copyrightLine}</div>
         </div>
       </div>
     </div>

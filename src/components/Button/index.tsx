@@ -45,7 +45,7 @@ const outlineVariants = {
   muted:
     'text-gray-400 border border-gray-300 hover:bg-gray-300 hover:text-white disabled:bg-transparent disabled:text-gray-400',
   inverse:
-    'text-green-200 border border-green-200 hover:bg-white hover:border-white hover:text-green-500 disabled:bg-transparent disabled:border-green-200 disabled:text-green-200',
+    'text-green-200 border border-green-300 hover:bg-white hover:border-white hover:text-green-500 disabled:bg-transparent disabled:border-green-300 disabled:text-green-200',
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500',
 };
 
