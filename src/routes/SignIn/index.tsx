@@ -21,6 +21,7 @@ import Radio from '../../components/Radio';
 import Select from '../../components/Select';
 import useAuth from '../../hooks/useAuth';
 import Logo from '../../components/Svgs/Logos/Logo';
+import Spinner from '../../components/Spinner';
 
 interface SignInListProps {}
 
@@ -149,7 +150,19 @@ const SignIn: FC<SignInListProps> = () => {
           </Checkbox>
 
           <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
-            {isSigningIn ? 'Signing in...' : 'Start chatting'}
+            {isSigningIn ? (
+              <>
+                <Spinner
+                  size="sm"
+                  variant="inverse"
+                  className="inline-block mr-2"
+                  deferRender={false}
+                />
+                Signing in...
+              </>
+            ) : (
+              'Start chatting'
+            )}
           </Button>
           {!!submitError && (
             <ErrorText
