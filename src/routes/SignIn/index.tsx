@@ -80,8 +80,9 @@ const SignIn: FC<SignInListProps> = () => {
         <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:m-6 mt-2 md:mt-0" />
         <form onSubmit={onSubmit} className="p-4 md:p-6 bg-white rounded-sm text-gray-700">
           <p className="mb-4 md:mb-6">
-            babel chat is free and completely anonymous. If you’d like, you can provide some basic
-            info below, but it is <span className="font-bold">100% optional.</span>
+            <span className="text-gray-500 font-bold">babel chat</span> is free and completely
+            anonymous. If you’d like, you can provide some basic info below, but it is{' '}
+            <span className="font-bold">100% optional.</span>
           </p>
 
           <FormControl label="Nickname" htmlFor="signup-nickname">
