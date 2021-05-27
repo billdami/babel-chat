@@ -20,7 +20,7 @@ interface SidebarProps {
   className?: string;
 }
 
-const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
+const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user, isSigningOut, signOut } = useAuth();
   const { activeTab } = useDrawer();
   const { numUnread } = useNotifications();
@@ -31,7 +31,7 @@ const Sidebar: FC<SidebarProps> = ({ children, className = '' }) => {
   return (
     <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 border-b border-gray-200">
-        <Link to="/main" className="py-1 px-2 bg-gray-600 bg-opacity-10">
+        <Link to="/main" className="py-1 px-2 border border-green-500">
           <LogoIcon className="h-8" />
         </Link>
         <Button variant="muted" onClick={signOut} disabled={isSigningOut}>
