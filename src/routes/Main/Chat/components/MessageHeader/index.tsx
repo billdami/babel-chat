@@ -40,7 +40,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           className="mr-2 md:hidden relative"
           outline
         >
-          ☰
+          &#9776;
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"

@@ -51,7 +51,7 @@ const outlineVariants = {
 
 const sizes = {
   sm: 'px-3 py-1 text-sm',
-  md: 'px-5 py-2',
+  md: 'px-4 py-2',
   lg: 'px-6 py-4 text-lg',
 };
 

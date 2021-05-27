@@ -2,6 +2,8 @@ import React, { FC, useCallback } from 'react';
 
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
+import UserNickname from '../../../components/UserNickname';
+import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import useDrawer from '../../../hooks/useDrawer';
 import useNotifications from '../../../hooks/useNotifications';
@@ -9,6 +11,7 @@ import useNotifications from '../../../hooks/useNotifications';
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
+  const { isSigningOut, signOut } = useAuth();
   const { user } = useCurrentUser();
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
   const { numUnread } = useNotifications();
@@ -25,14 +28,14 @@ const Index: FC<IndexProps> = () => {
 
   return (
     <div className="Index flex flex-col flex-1">
-      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white md:hidden">
+      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white">
         <Button
           onClick={toggleDrawer}
           variant="inverse"
           className="relative mr-2 md:hidden"
           outline
         >
-          ☰
+          &#9776;
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"
@@ -44,18 +47,20 @@ const Index: FC<IndexProps> = () => {
             />
           )}
         </Button>
+        <Button variant="inverse" className="ml-auto" outline>
+          <UserNickname user={user} mutedClassName="text-green-300" className="inline" />
+        </Button>
       </div>
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
           <h2 className="text-lg font-bold">Welcome to babel chat!</h2>
-          <p>
-            Logged in as{' '}
-            {!!user && (
-              <>
-                <span className="font-bold">{user.nickname}</span>
-                <span className="text-gray-400 tracking-tighter">#{user.uuid}</span>
-              </>
-            )}
+          <p className="mb-4">
+            Logged in as {!!user && <UserNickname user={user} className="inline" />}
+          </p>
+          <p className="mb-4">
+            <Button variant="secondary" onClick={signOut} disabled={isSigningOut} outline>
+              {isSigningOut ? 'Signing out...' : 'Sign out'}
+            </Button>
           </p>
           <p className="mb-4">
             [TODO] main page content (newest users, view all users link, recent chats, view all
