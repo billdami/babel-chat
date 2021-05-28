@@ -13,7 +13,7 @@ import React, {
 } from 'react';
 
 import { NewUserDetails } from '../types/user';
-import { createUser, deleteUser } from '../utils/user';
+import { createUser, deleteUser, logUser } from '../utils/user';
 import { SignInError, ReCaptchaError } from '../errors/auth';
 import { envVar } from '../utils/env';
 
@@ -69,6 +69,8 @@ const useProvideAuth = () => {
 
       if (userCred.user) {
         await createUser(userCred.user.uid, details);
+        // log the new user (dont need to wait for successful response)
+        logUser(userCred.user.uid);
         setIsSigningIn(false);
         setUser(userCred.user);
         return userCred.user;

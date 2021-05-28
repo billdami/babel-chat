@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './constants';
+import { setupApp } from './firebase';
 
 export const deleteOrphanedData = async (
   db: admin.database.Database,
@@ -29,15 +29,30 @@ export const deleteOrphanedData = async (
   }
 };
 
+export const deleteOrphanedSessions = async (db: admin.database.Database) => {
+  try {
+    const auth = admin.auth();
+    const result = await auth.listUsers(1000);
+    const userIds: string[] = [];
+
+    for (const authUser of result.users) {
+      const user = await db.ref(`users/${authUser.uid}`).get();
+      if (!user.exists()) {
+        userIds.push(authUser.uid);
+      }
+    }
+
+    if (userIds.length) {
+      await auth.deleteUsers(userIds);
+      functions.logger.info(`deleted ${userIds.length} orphaned user sessions`);
+    }
+  } catch (err) {
+    functions.logger.error('auth users delete failed', err, { structuredData: true });
+  }
+};
+
 export const cleanupDatabase = async (env: 'production' | 'development'): Promise<void> => {
-  // TODO make this better - store db URLs in firebase configs
-  const app = admin.initializeApp({
-    ...JSON.parse(process.env.FIREBASE_CONFIG ?? '{}'),
-    databaseURL:
-      env === 'production'
-        ? `https://${DB_NAME_PRODUCTION}.firebaseio.com/`
-        : `https://${DB_NAME_DEVELOPMENT}.firebaseio.com/`,
-  });
+  const app = setupApp(env);
   const db = app.database();
   const deleteAppInstance = () => app.delete().catch(() => {});
 
@@ -98,8 +113,8 @@ export const cleanupDatabase = async (env: 'production' | 'development'): Promis
   // delete any /spam_reports whose key does not have a matching /users key
   await deleteOrphanedData(db, 'spam_reports');
 
-  // TODO [future] delete old/orphaned firebase anonymous sessions
-  // that no longer have an associated user
+  // delete old/orphaned firebase anonymous sessions that no longer have an associated user
+  await deleteOrphanedSessions(db);
 
   return deleteAppInstance();
 };
