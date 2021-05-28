@@ -8,6 +8,7 @@ import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
 import usePageVisibility from '../../../../../hooks/usePageVisibility';
+import Spinner from '../../../../../components/Spinner';
 
 interface AuthorsMap {
   [id: string]: User & { isSelf?: boolean };
@@ -89,6 +90,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
             Sorry, you can't talk to yourself on babel chat. 😛
           </div>
         )}
+        {/* TODO show "welcome" CTA when there are no messages yet, e.g. "Nothing here yet... Introduce yourself and say hi!" */}
         {messages?.map((message) => (
           <div key={message.id} className="px-2 md:px-4">
             <span
@@ -99,10 +101,7 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
             <span>{message.content}</span>
           </div>
         ))}
-        {isLoading && (
-          // TODO create <LoadingSpinner isShown={isLoading} />
-          <div className="px-2 md:px-4">Loading&hellip;</div>
-        )}
+        {isLoading && <Spinner className="mx-2 md:mx-4 my-1" />}
       </div>
     </div>
   );

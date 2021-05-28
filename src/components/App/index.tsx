@@ -15,13 +15,14 @@ import AppOffline from '../AppOffline';
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
-  const { isSessionLoading } = useAuth();
+  const { isSessionLoading, isSigningOut } = useAuth();
   const { isAppOffline, isAppOfflineLoading } = useIsAppOffline();
+  const isSplashVisible = isAppOfflineLoading || isSessionLoading || isSigningOut;
 
   return (
     <Router>
       <div className="App h-full min-h-full max-h-full flex">
-        {isSessionLoading || isAppOfflineLoading ? (
+        {isSplashVisible ? (
           <Splash />
         ) : isAppOffline ? (
           <AppOffline />

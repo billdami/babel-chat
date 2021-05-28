@@ -7,6 +7,7 @@ import useDrawer from '../../../../../hooks/useDrawer';
 import UserNickname from '../../../../../components/UserNickname';
 import UserDetails from '../../../../../components/UserDetails';
 import UserStatus from '../../../../../components/UserStatus';
+import Spinner from '../../../../../components/Spinner';
 
 interface UsersListProps {
   users?: UserRecord[];
@@ -33,8 +34,8 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
               to={`/main/chat/${user.id}`}
               onClick={closeDrawer}
             >
-              <UserStatus user={user} className="mr-2" />
-              <div>
+              <UserStatus user={user} className="mr-2 flex-shrink-0" />
+              <div className="truncate">
                 <UserNickname
                   user={user}
                   isCurrentUser={user.id === currentUser?.uid}
@@ -45,8 +46,8 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
             </NavLink>
           </li>
         ))}
-        {isLoading && <div>Loading&hellip;</div>}
       </ul>
+      {isLoading && <Spinner className="mx-3 my-2" />}
     </div>
   );
 };

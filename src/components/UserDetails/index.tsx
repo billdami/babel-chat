@@ -24,7 +24,7 @@ const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
 
   const hasAge = user?.age !== UNSPECIFIED;
   const hasGender = gender?.value !== UNSPECIFIED;
-  const hasCountry = country?.value !== UNSPECIFIED;
+  const hasCountry = country?.value && country?.value !== UNSPECIFIED;
   const hasAgeOrGender = hasAge || hasGender;
 
   return (
@@ -38,7 +38,7 @@ const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
           {hasAge && `${user?.age}yr old`}
           {hasGender && `${hasAge ? ` ${gender?.label.toLowerCase()}` : gender?.label}`}
           {hasAgeOrGender && hasCountry && ', '}
-          {country?.value !== UNSPECIFIED && country?.label}
+          {hasCountry && country?.label}
         </>
       )}
     </h3>

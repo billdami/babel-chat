@@ -1,4 +1,5 @@
-import React, { FC, FormEvent, useCallback, useMemo, useState } from 'react';
+import React, { createRef, FC, FormEvent, useCallback, useMemo, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import { Age, Gender } from '../../types/user';
 import {
@@ -22,6 +23,8 @@ import Select from '../../components/Select';
 import useAuth from '../../hooks/useAuth';
 import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
+import { copyrightLine } from '../../constants/app';
+import { envVar } from '../../utils/env';
 
 interface SignInListProps {}
 
@@ -33,8 +36,18 @@ const ageOptions = [
   })),
 ];
 
+const countryOptions = [
+  { value: UNSPECIFIED, label: 'Prefer not to say' },
+  { value: 'FREQUENTLY_USED', label: '-- Frequently used --', disabled: true },
+  ...COUNTRIES.filter((c) => c.prioritized),
+  { value: 'ALL', label: '-- All countries --', disabled: true },
+  ...COUNTRIES.filter((c) => !c.prioritized),
+];
+
 const SignIn: FC<SignInListProps> = () => {
   const { isSigningIn, signIn } = useAuth();
+
+  const recaptchaRef = createRef<ReCAPTCHA>();
 
   const [nickname, setNickname] = useState<string>('');
   const [country, setCountry] = useState<Country>(Country.UNSPECIFIED);
@@ -56,30 +69,34 @@ const SignIn: FC<SignInListProps> = () => {
     async (event: FormEvent) => {
       event.preventDefault();
 
-      if (!isFormValid) {
+      if (!isFormValid || !recaptchaRef.current) {
         return;
       }
 
       try {
-        await signIn({
-          nickname: nickname?.trim(),
-          country,
-          age,
-          gender,
-          agreedToToS,
-        });
+        const token = await recaptchaRef.current.executeAsync();
+
+        if (token) {
+          await signIn({
+            nickname: nickname?.trim(),
+            country,
+            age,
+            gender,
+            agreedToToS,
+          });
+        }
       } catch (err) {
         setSubmitError(err);
       }
     },
-    [signIn, isFormValid, nickname, country, age, gender, agreedToToS]
+    [signIn, isFormValid, nickname, country, age, gender, agreedToToS, recaptchaRef]
   );
 
   return (
-    <div className="mx-auto my-auto p-4">
+    <div className="mx-auto my-auto px-4 pt-4 pb-20 md:pb-4">
       <div className="w-full sm:w-116">
-        <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:m-6 mt-2 md:mt-0" />
-        <form onSubmit={onSubmit} className="p-4 md:p-6 bg-white rounded-sm text-gray-700">
+        <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:mb-6 mt-2 md:mt-0" />
+        <form onSubmit={onSubmit} className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
           <p className="mb-4 md:mb-6">
             <span className="text-gray-500 font-bold">babel chat</span> is free and completely
             anonymous. If you’d like, you can provide some basic info below, but it is{' '}
@@ -102,7 +119,7 @@ const SignIn: FC<SignInListProps> = () => {
             <Select
               id="signup-country"
               value={country}
-              options={COUNTRIES}
+              options={countryOptions}
               onChange={(e) => setCountry(e.target.value as Country)}
               fullWidth
             />
@@ -149,6 +166,15 @@ const SignIn: FC<SignInListProps> = () => {
             </Link>
           </Checkbox>
 
+          <ReCAPTCHA
+            sitekey={envVar('CAPTCHA_SITE_KEY')!}
+            size="invisible"
+            badge="bottomright"
+            // TODO set based on light or dark app theme setting
+            theme="light"
+            ref={recaptchaRef}
+          />
+
           <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
             {isSigningIn ? (
               <>
@@ -171,6 +197,7 @@ const SignIn: FC<SignInListProps> = () => {
             />
           )}
         </form>
+        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
       </div>
     </div>
   );

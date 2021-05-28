@@ -4,6 +4,7 @@ import cn from 'classnames';
 export interface SelectOption {
   value: string;
   label?: string;
+  disabled?: boolean;
 }
 
 interface SelectProps
@@ -44,7 +45,7 @@ const Select: FC<SelectProps> = ({ className, fullWidth = false, options, ...res
     {...rest}
   >
     {options?.map((opt) => (
-      <option key={opt.value} value={opt.value}>
+      <option key={opt.value} value={opt.value} disabled={opt.disabled}>
         {opt.label}
       </option>
     ))}

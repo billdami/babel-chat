@@ -58,7 +58,7 @@ const Chat: FC<ChatProps> = () => {
   );
 
   return (
-    <div className="Chat flex flex-col flex-1">
+    <div className="Chat flex flex-col flex-1 min-w-0">
       <MessageHeader destUser={destUser} originChat={chat} isLoading={isLoadingDestUser} />
       <MessageList originUser={user} originChat={chat} destUser={destUser} />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />

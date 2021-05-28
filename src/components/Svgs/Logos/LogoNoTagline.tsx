@@ -3,7 +3,14 @@ import React, { FC, SVGProps } from 'react';
 interface LogoNoTaglineProps extends SVGProps<SVGSVGElement> {}
 
 const LogoNoTagline: FC<LogoNoTaglineProps> = ({ ...rest }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1914.89 482.71" {...rest}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1914.89 482.71"
+    role="img"
+    aria-labelledby="logo-no-tagline-title"
+    {...rest}
+  >
+    <title id="logo-no-tagline-title">babel chat</title>
     <g>
       <g>
         <path d="M44.36,371,93.17,245.49a39.57,39.57,0,0,1,50.31-22.87c47.33,17,132.91,42.57,204.09,35.15l17.26,83.46a39.55,39.55,0,0,1-35.17,47.42c-48.22,4.35-125.88,9.2-180,1.91a39,39,0,0,0-27.47,6.83L0,482.71Z" fill="#10b981"/>
