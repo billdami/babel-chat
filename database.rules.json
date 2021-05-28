@@ -4,6 +4,7 @@
       ".read": "true"
     },
     "users": {
+      ".indexOn": ["dateLastActive"],
       // all authenticateds users can read all users
       ".read": "root.child('APP_OFFLINE').val() !== true && auth != null",
       // authenticated users can only update/delete their own user
@@ -15,6 +16,7 @@
       }
     },
     "user_uuids": {
+      ".indexOn": ".value",
       // all authenticated users can read all user_uuids
       ".read": "root.child('APP_OFFLINE').val() !== true && auth != null",
       // authenticated users can create or delete user_uuids that match their own user ID
@@ -54,6 +56,7 @@
           auth != null &&
           $chat_messages_id.contains(auth.uid)",
         "$message_id": {
+          ".indexOn": ["dateSent"],
           // authenticated users can only create chat messages whose ID contains their own user ID
           ".write": "root.child('APP_OFFLINE').val() !== true &&
             auth != null &&

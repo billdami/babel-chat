@@ -3,7 +3,15 @@ export const generateRandomNickname = (): string => {
   return `Anonymous user`;
 };
 
-export const generateRandomUUID = (exclude: number[] = [], min = 1000, max = 9999): number => {
+export const generateRandomUUID = (exclude: number[] = [], minNumDigits = 4): number => {
+  // increase the min/max values if the total number of excluded values
+  // have used up all the available numbers in the current range
+  const numDigits = Math.max(minNumDigits, `${exclude.length}`.length);
+  const min = Math.pow(10, numDigits);
+  const max = Math.pow(10, numDigits + 1) - 1;
+
+  console.log('TODO remove', numDigits, min, max);
+
   const total = max - min;
   let i = 0;
   let uuid = Math.floor(Math.random() * (max - min + 1)) + min;

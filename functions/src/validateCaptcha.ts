@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import fetch from 'node-fetch';
 
-// TODO eventuall remove origin: true, or allow only specific hosts if possible
+// TODO [future] remove origin: true, or allow only specific hosts if possible
 // @see https://github.com/expressjs/cors#configuration-options
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cors = require('cors')({ origin: true });
