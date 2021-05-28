@@ -7,6 +7,7 @@ import { NewUserDetails, User } from '../types/user';
 
 import { generateRandomNickname, generateRandomUUID } from './random';
 import { getFirebaseTimestamp } from './firebase';
+import { env, envVar } from './env';
 
 export const createUser = async (
   id: string,
@@ -50,4 +51,11 @@ export const deleteUser = async (uid: string): Promise<void> => {
     const uuidRef = db.ref(`user_uuids/${userData.uuid}`);
     await Promise.all([userRef.remove(), uuidRef.remove()]);
   }
+};
+
+export const logUser = (userId: string): Promise<Response> => {
+  return fetch(`${envVar('FB_FUNCTIONS_BASE_URL')}/${env()}RegisterUser`, {
+    method: 'POST',
+    body: new URLSearchParams({ userId }),
+  });
 };
