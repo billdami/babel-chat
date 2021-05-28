@@ -25,7 +25,7 @@ import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
 import { copyrightLine } from '../../constants/app';
 import { envVar } from '../../utils/env';
-import { ReCaptchaError, SignInError } from '../../errors/auth';
+import { ReCaptchaError, ReCaptchaLoadError, SignInError } from '../../errors/auth';
 
 interface SignInListProps {}
 
@@ -51,6 +51,7 @@ const SignIn: FC<SignInListProps> = () => {
   const captcha = createRef<ReCAPTCHA>();
 
   const [captchaToken, setCaptchaToken] = useState<string>('');
+  const [captchaHasErrored, setCaptchaHasErrored] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [country, setCountry] = useState<Country>(Country.UNSPECIFIED);
   const [age, setAge] = useState<Age>(UNSPECIFIED);
@@ -67,6 +68,13 @@ const SignIn: FC<SignInListProps> = () => {
     [nickname, agreedToToS]
   );
 
+  const onCaptchaExpired = useCallback(() => captcha.current?.reset(), [captcha]);
+
+  const onCaptchaErrored = useCallback(() => {
+    setCaptchaHasErrored(true);
+    setSubmitError(new ReCaptchaLoadError().message);
+  }, []);
+
   const onSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
@@ -79,8 +87,8 @@ const SignIn: FC<SignInListProps> = () => {
         let _captchaToken: string | null = captchaToken;
 
         if (!_captchaToken) {
-          if (!captcha.current) {
-            throw new ReCaptchaError();
+          if (!captcha.current || captchaHasErrored) {
+            throw new ReCaptchaLoadError();
           }
 
           _captchaToken = await captcha.current.executeAsync();
@@ -98,13 +106,26 @@ const SignIn: FC<SignInListProps> = () => {
         });
       } catch (err) {
         setSubmitError(
-          err instanceof SignInError || err instanceof ReCaptchaError
+          err instanceof SignInError ||
+            err instanceof ReCaptchaError ||
+            err instanceof ReCaptchaLoadError
             ? err.message
             : 'Unable to sign in. Please try again.'
         );
       }
     },
-    [signIn, isFormValid, nickname, country, age, gender, agreedToToS, captcha, captchaToken]
+    [
+      signIn,
+      isFormValid,
+      nickname,
+      country,
+      age,
+      gender,
+      agreedToToS,
+      captcha,
+      captchaToken,
+      captchaHasErrored,
+    ]
   );
 
   return (
@@ -183,7 +204,8 @@ const SignIn: FC<SignInListProps> = () => {
 
           <ReCAPTCHA
             ref={captcha}
-            onExpired={() => captcha.current?.reset()}
+            onExpired={onCaptchaExpired}
+            onErrored={onCaptchaErrored}
             sitekey={envVar('CAPTCHA_SITE_KEY')!}
             size="invisible"
             badge="bottomright"

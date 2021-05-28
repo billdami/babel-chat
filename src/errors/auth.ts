@@ -18,3 +18,12 @@ export class ReCaptchaError extends Error {
     this.name = 'ReCaptchaError';
   }
 }
+
+export class ReCaptchaLoadError extends Error {
+  constructor(
+    message: string = 'reCAPTCHA has failed to load. Please reload the page and try again.'
+  ) {
+    super(message);
+    this.name = 'ReCaptchaError';
+  }
+}
