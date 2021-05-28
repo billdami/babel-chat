@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './constants';
+import { setupApp } from './firebase';
 
 export const deleteOrphanedData = async (
   db: admin.database.Database,
@@ -30,14 +30,7 @@ export const deleteOrphanedData = async (
 };
 
 export const cleanupDatabase = async (env: 'production' | 'development'): Promise<void> => {
-  // TODO make this better - store db URLs in firebase configs
-  const app = admin.initializeApp({
-    ...JSON.parse(process.env.FIREBASE_CONFIG ?? '{}'),
-    databaseURL:
-      env === 'production'
-        ? `https://${DB_NAME_PRODUCTION}.firebaseio.com/`
-        : `https://${DB_NAME_DEVELOPMENT}.firebaseio.com/`,
-  });
+  const app = setupApp(env);
   const db = app.database();
   const deleteAppInstance = () => app.delete().catch(() => {});
 
