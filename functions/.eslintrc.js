@@ -28,5 +28,7 @@ module.exports = {
     'indent': ['warn', 2],
     'max-len': ['warn', 100],
     'object-curly-spacing': ['warn', 'always'],
+    'operator-linebreak': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
   },
 };
