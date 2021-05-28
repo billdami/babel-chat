@@ -11,8 +11,6 @@ export const generateRandomUUID = (exclude: number[] = [], minNumDigits = 4): nu
   const min = Math.pow(10, numDigits - 1);
   const max = Math.pow(10, numDigits) - 1;
 
-  console.log('TODO remove', numDigits, min, max);
-
   const total = max - min;
   let i = 0;
   let uuid = Math.floor(Math.random() * (max - min + 1)) + min;

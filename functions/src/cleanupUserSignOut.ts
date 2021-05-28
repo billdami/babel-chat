@@ -1,9 +1,12 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
+import { CloudFunction } from 'firebase-functions';
+import { DataSnapshot } from 'firebase-functions/lib/providers/database';
+
 import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './constants';
 
-const funcCleanupUserSignOut = (env: 'production' | 'development') =>
+const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunction<DataSnapshot> =>
   functions.database
     // TODO make this better - store db URLs in firebase configs
     .instance(env === 'production' ? DB_NAME_PRODUCTION : DB_NAME_DEVELOPMENT)
@@ -33,7 +36,8 @@ const funcCleanupUserSignOut = (env: 'production' | 'development') =>
             .equalTo(userId)
             .get()
             .then((snapshots) => {
-              let deletes: Promise<any>[] = [];
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const deletes: Promise<any>[] = [];
               snapshots.forEach((snapshot) => {
                 deletes.push(snapshot.ref.remove());
               });

@@ -6,8 +6,8 @@ import funcValidateCaptcha from './validateCaptcha';
  * @see https://firebase.google.com/docs/functions/typescript
  */
 
-export const production_cleanupUserSignOut = funcCleanupUserSignOut('production');
-export const development_cleanupUserSignOut = funcCleanupUserSignOut('development');
-export const production_cleanupDatabase = funcCleanupDatabase('production');
-export const development_cleanupDatabase = funcCleanupDatabase('development');
+export const productionCleanupUserSignOut = funcCleanupUserSignOut('production');
+export const developmentCleanupUserSignOut = funcCleanupUserSignOut('development');
+export const productionCleanupDatabase = funcCleanupDatabase('production');
+export const developmentCleanupDatabase = funcCleanupDatabase('development');
 export const validateCaptcha = funcValidateCaptcha;
