@@ -48,8 +48,6 @@ export const deleteUser = async (uid: string): Promise<void> => {
   if (userRec.exists()) {
     const userData: User = userRec.val();
     const uuidRef = db.ref(`user_uuids/${userData.uuid}`);
-
-    // TODO clean up all other related data (user's own chats, etc)
     await Promise.all([userRef.remove(), uuidRef.remove()]);
   }
 };
