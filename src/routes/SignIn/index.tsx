@@ -25,6 +25,7 @@ import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
 import { copyrightLine } from '../../constants/app';
 import { envVar } from '../../utils/env';
+import { ReCaptchaError, SignInError } from '../../errors/auth';
 
 interface SignInListProps {}
 
@@ -47,14 +48,15 @@ const countryOptions = [
 const SignIn: FC<SignInListProps> = () => {
   const { isSigningIn, signIn } = useAuth();
 
-  const recaptchaRef = createRef<ReCAPTCHA>();
+  const captcha = createRef<ReCAPTCHA>();
 
+  const [captchaToken, setCaptchaToken] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [country, setCountry] = useState<Country>(Country.UNSPECIFIED);
   const [age, setAge] = useState<Age>(UNSPECIFIED);
   const [gender, setGender] = useState<Gender>(Gender.UNSPECIFIED);
   const [agreedToToS, setAgreedToToS] = useState<boolean>(false);
-  const [submitError, setSubmitError] = useState<Error | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const isFormValid = useMemo<boolean>(
     () =>
@@ -69,27 +71,35 @@ const SignIn: FC<SignInListProps> = () => {
     async (event: FormEvent) => {
       event.preventDefault();
 
-      if (!isFormValid || !recaptchaRef.current) {
+      if (!isFormValid || !captcha.current) {
         return;
       }
 
       try {
-        const token = await recaptchaRef.current.executeAsync();
-
-        if (token) {
-          await signIn({
-            nickname: nickname?.trim(),
-            country,
-            age,
-            gender,
-            agreedToToS,
-          });
+        let _captchaToken: string | null = captchaToken;
+        if (!_captchaToken) {
+          _captchaToken = await captcha.current.executeAsync();
+          if (_captchaToken) {
+            setCaptchaToken(_captchaToken);
+          }
         }
+
+        await signIn(_captchaToken, {
+          nickname: nickname?.trim(),
+          country,
+          age,
+          gender,
+          agreedToToS,
+        });
       } catch (err) {
-        setSubmitError(err);
+        setSubmitError(
+          err instanceof SignInError || err instanceof ReCaptchaError
+            ? err.message
+            : 'Unable to sign in. Please try again.'
+        );
       }
     },
-    [signIn, isFormValid, nickname, country, age, gender, agreedToToS, recaptchaRef]
+    [signIn, isFormValid, nickname, country, age, gender, agreedToToS, captcha, captchaToken]
   );
 
   return (
@@ -137,7 +147,7 @@ const SignIn: FC<SignInListProps> = () => {
           </FormControl>
 
           <FormControl label="Gender">
-            <div className="flex">
+            <div className="flex flex-wrap">
               {GENDERS.map((g) => (
                 <Radio
                   key={g.value}
@@ -167,12 +177,13 @@ const SignIn: FC<SignInListProps> = () => {
           </Checkbox>
 
           <ReCAPTCHA
+            ref={captcha}
+            onExpired={() => captcha.current?.reset()}
             sitekey={envVar('CAPTCHA_SITE_KEY')!}
             size="invisible"
             badge="bottomright"
             // TODO set based on light or dark app theme setting
             theme="light"
-            ref={recaptchaRef}
           />
 
           <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
@@ -190,12 +201,7 @@ const SignIn: FC<SignInListProps> = () => {
               'Start chatting'
             )}
           </Button>
-          {!!submitError && (
-            <ErrorText
-              className="mt-2"
-              text="Sorry, an error ocurred while attempting to sign in."
-            />
-          )}
+          {!!submitError && <ErrorText className="mt-2 font-bold" text={submitError} />}
         </form>
         <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
       </div>

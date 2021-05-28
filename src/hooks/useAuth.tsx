@@ -14,13 +14,19 @@ import React, {
 
 import { NewUserDetails } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
+import { VALIDATE_CAPTCHA_ENDPOINT } from '../constants/api';
+import { SignInError, ReCaptchaError } from '../errors/auth';
 
 interface AuthContext {
   user?: firebase.User | null;
   isSessionLoading: boolean;
   isSigningIn: boolean;
   isSigningOut: boolean;
-  signIn: (details: NewUserDetails) => Promise<firebase.User | null> | void;
+  hasSignedOut: boolean;
+  signIn: (
+    captchaToken: string | null,
+    details: NewUserDetails
+  ) => Promise<firebase.User | null> | void;
   signOut: () => Promise<void> | void;
 }
 
@@ -29,6 +35,7 @@ const authContext = createContext<AuthContext>({
   isSessionLoading: true,
   isSigningIn: false,
   isSigningOut: false,
+  hasSignedOut: false,
   signIn: () => {},
   signOut: () => {},
 });
@@ -39,45 +46,54 @@ const useProvideAuth = () => {
   const [isSessionLoading, setIsSessionLoading] = useState<boolean>(true);
   const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
   const [isSigningOut, setIsSigngingOut] = useState<boolean>(false);
+  const [hasSignedOut, setHasSignedOut] = useState<boolean>(false);
 
-  const signIn = useCallback(async (details: NewUserDetails) => {
+  const signIn = useCallback(async (captchaToken: string | null, details: NewUserDetails) => {
+    if (!captchaToken) {
+      throw new ReCaptchaError();
+    }
+
     setIsSigningIn(true);
 
     try {
+      const captchaResult = await fetch(VALIDATE_CAPTCHA_ENDPOINT, {
+        method: 'POST',
+        body: new URLSearchParams({ token: captchaToken }),
+      });
+
+      if (!captchaResult?.ok) {
+        throw new ReCaptchaError();
+      }
+
       const userCred = await firebase.auth().signInAnonymously();
 
       if (userCred.user) {
-        // TODO failing to create the user should reject this promise
         await createUser(userCred.user.uid, details);
         setIsSigningIn(false);
         setUser(userCred.user);
         return userCred.user;
       } else {
-        // TODO custom error classes
-        throw new Error('could not create user on sign in');
+        throw new SignInError();
       }
     } catch (err) {
       setIsSigningIn(false);
-      // TODO custom error classes
       throw err;
     }
   }, []);
 
-  const signOut = useCallback(async () => {
-    // TODO catch/handle errors
+  const signOut = useCallback(async (shouldDelete: boolean = true) => {
     const uid = firebase.auth().currentUser?.uid;
 
     try {
       setIsSigngingOut(true);
 
-      if (uid) {
+      if (uid && shouldDelete) {
         await deleteUser(uid);
       }
 
       await firebase.auth().signOut();
-
       setUser(null);
-      setIsSigngingOut(false);
+      setHasSignedOut(true);
     } catch (err) {
       setUser(null);
       setIsSigngingOut(false);
@@ -100,7 +116,7 @@ const useProvideAuth = () => {
           if (user) {
             const userRec = await firebase.database().ref(`users/${user.uid}`).get();
             if (!userRec.exists()) {
-              await signOut();
+              await signOut(false);
             }
           }
 
@@ -118,11 +134,19 @@ const useProvideAuth = () => {
     return () => authChangeUnsub.current?.();
   }, [isSessionLoading, signOut]);
 
+  useEffect(() => {
+    if (hasSignedOut) {
+      // reload the entire sign in page to reset recaptcha, etc
+      setTimeout(() => window.location.reload(), 1);
+    }
+  }, [hasSignedOut]);
+
   return {
     user,
     isSessionLoading,
     isSigningIn,
     isSigningOut,
+    hasSignedOut,
     signIn,
     signOut,
   };
