@@ -1,9 +1,7 @@
-import * as functions from "firebase-functions";
+import funcValidateCaptcha from './validateCaptcha';
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+/**
+ * @see https://firebase.google.com/docs/functions/typescript
+ */
+
+export const validateCaptcha = funcValidateCaptcha;
