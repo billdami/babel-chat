@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { CloudFunction } from 'firebase-functions';
 import { DataSnapshot } from 'firebase-functions/lib/providers/database';
 
-import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './constants';
+import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './utils/constants';
 
 const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunction<DataSnapshot> =>
   functions.database
@@ -55,40 +55,36 @@ const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunctio
         );
 
         // delete /user_ips/{userId}
-        // TODO enable once the collection exists
-        // operations.push(
-        //   db
-        //     .ref(`user_ips/${userId}`)
-        //     .remove()
-        //     .catch(() => {})
-        // );
+        operations.push(
+          db
+            .ref(`user_ips/${userId}`)
+            .remove()
+            .catch(() => {})
+        );
 
         // delete /user_blocks/{userId}
-        // TODO enable once the collection exists
-        // operations.push(
-        //   db
-        //     .ref(`user_blocks/${userId}`)
-        //     .remove()
-        //     .catch(() => {})
-        // );
+        operations.push(
+          db
+            .ref(`user_blocks/${userId}`)
+            .remove()
+            .catch(() => {})
+        );
 
         // delete /user_spam_reports/{userId}
-        // TODO enable once the collection exists
-        // operations.push(
-        //   db
-        //     .ref(`user_spam_reports/${userId}`)
-        //     .remove()
-        //     .catch(() => {})
-        // );
+        operations.push(
+          db
+            .ref(`user_spam_reports/${userId}`)
+            .remove()
+            .catch(() => {})
+        );
 
         // delete /spam_reports/{userId}
-        // TODO enable once the collection exists
-        // operations.push(
-        //   db
-        //     .ref(`spam_reports/${userId}`)
-        //     .remove()
-        //     .catch(() => {})
-        // );
+        operations.push(
+          db
+            .ref(`spam_reports/${userId}`)
+            .remove()
+            .catch(() => {})
+        );
 
         return Promise.all(operations).then(deleteAppInstance);
       }

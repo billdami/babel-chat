@@ -1,12 +1,12 @@
 import * as functions from 'firebase-functions';
 import fetch from 'node-fetch';
 
+import { recaptchaEndpoint } from './utils/constants';
+
 // TODO [future] remove origin: true, or allow only specific hosts if possible
 // @see https://github.com/expressjs/cors#configuration-options
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cors = require('cors')({ origin: true });
-
-const recaptchaEndpoint = 'https://recaptcha.google.com/recaptcha/api/siteverify';
 
 const funcValidateCaptcha = functions.https.onRequest(
   async (req: functions.https.Request, res: functions.Response<string>) => {
