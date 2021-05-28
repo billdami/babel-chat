@@ -4,6 +4,8 @@ import fetch from 'node-fetch';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cors = require('cors')({ origin: true });
 
+const recaptchaEndpoint = 'https://recaptcha.google.com/recaptcha/api/siteverify';
+
 const funcValidateCaptcha = functions.https.onRequest(
   async (req: functions.https.Request, res: functions.Response<string>) => {
     cors(req, res, async () => {
@@ -37,11 +39,7 @@ const funcValidateCaptcha = functions.https.onRequest(
           remoteip: ip,
         });
 
-        const recaptchaRes = await fetch('https://recaptcha.google.com/recaptcha/api/siteverify', {
-          method: 'POST',
-          body: params,
-        });
-
+        const recaptchaRes = await fetch(recaptchaEndpoint, { method: 'POST', body: params });
         const result = await recaptchaRes.json();
 
         if (result.success) {

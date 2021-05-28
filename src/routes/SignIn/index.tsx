@@ -71,13 +71,18 @@ const SignIn: FC<SignInListProps> = () => {
     async (event: FormEvent) => {
       event.preventDefault();
 
-      if (!isFormValid || !captcha.current) {
+      if (!isFormValid) {
         return;
       }
 
       try {
         let _captchaToken: string | null = captchaToken;
+
         if (!_captchaToken) {
+          if (!captcha.current) {
+            throw new ReCaptchaError();
+          }
+
           _captchaToken = await captcha.current.executeAsync();
           if (_captchaToken) {
             setCaptchaToken(_captchaToken);

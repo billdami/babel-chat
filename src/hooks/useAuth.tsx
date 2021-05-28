@@ -14,8 +14,8 @@ import React, {
 
 import { NewUserDetails } from '../types/user';
 import { createUser, deleteUser } from '../utils/user';
-import { VALIDATE_CAPTCHA_ENDPOINT } from '../constants/api';
 import { SignInError, ReCaptchaError } from '../errors/auth';
+import { envVar } from '../utils/env';
 
 interface AuthContext {
   user?: firebase.User | null;
@@ -56,7 +56,7 @@ const useProvideAuth = () => {
     setIsSigningIn(true);
 
     try {
-      const captchaResult = await fetch(VALIDATE_CAPTCHA_ENDPOINT, {
+      const captchaResult = await fetch(`${envVar('FB_FUNCTIONS_BASE_URL')}/validateCaptcha`, {
         method: 'POST',
         body: new URLSearchParams({ token: captchaToken }),
       });
