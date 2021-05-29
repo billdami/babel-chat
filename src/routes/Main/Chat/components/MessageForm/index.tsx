@@ -38,7 +38,11 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
 
   const onInputFocus = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     // fixes issue with the document being pushed up out of view on iOS
-    setTimeout(() => (document.body.scrollTop = 0), 50);
+    event.preventDefault();
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+    }, 1);
   }, []);
 
   const onMessageSubmit = useCallback(
