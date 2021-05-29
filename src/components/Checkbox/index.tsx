@@ -5,12 +5,14 @@ interface CheckboxProps
   extends DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   label?: string;
   labelClassName?: string;
+  inputClassName?: string;
   standalone?: boolean;
 }
 
 const Checkbox: FC<CheckboxProps> = ({
   className,
   labelClassName = '',
+  inputClassName = '',
   label = '',
   id,
   children,
@@ -43,7 +45,8 @@ const Checkbox: FC<CheckboxProps> = ({
         focus:ring-green-300
         disabled:opacity-50
         disabled:cursor-not-allowed`,
-        { 'mt-1 mr-2': !standalone }
+        { 'mt-1 mr-2': !standalone },
+        inputClassName
       )}
       {...rest}
     />

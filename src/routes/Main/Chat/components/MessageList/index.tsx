@@ -42,6 +42,15 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser, d
     if (destUserId) {
       map[destUserId] = destUser?.id ? destUser : originChat?.toUserDetails;
     }
+
+    if (destUser?.id && !map[destUser?.id]) {
+      map[destUser?.id] = destUser;
+    }
+
+    if (originChat?.id && !map[originChat?.id]) {
+      map[originChat?.id] = originChat?.toUserDetails;
+    }
+
     return map;
   }, [originUser, originChat, destUser, destUserId]);
 

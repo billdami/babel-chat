@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FC, useCallback, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import { matchPath, NavLink, useHistory, useLocation } from 'react-router-dom';
 
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
@@ -9,6 +9,7 @@ import UserNickname from '../../../../../components/UserNickname';
 import useDrawer from '../../../../../hooks/useDrawer';
 import { ChatRecord } from '../../../../../types/chat';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import { ChatRouteParams } from '../../../Chat';
 
 interface ChatsListProps {
   chats?: ChatRecord[];
@@ -16,10 +17,19 @@ interface ChatsListProps {
 }
 
 const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
+  const history = useHistory();
+  const location = useLocation();
   const { closeDrawer } = useDrawer();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedChats, setSelectedChats] = useState<string[]>([]);
+
+  const currentChatId = useMemo<string | undefined>(
+    () =>
+      (matchPath(location.pathname, { path: '/main/chat/:userId' })?.params as ChatRouteParams)
+        ?.userId,
+    [location.pathname]
+  );
 
   const selectAllChats = useCallback(() => {
     setSelectedChats([...(chats?.map((c) => c.id) ?? [])]);
@@ -63,11 +73,17 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
       const chatRecs = selectedChats.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
       chatRecs.forEach((chat) => ops.push(chat!.ref?.remove().catch(() => {})));
       deselectAllChats();
+
+      // if one of the removed chats is currently being viewed, navigate to the index
+      if (currentChatId && selectedChats.includes(currentChatId)) {
+        history.push('/main');
+      }
+
       await Promise.all(ops.filter(Boolean));
     } catch (err) {
       // TODO handle
     }
-  }, [selectedChats, chats, deselectAllChats]);
+  }, [selectedChats, chats, deselectAllChats, currentChatId, history]);
 
   const markChatsRead = useCallback(async () => {
     try {
@@ -75,11 +91,12 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
       const chatRecs = selectedChats.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
       const update = { dateLastSeen: getFirebaseTimestamp() };
       chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
+      deselectAllChats();
       await Promise.all(ops.filter(Boolean));
     } catch (err) {
       // TODO handle
     }
-  }, [selectedChats, chats]);
+  }, [selectedChats, chats, deselectAllChats]);
 
   // TODO apply sorting
   return (
@@ -87,12 +104,23 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
       {!!chats?.length && (
         <>
           {isEditing ? (
-            <div>
-              <div className="flex justify-between px-3 mb-2">
-                <Button variant="link" size="sm" className="-ml-2" onClick={stopEditing}>
-                  &#8592; Done
-                </Button>
-                <div className="flex">
+            <div className="flex justify-between items-center px-3 mb-1">
+              <div className="flex items-center px-2 py-1 -ml-2 bg-gray-200 rounded">
+                <Checkbox
+                  onChange={onToggleAllChange}
+                  checked={selectedChats.length === chats?.length}
+                  inputClassName="bg-white"
+                  standalone
+                />
+                {!!selectedChats.length && (
+                  <span className="ml-2 text-gray-500 text-sm font-bold">
+                    {selectedChats.length}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex">
+                <div className="flex mr-2">
                   <Button
                     variant="link"
                     size="sm"
@@ -111,29 +139,13 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                     Mark read
                   </Button>
                 </div>
-              </div>
-              <div className="px-3 mb-1 pb-2 border-b border-gray-200 flex items-center">
-                <Checkbox
-                  onChange={onToggleAllChange}
-                  checked={selectedChats.length === chats?.length}
-                  className="mr-2"
-                  standalone
-                />
-                <span className="text-sm text-gray-500">
-                  {!selectedChats.length ? (
-                    <>No chats selected</>
-                  ) : (
-                    <>
-                      <span className="font-bold">{selectedChats.length}</span>{' '}
-                      {/* create pluralize() util for this */}
-                      {selectedChats.length === 1 ? 'chat' : 'chats'} selected
-                    </>
-                  )}
-                </span>
+                <Button variant="link" size="sm" className="-ml-2" onClick={stopEditing}>
+                  Done
+                </Button>
               </div>
             </div>
           ) : (
-            <div className="flex justify-between px-3 mb-2">
+            <div className="flex justify-end px-3 mb-1">
               <Button variant="link" size="sm" className="-ml-2" onClick={startEditing}>
                 Edit chats
               </Button>
