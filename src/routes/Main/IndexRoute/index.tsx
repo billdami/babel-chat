@@ -2,6 +2,7 @@ import React, { FC, useCallback } from 'react';
 
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
+import Icon from '../../../components/Icon';
 import UserNickname from '../../../components/UserNickname';
 import { copyrightLine } from '../../../constants/app';
 import useAuth from '../../../hooks/useAuth';
@@ -50,7 +51,7 @@ const Index: FC<IndexProps> = () => {
         </Button>
         {/* TODO update with a real button/menu */}
         <Button variant="inverse" className="ml-auto" outline>
-          👤
+          <Icon name="user" size="md" />
         </Button>
       </div>
       <div className="flex-1 flex overflow-y-auto">
