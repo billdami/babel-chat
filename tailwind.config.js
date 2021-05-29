@@ -32,6 +32,8 @@ module.exports = {
       backgroundColor: ['disabled', 'active', 'checked'],
       backgroundImage: ['checked'],
       borderColor: ['checked'],
+      textColor: ['disabled'],
+      textDecoration: ['disabled'],
     },
   },
   plugins: [],

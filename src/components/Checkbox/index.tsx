@@ -5,6 +5,7 @@ interface CheckboxProps
   extends DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   label?: string;
   labelClassName?: string;
+  standalone?: boolean;
 }
 
 const Checkbox: FC<CheckboxProps> = ({
@@ -13,20 +14,20 @@ const Checkbox: FC<CheckboxProps> = ({
   label = '',
   id,
   children,
+  standalone = false,
   ...rest
 }) => (
   <div className={cn('flex items-start', className)}>
     <input
       type="checkbox"
       id={id}
-      className="appearance-none
+      className={cn(
+        `appearance-none
         flex-shrink-0
         border
         border-gray-400
         w-4
         h-4
-        mt-1
-        mr-2
         bg-no-repeat
         bg-center
         bg-contain
@@ -41,7 +42,9 @@ const Checkbox: FC<CheckboxProps> = ({
         focus:ring-opacity-50
         focus:ring-green-300
         disabled:opacity-50
-        disabled:cursor-not-allowed"
+        disabled:cursor-not-allowed`,
+        { 'mt-1 mr-2': !standalone }
+      )}
       {...rest}
     />
     <label htmlFor={id} className={labelClassName}>
