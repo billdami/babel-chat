@@ -4,6 +4,7 @@ import { matchPath, NavLink, useHistory, useLocation } from 'react-router-dom';
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
 import Checkbox from '../../../../../components/Checkbox';
+import Icon from '../../../../../components/Icon';
 import Spinner from '../../../../../components/Spinner';
 import UserNickname from '../../../../../components/UserNickname';
 import useDrawer from '../../../../../hooks/useDrawer';
@@ -120,33 +121,34 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
               </div>
 
               <div className="flex">
-                <div className="flex mr-2">
+                <div className="flex mr-1">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={markChatsRead}
+                    disabled={!selectedChats.length}
+                    title="Mark as read"
+                  >
+                    <Icon name="message-check" size="sm" />
+                  </Button>
                   <Button
                     variant="link"
                     size="sm"
                     onClick={removeChats}
                     disabled={!selectedChats.length}
+                    title="Remove"
                   >
-                    Remove
-                  </Button>
-                  <Button
-                    variant="link"
-                    size="sm"
-                    className="-mr-2"
-                    onClick={markChatsRead}
-                    disabled={!selectedChats.length}
-                  >
-                    Mark read
+                    <Icon name="trash-can" size="sm" />
                   </Button>
                 </div>
-                <Button variant="link" size="sm" className="-ml-2" onClick={stopEditing}>
+                <Button variant="link" size="sm" className="-mr-2" onClick={stopEditing}>
                   Done
                 </Button>
               </div>
             </div>
           ) : (
             <div className="flex justify-end px-3 mb-1">
-              <Button variant="link" size="sm" className="-ml-2" onClick={startEditing}>
+              <Button variant="link" size="sm" className="-mr-2" onClick={startEditing}>
                 Edit chats
               </Button>
             </div>
