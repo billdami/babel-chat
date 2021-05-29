@@ -12,8 +12,10 @@ import { useParams } from 'react-router-dom';
 
 import { ChatRouteParams } from '../..';
 import Button from '../../../../../components/Button';
+import Icon from '../../../../../components/Icon';
 import Input from '../../../../../components/Input';
 import { MAX_MESSAGE_LEN } from '../../../../../constants/chat';
+import useIsMobile from '../../../../../hooks/useIsMobile';
 
 interface MessageFormProps {
   canSend: boolean;
@@ -22,6 +24,7 @@ interface MessageFormProps {
 
 const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
   const { userId } = useParams<ChatRouteParams>();
+  const isMobile = useIsMobile();
 
   const [newMessage, setNewMessage] = useState<string>('');
 
@@ -46,10 +49,12 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
 
       onSubmit(newMessage.trim());
       setNewMessage('');
-      // should the input be re-focused on mobile? (maybe once focus scroll bug is fixed?)
-      newMessageInput.current?.focus();
+
+      if (!isMobile) {
+        newMessageInput.current?.focus();
+      }
     },
-    [isFormEnabled, newMessage, onSubmit]
+    [isFormEnabled, newMessage, onSubmit, isMobile]
   );
 
   useLayoutEffect(() => {
@@ -76,9 +81,8 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         maxLength={MAX_MESSAGE_LEN}
         disabled={!canSend}
       />
-      <Button type="submit" className="w-24" disabled={!isFormEnabled}>
-        {/* TODO make the send button an up arrow (or similar "send"-like) icon on mobile */}
-        Send
+      <Button type="submit" className="md:w-24" disabled={!isFormEnabled}>
+        {isMobile ? <Icon name="arrow-up" /> : 'Send'}
       </Button>
     </form>
   );

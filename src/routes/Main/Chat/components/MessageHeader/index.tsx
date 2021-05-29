@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
+import Icon from '../../../../../components/Icon';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import UserStatus from '../../../../../components/UserStatus';
@@ -40,7 +41,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           className="mr-2 md:hidden relative flex-shrink-0"
           outline
         >
-          &#9776;
+          <Icon name="bars" />
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"
@@ -76,7 +77,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           ))}
       </div>
       <Button onClick={closeChat} variant="inverse" className="ml-2 flex-shrink-0" outline>
-        &times;
+        <Icon name="x-mark" />
       </Button>
     </div>
   );

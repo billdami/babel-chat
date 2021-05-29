@@ -5,10 +5,34 @@ import User from '../Svgs/Icons/User';
 import MessageCheck from '../Svgs/Icons/MessageCheck';
 import TrashCan from '../Svgs/Icons/TrashCan';
 import Ban from '../Svgs/Icons/Ban';
+import OctagonExclamation from '../Svgs/Icons/OctagonExclamation';
+import Ellipsis from '../Svgs/Icons/Ellipsis';
+import EllipsisVertical from '../Svgs/Icons/EllipsisVertical';
+import PaperPlane from '../Svgs/Icons/PaperPlane';
+import XMark from '../Svgs/Icons/XMark';
+import ArrowUp from '../Svgs/Icons/ArrowUp';
+import Bars from '../Svgs/Icons/Bars';
+import Ghost from '../Svgs/Icons/Ghost';
+import Message from '../Svgs/Icons/Message';
+import MessageExclamation from '../Svgs/Icons/MessageExclamation';
 
 type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-type IconName = 'user' | 'message-check' | 'trash-can' | 'ban';
+type IconName =
+  | 'user'
+  | 'message'
+  | 'message-exclamation'
+  | 'message-check'
+  | 'trash-can'
+  | 'ban'
+  | 'octagon-exclamation'
+  | 'ellipsis'
+  | 'ellipsis-vertical'
+  | 'paper-plane'
+  | 'x-mark'
+  | 'arrow-up'
+  | 'bars'
+  | 'ghost';
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName;
@@ -19,12 +43,32 @@ const getSvg = (name: IconName) => {
   switch (name) {
     case 'user':
       return User;
+    case 'message':
+      return Message;
+    case 'message-exclamation':
+      return MessageExclamation;
     case 'message-check':
       return MessageCheck;
     case 'trash-can':
       return TrashCan;
     case 'ban':
       return Ban;
+    case 'octagon-exclamation':
+      return OctagonExclamation;
+    case 'ellipsis':
+      return Ellipsis;
+    case 'ellipsis-vertical':
+      return EllipsisVertical;
+    case 'paper-plane':
+      return PaperPlane;
+    case 'x-mark':
+      return XMark;
+    case 'arrow-up':
+      return ArrowUp;
+    case 'bars':
+      return Bars;
+    case 'ghost':
+      return Ghost;
   }
 };
 

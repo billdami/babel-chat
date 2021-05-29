@@ -11,6 +11,7 @@ import useDrawer from '../../../../hooks/useDrawer';
 import useNotifications from '../../../../hooks/useNotifications';
 import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import Link from '../../../../components/Link';
+import Icon from '../../../../components/Icon';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
@@ -34,8 +35,9 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         <Link to="/main" className="py-1 px-2 bg-white border border-white">
           <LogoIcon className="h-8" />
         </Link>
+        {/* TODO user menu */}
         <Button variant="inverse" outline>
-          &#8942;
+          <Icon name="ellipsis-vertical" />
         </Button>
       </div>
       <TabPanel
