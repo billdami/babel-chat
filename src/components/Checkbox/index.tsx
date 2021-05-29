@@ -45,7 +45,7 @@ const Checkbox: FC<CheckboxProps> = ({
         focus:ring-green-300
         disabled:opacity-50
         disabled:cursor-not-allowed`,
-        { 'mt-1 mr-2': !standalone },
+        { 'mt-1 mr-3': !standalone },
         inputClassName
       )}
       {...rest}

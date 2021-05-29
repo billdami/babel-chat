@@ -15,6 +15,7 @@ import Bars from '../Svgs/Icons/Bars';
 import Ghost from '../Svgs/Icons/Ghost';
 import Message from '../Svgs/Icons/Message';
 import MessageExclamation from '../Svgs/Icons/MessageExclamation';
+import Thumbtack from '../Svgs/Icons/Thumbtack';
 
 type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -32,11 +33,13 @@ type IconName =
   | 'x-mark'
   | 'arrow-up'
   | 'bars'
-  | 'ghost';
+  | 'ghost'
+  | 'thumbtack';
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName;
   size?: IconSize;
+  title?: string;
 }
 
 const getSvg = (name: IconName) => {
@@ -69,6 +72,8 @@ const getSvg = (name: IconName) => {
       return Bars;
     case 'ghost':
       return Ghost;
+    case 'thumbtack':
+      return Thumbtack;
   }
 };
 

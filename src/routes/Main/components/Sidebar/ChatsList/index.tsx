@@ -101,12 +101,12 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
 
   // TODO apply sorting
   return (
-    <div className="ChatsList py-2">
-      {!!chats?.length && (
-        <>
+    <div className="ChatsList pb-2">
+      {(!!chats?.length || isEditing) && (
+        <div className="px-3 py-1 mb-1 bg-gray-200 shadow-inner">
           {isEditing ? (
-            <div className="flex justify-between items-center px-3 mb-1">
-              <div className="flex items-center px-2 py-1 -ml-2 bg-gray-200 rounded">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
                 <Checkbox
                   onChange={onToggleAllChange}
                   checked={selectedChats.length === chats?.length}
@@ -114,7 +114,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                   standalone
                 />
                 {!!selectedChats.length && (
-                  <span className="ml-2 text-gray-500 text-sm font-bold">
+                  <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-sm font-bold">
                     {selectedChats.length}
                   </span>
                 )}
@@ -147,13 +147,13 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
               </div>
             </div>
           ) : (
-            <div className="flex justify-end px-3 mb-1">
+            <div className="flex justify-end">
               <Button variant="link" size="sm" className="-mr-2" onClick={startEditing}>
                 Edit chats
               </Button>
             </div>
           )}
-        </>
+        </div>
       )}
       <ul>
         {chats?.map((chat) => (
