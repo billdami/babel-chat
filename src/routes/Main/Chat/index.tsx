@@ -23,7 +23,7 @@ const Chat: FC<ChatProps> = () => {
   const { user: authUser } = useAuth();
   const { user, updateUser } = useCurrentUser();
   const [destUser, isLoadingDestUser] = useUser(userId);
-  const [chat] = useChatByMembers(authUser?.uid, userId);
+  const [originChat] = useChatByMembers(authUser?.uid, userId);
   const [destChat] = useChatByMembers(userId, authUser?.uid);
 
   // can't send if: not logged in, dest user doesn't exist, or dest user is yourself
@@ -39,7 +39,7 @@ const Chat: FC<ChatProps> = () => {
       }
 
       // create chat for origin user, if it doesnt exist
-      if (!chat?.id) {
+      if (!originChat?.id) {
         createChat(authUser.uid, userId, true);
       }
 
@@ -54,13 +54,13 @@ const Chat: FC<ChatProps> = () => {
       // update the last active date for the user
       updateUser({ dateLastActive: getFirebaseTimestamp() });
     },
-    [canSendMessage, chat, destChat, userId, authUser, updateUser]
+    [canSendMessage, originChat, destChat, userId, authUser, updateUser]
   );
 
   return (
     <div className="Chat flex flex-col flex-1 min-w-0">
-      <MessageHeader destUser={destUser} originChat={chat} isLoading={isLoadingDestUser} />
-      <MessageList originUser={user} originChat={chat} destUser={destUser} />
+      <MessageHeader destUser={destUser} originChat={originChat} isLoading={isLoadingDestUser} />
+      <MessageList originUser={user} originChat={originChat} destUser={destUser} />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
     </div>
   );

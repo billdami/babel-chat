@@ -23,10 +23,11 @@ interface MessageListProps {
 const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser }) => {
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
-  const [messages, isLoading] = useChatMessages(originUser?.id, destUser?.id);
+  const [messages, isLoading] = useChatMessages(originUser?.id, originChat?.id);
   const isPageVisible = usePageVisibility();
   const prevIsPageVisible = usePrevious<boolean>(isPageVisible);
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
+  const prevChatId = usePrevious<string | undefined>(originChat?.id);
 
   const isFirstMount = useRef<boolean>(true);
   const containerElement = useRef<HTMLDivElement>(null);
@@ -37,11 +38,11 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
       map[originUser.id] = { ...originUser, isSelf: true };
     }
 
-    if (destUser?.id) {
-      map[destUser.id] = destUser;
+    if (originChat?.id) {
+      map[originChat.id] = destUser?.id ? destUser : originChat.toUserDetails;
     }
     return map;
-  }, [originUser, destUser]);
+  }, [originUser, originChat, destUser]);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -55,6 +56,14 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
       originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
     }
   }, [prevMessages, messages, originChat, isPageVisible, prevIsPageVisible]);
+
+  useEffect(() => {
+    // if the chat just became created (i.e. the other user sent the first message while the user
+    // is viewing the chat between them) then immediately update the dateLastSeen
+    if (!prevChatId && originChat?.id) {
+      originChat.ref?.update({ dateLastSeen: getFirebaseTimestamp() });
+    }
+  }, [originChat, prevChatId]);
 
   useLayoutEffect(() => {
     const el = containerElement.current;
