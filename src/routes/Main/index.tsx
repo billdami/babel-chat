@@ -19,7 +19,7 @@ import Sidebar from './components/Sidebar';
 interface MainListProps {}
 
 const Main: FC<MainListProps> = () => {
-  useBodyClass('overflow-hidden');
+  useBodyClass('overflow-hidden', true);
   // The `path` lets us build <Route> paths that are relative to the parent route,
   // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>
   const { path /*url*/ } = useRouteMatch();
