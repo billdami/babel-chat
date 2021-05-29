@@ -10,6 +10,7 @@ import useInterval from '../../hooks/useInterval';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import { getFirebaseTimestamp } from '../../utils/firebase';
 import { ACTIVE_TICK_INTERVAL } from '../../constants/user';
+import useAuth from '../../hooks/useAuth';
 
 import Chat from './Chat';
 import Index from './IndexRoute';
@@ -23,7 +24,15 @@ const Main: FC<MainListProps> = () => {
   // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>
   const { path /*url*/ } = useRouteMatch();
   const { isDrawerOpen, closeDrawer } = useDrawer();
-  const { updateUser } = useCurrentUser();
+  const { user, isUserLoading, updateUser } = useCurrentUser();
+  const { isSigningOut, hasSignedOut, signOut } = useAuth();
+
+  // if the user becomes deleted while signed in, auto log out
+  useEffect(() => {
+    if (!user?.id && !isUserLoading && !isSigningOut && !hasSignedOut) {
+      signOut();
+    }
+  }, [user, isUserLoading, isSigningOut, hasSignedOut, signOut]);
 
   // when the app is first opened (or reopened), update the user's last active status
   useEffect(() => {
