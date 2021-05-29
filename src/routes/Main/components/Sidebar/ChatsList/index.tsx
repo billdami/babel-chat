@@ -19,10 +19,10 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   const { closeDrawer } = useDrawer();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [selectedChats, setSelectedChats] = useState<ChatRecord[]>([]);
+  const [selectedChats, setSelectedChats] = useState<string[]>([]);
 
   const selectAllChats = useCallback(() => {
-    setSelectedChats([...(chats ?? [])]);
+    setSelectedChats([...(chats?.map((c) => c.id) ?? [])]);
   }, [chats]);
 
   const deselectAllChats = useCallback(() => {
@@ -37,7 +37,16 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
     [selectAllChats, deselectAllChats]
   );
 
-  const toggleChatSelection = useCallback((chat: ChatRecord) => {}, []);
+  const toggleChatSelection = useCallback(
+    (chat: ChatRecord) => {
+      if (selectedChats.includes(chat.id)) {
+        setSelectedChats(selectedChats.filter((id) => id !== chat.id));
+      } else {
+        setSelectedChats([...selectedChats, chat.id]);
+      }
+    },
+    [selectedChats]
+  );
 
   const startEditing = useCallback(() => {
     setIsEditing(true);
@@ -51,23 +60,26 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   const removeChats = useCallback(async () => {
     try {
       const ops: Promise<any>[] = [];
-      selectedChats.forEach((chat) => ops.push(chat.ref?.remove().catch(() => {})));
+      const chatRecs = selectedChats.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+      chatRecs.forEach((chat) => ops.push(chat!.ref?.remove().catch(() => {})));
+      deselectAllChats();
       await Promise.all(ops.filter(Boolean));
     } catch (err) {
       // TODO handle
     }
-  }, [selectedChats]);
+  }, [selectedChats, chats, deselectAllChats]);
 
   const markChatsRead = useCallback(async () => {
     try {
-      const update = { dateLastSeen: getFirebaseTimestamp() };
       const ops: Promise<any>[] = [];
-      selectedChats.forEach((chat) => ops.push(chat.ref?.update(update).catch(() => {})));
+      const chatRecs = selectedChats.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+      const update = { dateLastSeen: getFirebaseTimestamp() };
+      chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
       await Promise.all(ops.filter(Boolean));
     } catch (err) {
       // TODO handle
     }
-  }, [selectedChats]);
+  }, [selectedChats, chats]);
 
   // TODO apply sorting
   return (
@@ -77,8 +89,8 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
           {isEditing ? (
             <div>
               <div className="flex justify-between px-3 mb-2">
-                <Button variant="link" size="sm" className="-ml-3" onClick={stopEditing}>
-                  Cancel
+                <Button variant="link" size="sm" className="-ml-2" onClick={stopEditing}>
+                  &#8592; Done
                 </Button>
                 <div className="flex">
                   <Button
@@ -92,6 +104,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                   <Button
                     variant="link"
                     size="sm"
+                    className="-mr-2"
                     onClick={markChatsRead}
                     disabled={!selectedChats.length}
                   >
@@ -106,16 +119,22 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                   className="mr-2"
                   standalone
                 />
-                <span className="text-sm text-gray-600">
-                  <span className="font-bold">{selectedChats.length}</span>{' '}
-                  {/* create pluralize() util for this */}
-                  {selectedChats.length === 1 ? 'chat' : 'chats'} selected
+                <span className="text-sm text-gray-500">
+                  {!selectedChats.length ? (
+                    <>No chats selected</>
+                  ) : (
+                    <>
+                      <span className="font-bold">{selectedChats.length}</span>{' '}
+                      {/* create pluralize() util for this */}
+                      {selectedChats.length === 1 ? 'chat' : 'chats'} selected
+                    </>
+                  )}
                 </span>
               </div>
             </div>
           ) : (
             <div className="flex justify-between px-3 mb-2">
-              <Button variant="link" size="sm" className="-ml-3" onClick={startEditing}>
+              <Button variant="link" size="sm" className="-ml-2" onClick={startEditing}>
                 Edit chats
               </Button>
             </div>
@@ -142,7 +161,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                 <div className="flex items-center">
                   {isEditing && (
                     <Checkbox
-                      checked={selectedChats.includes(chat)}
+                      checked={selectedChats.includes(chat.id)}
                       onChange={() => toggleChatSelection(chat)}
                       onClick={(event) => event.stopPropagation()}
                       className="mr-2"
@@ -159,6 +178,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                     pulse={false}
                   />
                 )}
+                {/* TODO on mouseEnter/Leave toggle "..." actions menu on desktop  */}
               </div>
             </NavLink>
           </li>
