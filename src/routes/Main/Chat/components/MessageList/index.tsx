@@ -11,19 +11,20 @@ import usePageVisibility from '../../../../../hooks/usePageVisibility';
 import Spinner from '../../../../../components/Spinner';
 
 interface AuthorsMap {
-  [id: string]: User & { isSelf?: boolean };
+  [id: string]: (User & { isSelf?: boolean }) | undefined | null;
 }
 
 interface MessageListProps {
   originUser?: UserRecord | null;
   originChat?: ChatRecord | null;
   destUser?: UserRecord | null;
+  destUserId?: string;
 }
 
-const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser }) => {
+const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser, destUserId }) => {
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
-  const [messages, isLoading] = useChatMessages(originUser?.id, originChat?.id);
+  const [messages, isLoading] = useChatMessages(originUser?.id, destUserId);
   const isPageVisible = usePageVisibility();
   const prevIsPageVisible = usePrevious<boolean>(isPageVisible);
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
@@ -38,11 +39,11 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
       map[originUser.id] = { ...originUser, isSelf: true };
     }
 
-    if (originChat?.id) {
-      map[originChat.id] = destUser?.id ? destUser : originChat.toUserDetails;
+    if (destUserId) {
+      map[destUserId] = destUser?.id ? destUser : originChat?.toUserDetails;
     }
     return map;
-  }, [originUser, originChat, destUser]);
+  }, [originUser, originChat, destUser, destUserId]);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -105,7 +106,10 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
             <span
               className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
             >
-              {authors[message.author]?.isSelf ? 'Me' : authors[message.author]?.nickname}:
+              {authors[message.author]?.isSelf
+                ? 'Me'
+                : authors[message.author]?.nickname || 'Unknown'}
+              :
             </span>{' '}
             <span>{message.content}</span>
           </div>
