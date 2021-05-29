@@ -36,6 +36,12 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
     setNewMessage(event.target.value);
   }, []);
 
+  const onInputFocus = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    // fixes issue with the document being pushed up out of view on iOS
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+  }, []);
+
   const onMessageSubmit = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
@@ -70,6 +76,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         autoComplete="off"
         value={newMessage}
         onChange={onNewMessageChange}
+        onFocus={onInputFocus}
         ref={newMessageInput}
         maxLength={MAX_MESSAGE_LEN}
         disabled={!canSend}
