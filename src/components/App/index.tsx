@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
 import useAuth from '../../hooks/useAuth';
-import useIsAppOffline from '../../hooks/useAppOffline';
+import useIsAppOffline from '../../hooks/useIsAppOffline';
 import Main from '../../routes/Main';
 import PageNotFound from '../../routes/PageNotFound';
 import SignIn from '../../routes/SignIn';
