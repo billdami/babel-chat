@@ -37,7 +37,7 @@ const Index: FC<IndexProps> = () => {
           className="relative mr-2 md:hidden"
           outline
         >
-          <Icon name="bars" />
+          <Icon name="bars" size="sm" className="my-1" />
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"
@@ -51,7 +51,7 @@ const Index: FC<IndexProps> = () => {
         </Button>
         {/* TODO update with a real button/menu */}
         <Button variant="inverse" className="ml-auto" outline>
-          <Icon name="user" size="md" />
+          <Icon name="user" size="sm" className="my-1" />
         </Button>
       </div>
       <div className="flex-1 flex overflow-y-auto">

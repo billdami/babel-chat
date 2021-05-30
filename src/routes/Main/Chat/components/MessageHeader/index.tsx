@@ -41,7 +41,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           className="mr-2 md:hidden relative flex-shrink-0"
           outline
         >
-          <Icon name="bars" />
+          <Icon name="bars" size="sm" className="my-1" />
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"
@@ -77,7 +77,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           ))}
       </div>
       <Button onClick={closeChat} variant="inverse" className="ml-2 flex-shrink-0" outline>
-        <Icon name="x-mark" />
+        <Icon name="x-mark" size="sm" className="my-1" />
       </Button>
     </div>
   );

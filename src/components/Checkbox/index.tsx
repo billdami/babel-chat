@@ -4,6 +4,7 @@ import cn from 'classnames';
 interface CheckboxProps
   extends DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   label?: string;
+  isIndeterminate?: boolean;
   labelClassName?: string;
   inputClassName?: string;
   standalone?: boolean;
@@ -17,6 +18,7 @@ const Checkbox: FC<CheckboxProps> = ({
   id,
   children,
   standalone = false,
+  isIndeterminate = false,
   ...rest
 }) => (
   <div className={cn('flex items-start', className)}>
@@ -45,7 +47,10 @@ const Checkbox: FC<CheckboxProps> = ({
         focus:ring-green-300
         disabled:opacity-50
         disabled:cursor-not-allowed`,
-        { 'mt-1 mr-3': !standalone },
+        {
+          'mt-1 mr-3': !standalone,
+          'bg-check-indeterminate bg-green-500 border-green-500 ': isIndeterminate,
+        },
         inputClassName
       )}
       {...rest}

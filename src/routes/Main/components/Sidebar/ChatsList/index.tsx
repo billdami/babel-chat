@@ -110,6 +110,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                 <Checkbox
                   onChange={onToggleAllChange}
                   checked={selectedChats.length === chats?.length}
+                  isIndeterminate={!!selectedChats.length && selectedChats.length !== chats?.length}
                   inputClassName="bg-white"
                   standalone
                 />

@@ -37,7 +37,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         </Link>
         {/* TODO user menu */}
         <Button variant="inverse" outline>
-          <Icon name="ellipsis-vertical" />
+          <Icon name="ellipsis-vertical" size="sm" className="my-1" />
         </Button>
       </div>
       <TabPanel
