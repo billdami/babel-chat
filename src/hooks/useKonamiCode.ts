@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 const KONAMI_CODE =
   'ARROWUP ARROWUP ARROWDOWN ARROWDOWN ARROWLEFT ARROWRIGHT ARROWLEFT ARROWRIGHT B A ENTER';
 
+// @see https://dev.to/gabe_ragland/how-to-create-a-usekonamicode-react-hook-259a
 const useKonamiCode = (handler: () => void) => {
   const timeout = useRef<number>();
   const [keys, setKeys] = useState<string[]>([]);
