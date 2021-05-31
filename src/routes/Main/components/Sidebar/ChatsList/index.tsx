@@ -5,8 +5,10 @@ import Button from '../../../../../components/Button';
 import Checkbox from '../../../../../components/Checkbox';
 import Icon from '../../../../../components/Icon';
 import Spinner from '../../../../../components/Spinner';
+import useCurrentUser from '../../../../../hooks/useCurrentUser';
 import { ChatRecord } from '../../../../../types/chat';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import { blockUser } from '../../../../../utils/user';
 import { ChatRouteParams } from '../../../Chat';
 
 import ListItem from './ListItem';
@@ -19,6 +21,7 @@ interface ChatsListProps {
 const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   const history = useHistory();
   const location = useLocation();
+  const { user, updateUser } = useCurrentUser();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedChatIds, setSelectedChatIds] = useState<string[]>([]);
@@ -71,7 +74,6 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         const ops: Promise<any>[] = [];
         const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
         chatRecs.forEach((chat) => ops.push(chat!.ref?.remove().catch(() => {})));
-        deselectAllChats();
 
         // if one of the removed chats is currently being viewed, navigate to the index
         if (currentChatId && chatIds.includes(currentChatId)) {
@@ -79,11 +81,13 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         }
 
         await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
       } catch (err) {
         // TODO handle
       }
     },
-    [chats, deselectAllChats, currentChatId, history]
+    [chats, deselectAllChats, currentChatId, history, updateUser]
   );
 
   const markChatsRead = useCallback(
@@ -93,13 +97,32 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
         const update = { dateLastSeen: getFirebaseTimestamp() };
         chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
-        deselectAllChats();
         await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
       } catch (err) {
         // TODO handle
       }
     },
-    [chats, deselectAllChats]
+    [chats, deselectAllChats, updateUser]
+  );
+
+  const blockChats = useCallback(
+    async (chatIds: string[]) => {
+      // TODO show confirmation modal before blocking users
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        chatRecs.forEach((chat) => ops.push(blockUser(user?.id!, chat!.id).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        await removeChats(chatIds);
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [user, chats, deselectAllChats, removeChats, updateUser]
   );
 
   // TODO apply sorting
@@ -131,11 +154,11 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                   <Button
                     variant="link"
                     size="sm"
-                    onClick={() => markChatsRead(selectedChatIds)}
+                    onClick={() => blockChats(selectedChatIds)}
                     disabled={!selectedChatIds.length}
-                    title="Mark as read"
+                    title="Block"
                   >
-                    <Icon name="message-check" size="sm" />
+                    <Icon name="ban" size="sm" />
                   </Button>
                   <Button
                     variant="link"
@@ -145,6 +168,15 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                     title="Remove"
                   >
                     <Icon name="trash-can" size="sm" />
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => markChatsRead(selectedChatIds)}
+                    disabled={!selectedChatIds.length}
+                    title="Mark as read"
+                  >
+                    <Icon name="message-check" size="sm" />
                   </Button>
                 </div>
                 <Button variant="link" size="sm" className="-mr-2" onClick={stopEditing}>

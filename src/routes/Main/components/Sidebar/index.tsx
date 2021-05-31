@@ -31,7 +31,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
 
   return (
     <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
-      <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 bg-green-600 text-white">
+      <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 text-white">
         <Link to="/main" className="py-1 px-2 bg-white border border-white">
           <LogoIcon className="h-8" />
         </Link>

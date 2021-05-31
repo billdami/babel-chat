@@ -26,12 +26,14 @@ const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
   const hasGender = gender?.value !== UNSPECIFIED;
   const hasCountry = country?.value && country?.value !== UNSPECIFIED;
   const hasAgeOrGender = hasAge || hasGender;
+  const fullyAnon =
+    user?.age === UNSPECIFIED &&
+    user?.gender === Gender.UNSPECIFIED &&
+    user?.country === Country.UNSPECIFIED;
 
   return (
     <h3 className={cn('truncate', className)}>
-      {user?.age === UNSPECIFIED &&
-      user?.gender === Gender.UNSPECIFIED &&
-      user?.country === Country.UNSPECIFIED ? (
+      {fullyAnon ? (
         <span className="italic">Anonymous</span>
       ) : (
         <>

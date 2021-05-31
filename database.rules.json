@@ -28,6 +28,28 @@
         )"
       }
     },
+    "user_blocks": {
+      "$blocks_user_id": {
+        // authenticated users can read and write to block lists whose ID matches their own user ID
+        ".read": "root.child('APP_OFFLINE').val() !== true &&
+          auth != null &&
+          $blocks_user_id === auth.uid",
+        ".write": "root.child('APP_OFFLINE').val() !== true &&
+          auth != null &&
+          $blocks_user_id === auth.uid",
+      }
+    },
+    "user_spam_reports": {
+      "$spam_reports_user_id": {
+        // authenticated users can read and write to spam report lists whose ID matches their own user ID
+        ".read": "root.child('APP_OFFLINE').val() !== true &&
+          auth != null &&
+          $spam_reports_user_id === auth.uid",
+        ".write": "root.child('APP_OFFLINE').val() !== true &&
+          auth != null &&
+          $spam_reports_user_id === auth.uid",
+      }
+    },
     "chats": {
       "$chats_user_id": {
         // authenticated users can read chat lists whose ID matches their own user ID

@@ -34,7 +34,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   }, [history]);
 
   return (
-    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white">
+    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 bg-green-500 text-white">
       <div className="flex items-center min-w-0">
         <Button
           onClick={toggleDrawer}
