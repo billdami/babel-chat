@@ -17,6 +17,7 @@ interface MessageHeaderProps {
   destUser?: UserRecord;
   originChat?: ChatRecord | null;
   isLoading?: boolean;
+  isBlocked?: boolean;
 }
 
 const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading = false }) => {
@@ -59,7 +60,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
             <div className="flex items-center min-w-0">
               <div className="hidden md:block relative flex-shrink-0 mr-2">
                 <UserAvatar user={user} />
-                <UserStatus user={user} className="absolute -top-1 -left-1 ml-px mt-px" />
+                <UserStatus user={user} className="absolute -top-1 -left-1 ml-px mt-px shadow" />
               </div>
               <div className="truncate">
                 <div className="flex items-center">

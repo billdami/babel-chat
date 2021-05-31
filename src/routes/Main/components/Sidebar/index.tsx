@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import cn from 'classnames';
 
 import Button from '../../../../components/Button';
@@ -6,7 +6,7 @@ import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
-import { useUsers } from '../../../../hooks/useUserRecord';
+import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
 import useDrawer from '../../../../hooks/useDrawer';
 import useNotifications from '../../../../hooks/useNotifications';
 import LogoIcon from '../../../../components/Svgs/Logos/Icon';
@@ -25,9 +25,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user } = useAuth();
   const { activeTab } = useDrawer();
   const { numUnread } = useNotifications();
-
+  const [userBlocks] = useUserBlocks(user?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(user?.uid);
+
+  const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
   return (
     <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
@@ -46,7 +48,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <UsersList users={users} isLoading={isLoadingUsers} />
+        <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
       </TabPanel>
       <TabPanel
         id="tab-chats"
@@ -54,7 +56,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ChatsList chats={chats} isLoading={isLoadingChats} />
+        <ChatsList chats={chats} isLoading={isLoadingChats} blockedIds={blockedIds} />
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />

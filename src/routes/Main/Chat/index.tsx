@@ -5,7 +5,7 @@ import { createChat, createChatMessage } from '../../../utils/chat';
 import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
-import { useUser } from '../../../hooks/useUserRecord';
+import { useUser, useUserBlocks } from '../../../hooks/useUserRecord';
 import { getFirebaseTimestamp } from '../../../utils/firebase';
 
 import MessageForm from './components/MessageForm';
@@ -25,11 +25,21 @@ const Chat: FC<ChatProps> = () => {
   const [destUser, isLoadingDestUser] = useUser(userId);
   const [originChat, isLoadingOriginChat] = useChatByMembers(authUser?.uid, userId);
   const [destChat] = useChatByMembers(userId, authUser?.uid);
+  const [userBlocks] = useUserBlocks(user?.id);
 
-  // can't send if: not logged in, dest user doesn't exist, or dest user is yourself
+  const isBlocked = useMemo<boolean>(
+    () => (userBlocks?.map((b) => b.id) ?? []).includes(userId),
+    [userBlocks, userId]
+  );
+
+  // can't send if:
+  // - not logged in
+  // - dest user doesn't exist
+  // - dest user is blocked
+  // - dest user is yourself
   const canSendMessage = useMemo<boolean>(
-    () => !!destUser?.id && !!authUser && !!userId && destUser?.id !== authUser?.uid,
-    [destUser, authUser, userId]
+    () => !!destUser?.id && !isBlocked && !!authUser && !!userId && destUser?.id !== authUser?.uid,
+    [destUser, authUser, userId, isBlocked]
   );
 
   const onMessageSubmit = useCallback(
@@ -63,12 +73,14 @@ const Chat: FC<ChatProps> = () => {
         destUser={destUser}
         originChat={originChat}
         isLoading={isLoadingDestUser || isLoadingOriginChat}
+        isBlocked={isBlocked}
       />
       <MessageList
         originUser={user}
         originChat={originChat}
         destUser={destUser}
         destUserId={userId}
+        isBlocked={isBlocked}
       />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
     </div>

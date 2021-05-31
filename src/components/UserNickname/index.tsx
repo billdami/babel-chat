@@ -9,6 +9,7 @@ interface UserNicknameProps {
   user?: User | null;
   isCurrentUser?: boolean;
   isOffline?: boolean;
+  isBlocked?: boolean;
   mutedClassName?: string;
 }
 
@@ -17,13 +18,19 @@ const UserNickname: FC<UserNicknameProps> = ({
   user,
   isCurrentUser = false,
   isOffline = false,
+  isBlocked = false,
   mutedClassName = 'text-gray-400',
 }) => (
   <h2 className={cn('truncate', className)}>
-    <span className="font-bold">{user?.nickname}</span>
-    {user?.uuid && (
-      <span className={cn('tracking-tighter font-light', mutedClassName)}>#{user?.uuid}</span>
-    )}
+    <span
+      className={cn({ 'line-through': isBlocked })}
+      title={isBlocked ? `${user?.nickname}#${user?.uuid} is blocked` : ''}
+    >
+      <span className="font-bold">{user?.nickname}</span>
+      {user?.uuid && (
+        <span className={cn('tracking-tighter font-light', mutedClassName)}>#{user?.uuid}</span>
+      )}
+    </span>
     {isCurrentUser && (
       <span className={cn('ml-1 text-xs font-bold', mutedClassName)}>
         <Icon name="user" size="sm" className="inline-block" title="This is you!" />

@@ -16,9 +16,10 @@ import ListItem from './ListItem';
 interface ChatsListProps {
   chats?: ChatRecord[];
   isLoading: boolean;
+  blockedIds: string[];
 }
 
-const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
+const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
   const history = useHistory();
   const location = useLocation();
   const { user, updateUser } = useCurrentUser();
@@ -31,6 +32,11 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
       (matchPath(location.pathname, { path: '/main/chat/:userId' })?.params as ChatRouteParams)
         ?.userId,
     [location.pathname]
+  );
+
+  const visibleChats = useMemo<ChatRecord[]>(
+    () => chats?.filter((c) => !blockedIds.includes(c.id)) ?? [],
+    [chats, blockedIds]
   );
 
   const selectAllChats = useCallback(() => {
@@ -109,11 +115,15 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
 
   const blockChats = useCallback(
     async (chatIds: string[]) => {
+      if (!user?.id) {
+        return;
+      }
+
       // TODO show confirmation modal before blocking users
       try {
         const ops: Promise<any>[] = [];
         const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
-        chatRecs.forEach((chat) => ops.push(blockUser(user?.id!, chat!.id).catch(() => {})));
+        chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
         await Promise.all(ops.filter(Boolean));
         await removeChats(chatIds);
         deselectAllChats();
@@ -194,7 +204,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         </div>
       )}
       <ul>
-        {chats?.map((chat) => (
+        {visibleChats.map((chat) => (
           <ListItem
             key={chat.id}
             chat={chat}
