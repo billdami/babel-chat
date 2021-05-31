@@ -30,7 +30,7 @@ const Index: FC<IndexProps> = () => {
 
   return (
     <div className="Index flex flex-col flex-1">
-      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-4 bg-green-500 text-white">
+      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
         <Button
           onClick={toggleDrawer}
           variant="inverse"
@@ -48,10 +48,6 @@ const Index: FC<IndexProps> = () => {
               }
             />
           )}
-        </Button>
-        {/* TODO update with a real button/menu */}
-        <Button variant="inverse" className="ml-auto" outline>
-          <Icon name="user" size="sm" className="my-1" />
         </Button>
       </div>
       <div className="flex-1 flex overflow-y-auto">

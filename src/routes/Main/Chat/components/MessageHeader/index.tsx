@@ -30,9 +30,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   const user = isOffline ? originChat?.toUserDetails : destUser;
   const userDetailsExist = !!user?.nickname;
 
-  const closeChat = useCallback(() => {
-    history.push('/main');
-  }, [history]);
+  const closeChat = useCallback(() => history.push('/main'), [history]);
 
   return (
     <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 bg-green-500 text-white">
@@ -84,9 +82,12 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
             </div>
           ))}
       </div>
-      <Button onClick={closeChat} variant="inverse" className="ml-2 flex-shrink-0" outline>
-        <Icon name="x-mark" size="sm" className="my-1" />
-      </Button>
+      <div>
+        <Button variant="inverse" className="ml-2 flex-shrink-0" outline>
+          <span className="hidden md:inline mr-2 text-sm">Chat menu</span>
+          <Icon name="ellipsis-vertical" size="sm" className="inline-block" />
+        </Button>
+      </div>
     </div>
   );
 };

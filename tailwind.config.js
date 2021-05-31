@@ -22,6 +22,9 @@ module.exports = {
         '108': '27rem',
         '116': '29rem',
         '120': '30rem',
+      },
+      minHeight: {
+        'navbar': '3.625rem'
       }
     },
   },

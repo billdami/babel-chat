@@ -110,6 +110,7 @@ const MessageList: FC<MessageListProps> = ({
   }, [prevMessages, messages]);
 
   return (
+    // TODO figure out timing issues when transitioning between chats (so theres no flicker of messages, etc.)
     <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
       <div className="py-1">
         {originUser && destUser && originUser.id === destUser.id && (

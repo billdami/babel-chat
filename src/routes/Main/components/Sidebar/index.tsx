@@ -22,12 +22,12 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
-  const { user } = useAuth();
+  const { user: authUser } = useAuth();
   const { activeTab } = useDrawer();
   const { numUnread } = useNotifications();
-  const [userBlocks] = useUserBlocks(user?.uid);
+  const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
-  const [chats, isLoadingChats] = useChats(user?.uid);
+  const [chats, isLoadingChats] = useChats(authUser?.uid);
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
@@ -39,7 +39,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         </Link>
         {/* TODO user menu */}
         <Button variant="inverse" outline>
-          <Icon name="ellipsis-vertical" size="sm" className="my-1" />
+          <Icon name="user" size="sm" className="inline-block" />
         </Button>
       </div>
       <TabPanel
