@@ -8,6 +8,7 @@ import UserNickname from '../../../../../components/UserNickname';
 import UserDetails from '../../../../../components/UserDetails';
 import UserStatus from '../../../../../components/UserStatus';
 import Spinner from '../../../../../components/Spinner';
+import UserAvatar from '../../../../../components/UserAvatar';
 
 interface UsersListProps {
   users?: UserRecord[];
@@ -25,7 +26,8 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
         {users?.map((user) => (
           <li key={user.id}>
             <NavLink
-              className="flex items-baseline w-full
+              className="flex items-center
+                w-full
                 px-3 py-1
                 text-left
                 hover:bg-opacity-50 hover:bg-gray-200
@@ -34,7 +36,10 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading }) => {
               to={`/main/chat/${user.id}`}
               onClick={closeDrawer}
             >
-              <UserStatus user={user} className="mr-2 flex-shrink-0" />
+              <div className="relative flex-shrink-0 mr-2">
+                <UserStatus user={user} className="absolute -top-1 -left-1 ml-px mt-px" />
+                <UserAvatar user={user} />
+              </div>
               <div className="truncate">
                 <UserNickname
                   user={user}

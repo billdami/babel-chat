@@ -23,7 +23,7 @@ const Chat: FC<ChatProps> = () => {
   const { user: authUser } = useAuth();
   const { user, updateUser } = useCurrentUser();
   const [destUser, isLoadingDestUser] = useUser(userId);
-  const [originChat] = useChatByMembers(authUser?.uid, userId);
+  const [originChat, isLoadingOriginChat] = useChatByMembers(authUser?.uid, userId);
   const [destChat] = useChatByMembers(userId, authUser?.uid);
 
   // can't send if: not logged in, dest user doesn't exist, or dest user is yourself
@@ -59,7 +59,11 @@ const Chat: FC<ChatProps> = () => {
 
   return (
     <div className="Chat flex flex-col flex-1 min-w-0">
-      <MessageHeader destUser={destUser} originChat={originChat} isLoading={isLoadingDestUser} />
+      <MessageHeader
+        destUser={destUser}
+        originChat={originChat}
+        isLoading={isLoadingDestUser || isLoadingOriginChat}
+      />
       <MessageList
         originUser={user}
         originChat={originChat}

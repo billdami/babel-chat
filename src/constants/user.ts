@@ -43,24 +43,24 @@ export const STATUSES: StatusOption[] = [
     value: Status.ACTIVE,
     label: 'Active',
     bgColor: 'bg-green-400',
-    borderColor: 'border-green-400',
+    borderColor: 'border-white',
   },
   {
     value: Status.IDLE,
     label: 'Idle',
     bgColor: 'bg-yellow-400',
-    borderColor: 'border-yellow-400',
+    borderColor: 'border-white',
   },
   {
     value: Status.AWAY,
     label: 'Away',
     bgColor: 'bg-gray-400',
-    borderColor: 'border-gray-400',
+    borderColor: 'border-white',
   },
   {
     value: Status.OFFLINE,
     label: 'Offline',
-    bgColor: 'bg-transparent',
+    bgColor: 'bg-white',
     borderColor: 'border-gray-400',
   },
 ];

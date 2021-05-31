@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
+import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import UserStatus from '../../../../../components/UserStatus';
@@ -55,17 +56,23 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
         </Button>
         {!isLoading &&
           (userDetailsExist ? (
-            <div className="min-w-0">
-              <div className="flex items-center">
-                <UserNickname
-                  user={user}
-                  isOffline={isOffline}
-                  className="md:text-lg md:leading-5"
-                  mutedClassName="text-green-200"
-                />
-                <UserStatus user={destUser} className="ml-2 shadow flex-shrink-0" />
+            <div className="flex items-center min-w-0">
+              <div className="hidden md:block relative flex-shrink-0 mr-2">
+                <UserAvatar user={user} />
+                <UserStatus user={user} className="absolute -top-1 -left-1 ml-px mt-px" />
               </div>
-              <UserDetails user={user} className="text-xs md:text-sm leading-3 text-green-200" />
+              <div className="truncate">
+                <div className="flex items-center">
+                  <UserNickname
+                    user={user}
+                    isOffline={isOffline}
+                    className="md:text-lg md:leading-5"
+                    mutedClassName="text-green-200"
+                  />
+                  <UserStatus user={user} className="md:hidden ml-2 flex-shrink-0" />
+                </div>
+                <UserDetails user={user} className="text-xs md:text-sm leading-3 text-green-200" />
+              </div>
             </div>
           ) : (
             <div className="min-w-0">

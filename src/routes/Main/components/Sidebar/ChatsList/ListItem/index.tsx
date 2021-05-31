@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import Badge from '../../../../../../components/Badge';
 import Checkbox from '../../../../../../components/Checkbox';
+import UserAvatar from '../../../../../../components/UserAvatar';
 import UserNickname from '../../../../../../components/UserNickname';
 import useDrawer from '../../../../../../hooks/useDrawer';
 import { ChatRecord } from '../../../../../../types/chat';
@@ -32,7 +33,7 @@ const ListItem: FC<ListItemProps> = ({ chat, selectedChatIds, isEditing, toggleC
         onClick={closeDrawer}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             {isEditing && (
               <Checkbox
                 checked={selectedChatIds.includes(chat.id)}
@@ -42,10 +43,18 @@ const ListItem: FC<ListItemProps> = ({ chat, selectedChatIds, isEditing, toggleC
                 standalone
               />
             )}
-            <UserNickname user={chat.toUserDetails} className="text-gray-800" />
+            <div className="flex items-center min-w-0">
+              <UserAvatar user={chat.toUserDetails} size={20} className="flex-shrink-0 mr-2" />
+              <UserNickname user={chat.toUserDetails} className="text-gray-800" />
+            </div>
           </div>
           {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
-            <Badge className="" tooltip="There are unread message(s)" size="md" pulse={false} />
+            <Badge
+              className="flex-shrink-0 ml-1"
+              tooltip="There are unread message(s)"
+              size="md"
+              pulse={false}
+            />
           )}
           {/* TODO on mouseEnter/Leave toggle "..." actions menu on desktop  */}
         </div>
