@@ -1,9 +1,10 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
+import Menu from '../../../../../components/Menu';
 import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
@@ -24,6 +25,8 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   const history = useHistory();
   const { toggleDrawer } = useDrawer();
   const { numUnread } = useNotifications();
+
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   // use the main user record to display details, but fall back to the chat's copy (e.g. if they signed out)
   const isOffline = !destUser?.id;
@@ -83,10 +86,56 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           ))}
       </div>
       <div>
-        <Button variant="inverse" className="ml-2 flex-shrink-0" outline>
-          <span className="hidden md:inline mr-2 text-sm">Chat menu</span>
-          <Icon name="ellipsis-vertical" size="sm" className="inline-block" />
-        </Button>
+        <Menu
+          isOpen={isMenuOpen}
+          menuClassName="py-2 text-sm "
+          onOutsideClick={() => setIsMenuOpen(false)}
+          target={
+            <Button
+              variant="inverse"
+              className="ml-2 flex-shrink-0"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              outline
+            >
+              <span className="hidden md:inline mr-2 text-sm">Chat menu</span>
+              <Icon name="ellipsis-vertical" size="sm" className="inline-block" />
+            </Button>
+          }
+        >
+          {/* TODO create <MenuItem> */}
+          <button
+            onClick={closeChat}
+            type="button"
+            className="flex items-center w-full px-4 py-1 text-left text-gray-600"
+          >
+            <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
+            Close chat
+          </button>
+          <button
+            onClick={closeChat}
+            type="button"
+            className="flex items-center w-full px-4 py-1 text-left text-gray-600"
+          >
+            <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
+            Remove from list
+          </button>
+          <button
+            onClick={closeChat}
+            type="button"
+            className="flex items-center w-full px-4 py-1 text-left text-gray-600"
+          >
+            <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
+            Block user
+          </button>
+          <button
+            onClick={closeChat}
+            type="button"
+            className="flex items-center w-full px-4 py-1 text-left text-red-600"
+          >
+            <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
+            Report spam
+          </button>
+        </Menu>
       </div>
     </div>
   );

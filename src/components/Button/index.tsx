@@ -11,6 +11,8 @@ interface ButtonProps
   block?: boolean;
   fullWidth?: boolean;
   outline?: boolean;
+  // TODO use for active states (like a menu being open)
+  isActive?: boolean;
 }
 
 const baseClasses = `text-center
@@ -60,6 +62,7 @@ const Button: FC<ButtonProps> = ({
   block = true,
   fullWidth = false,
   outline = false,
+  isActive = false,
   variant = 'primary',
   size = 'md',
   ...rest
