@@ -20,9 +20,10 @@ import Input from '../../components/Input';
 import Link from '../../components/Link';
 import Radio from '../../components/Radio';
 import Select from '../../components/Select';
-import useAuth from '../../hooks/useAuth';
 import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
+import useAuth from '../../hooks/useAuth';
+import useScrollToTop from '../../hooks/useScrollToTop';
 import { copyrightLine } from '../../constants/app';
 import { envVar } from '../../utils/env';
 import { ReCaptchaError, ReCaptchaLoadError, SignInError } from '../../errors/auth';
@@ -46,6 +47,7 @@ const countryOptions = [
 ];
 
 const SignIn: FC<SignInListProps> = () => {
+  useScrollToTop();
   const { isSigningIn, signIn } = useAuth();
 
   const captcha = createRef<ReCAPTCHA>();
@@ -197,8 +199,8 @@ const SignIn: FC<SignInListProps> = () => {
             onChange={(e) => setAgreedToToS(e.target.checked)}
           >
             I am over 18 and agree to the{' '}
-            <Link to="/terms-of-service" target="_blank">
-              terms of service
+            <Link to="/terms-of-use" target="_blank">
+              terms <span className="hidden md:inline">of use</span>
             </Link>
           </Checkbox>
 
@@ -230,7 +232,17 @@ const SignIn: FC<SignInListProps> = () => {
           </Button>
           {!!submitError && <ErrorText className="mt-2 font-bold" text={submitError} />}
         </form>
-        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="text-sm text-gray-400 text-center">
+          {copyrightLine}
+          <br />{' '}
+          <Link to="/privacy-policy" target="_blank">
+            privacy policy
+          </Link>{' '}
+          &middot;{' '}
+          <Link to="/terms-of-use" target="_blank">
+            terms of use
+          </Link>
+        </div>
       </div>
     </div>
   );

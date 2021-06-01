@@ -6,7 +6,8 @@ import useIsAppOffline from '../../hooks/useIsAppOffline';
 import Main from '../../routes/Main';
 import PageNotFound from '../../routes/PageNotFound';
 import SignIn from '../../routes/SignIn';
-import TermsOfService from '../../routes/TermsOfService';
+import TermsOfUse from '../../routes/TermsOfUse';
+import PrivacyPolicy from '../../routes/PrivacyPolicy';
 import ProtectedRoute from '../ProtectedRoute';
 import UnprotectedRoute from '../UnprotectedRoute';
 import Splash from '../Splash';
@@ -37,8 +38,11 @@ const App: FC<AppProps> = () => {
             <UnprotectedRoute path="/sign-in">
               <SignIn />
             </UnprotectedRoute>
-            <Route path="/terms-of-service">
-              <TermsOfService />
+            <Route path="/terms-of-use">
+              <TermsOfUse />
+            </Route>
+            <Route path="/privacy-policy">
+              <PrivacyPolicy />
             </Route>
             <Route path="*">
               <PageNotFound />
