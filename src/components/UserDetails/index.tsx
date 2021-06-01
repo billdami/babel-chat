@@ -9,9 +9,10 @@ import { Gender, GenderOption, User } from '../../types/user';
 interface UserDetailsProps {
   className?: string;
   user?: User;
+  shortCountry?: boolean;
 }
 
-const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
+const UserDetails: FC<UserDetailsProps> = ({ className = '', user, shortCountry = false }) => {
   const gender = useMemo<GenderOption | undefined>(
     () => GENDERS.find((g) => g.value === user?.gender),
     [user]
@@ -40,7 +41,7 @@ const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
           {hasAge && `${user?.age}yr old`}
           {hasGender && `${hasAge ? ` ${gender?.label.toLowerCase()}` : gender?.label}`}
           {hasAgeOrGender && hasCountry && ', '}
-          {hasCountry && country?.label}
+          {hasCountry && (shortCountry ? country?.value : country?.label)}
         </>
       )}
     </h3>

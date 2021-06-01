@@ -37,7 +37,7 @@ const Index: FC<IndexProps> = () => {
           className="relative mr-2 md:hidden"
           outline
         >
-          <Icon name="bars" size="sm" className="my-1" />
+          <Icon name="bars" size="sm" className="inline-block" />
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"

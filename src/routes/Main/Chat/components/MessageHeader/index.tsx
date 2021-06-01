@@ -1,18 +1,20 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
 import Menu, { MenuContentProps } from '../../../../../components/Menu';
+import MenuItem from '../../../../../components/Menu/MenuItem';
 import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import UserStatus from '../../../../../components/UserStatus';
+import useAuth from '../../../../../hooks/useAuth';
 import useDrawer from '../../../../../hooks/useDrawer';
 import useNotifications from '../../../../../hooks/useNotifications';
 import { ChatRecord } from '../../../../../types/chat';
-import { UserRecord } from '../../../../../types/user';
+import { User, UserRecord } from '../../../../../types/user';
 
 interface MessageHeaderProps {
   destUser?: UserRecord;
@@ -22,37 +24,61 @@ interface MessageHeaderProps {
 }
 
 interface ActionsMenuProps extends MenuContentProps {
+  user?: User;
+  isBlocked?: boolean;
+  canRemove?: boolean;
+  canBlock?: boolean;
+  canReportSpam?: boolean;
   closeChat?: () => void;
+  removeChat?: () => void;
+  toggleBlock?: () => void;
+  reportSpam?: () => void;
 }
 
-const ActionsMenu: FC<ActionsMenuProps> = ({ sheet, closeChat }) => (
+const ActionsMenu: FC<ActionsMenuProps> = ({
+  sheet,
+  user,
+  isBlocked,
+  canRemove,
+  canBlock,
+  canReportSpam,
+  closeChat,
+  removeChat,
+  toggleBlock,
+  reportSpam,
+}) => (
   <>
-    {/* TODO create <MenuItem> */}
-    <button
-      onClick={closeChat}
-      type="button"
-      className="flex items-center w-full px-4 py-1 text-left text-gray-600"
-    >
-      <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
-      Close chat
-    </button>
-    <button type="button" className="flex items-center w-full px-4 py-1 text-left text-gray-600">
+    <div className="flex items-center px-4 pb-2 mb-2 border-b border-gray-100">
+      <UserAvatar user={user} className="mr-2 border border-gray-200" />
+      <div>
+        <UserNickname user={user} className="text-gray-800" />
+        <UserDetails user={user} className="text-gray-400" shortCountry />
+      </div>
+    </div>
+    <MenuItem onClick={removeChat} disabled={!canRemove}>
       <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
       Remove from list
-    </button>
-    <button type="button" className="flex items-center w-full px-4 py-1 text-left text-gray-600">
+    </MenuItem>
+    <MenuItem onClick={toggleBlock} disabled={!canBlock}>
       <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
-      Block user
-    </button>
-    <button type="button" className="flex items-center w-full px-4 py-1 text-left text-red-600">
+      {isBlocked ? 'Unblock user' : 'Block user'}
+    </MenuItem>
+    <MenuItem onClick={reportSpam} disabled={!canReportSpam}>
       <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
       Report spam
-    </button>
+    </MenuItem>
+    <div className="mt-2 pt-2 border-t border-gray-100">
+      <MenuItem onClick={closeChat}>
+        <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
+        Close chat
+      </MenuItem>
+    </div>
   </>
 );
 
 const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading = false }) => {
   const history = useHistory();
+  const { user: authUser } = useAuth();
   const { toggleDrawer } = useDrawer();
   const { numUnread } = useNotifications();
 
@@ -62,8 +88,73 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   const isOffline = !destUser?.id;
   const user = isOffline ? originChat?.toUserDetails : destUser;
   const userDetailsExist = !!user?.nickname;
+  const isSelf = user?.id === authUser?.uid;
 
-  const closeChat = useCallback(() => history.push('/main'), [history]);
+  // TODO
+  const isBlocked = false;
+  const canRemove = !isSelf;
+  const canBlock = !isSelf && !isOffline;
+  // TODO only allow spam reports if the user has received at least once message from them
+  const canReportSpam = !isSelf && !isOffline;
+
+  const closeChat = useCallback(() => {
+    setIsMenuOpen(false);
+    history.push('/main');
+  }, [history]);
+
+  const removeChat = useCallback(() => {
+    // TODO
+    if (canRemove) {
+      setIsMenuOpen(false);
+      closeChat();
+    }
+  }, [canRemove, closeChat]);
+
+  const toggleBlock = useCallback(() => {
+    // TODO
+    if (canBlock) {
+      // TODO modal confirm
+
+      setIsMenuOpen(false);
+      if (!isBlocked) {
+        closeChat();
+      }
+    }
+  }, [canBlock, isBlocked, closeChat]);
+
+  const reportSpam = useCallback(() => {
+    // TODO
+    if (canReportSpam) {
+      // TODO modal confirm
+      setIsMenuOpen(false);
+      closeChat();
+    }
+  }, [canReportSpam, closeChat]);
+
+  const actionsMenuProps = useMemo<ActionsMenuProps>(
+    () => ({
+      user,
+      isBlocked,
+      canRemove,
+      canBlock,
+      canReportSpam,
+      closeChat,
+      removeChat,
+      toggleBlock,
+      reportSpam,
+    }),
+    [
+      user,
+      isBlocked,
+      canRemove,
+      canBlock,
+      canReportSpam,
+      closeChat,
+      removeChat,
+      toggleBlock,
+      reportSpam,
+    ]
+  );
 
   return (
     <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 bg-green-500 text-white">
@@ -74,7 +165,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           className="mr-2 md:hidden relative flex-shrink-0"
           outline
         >
-          <Icon name="bars" size="sm" className="my-1" />
+          <Icon name="bars" size="sm" className="inline-block" />
           {!!numUnread && (
             <Badge
               className="absolute -right-1 -top-1"
@@ -118,10 +209,10 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
       <div>
         <Menu<ActionsMenuProps>
           isOpen={isMenuOpen}
-          menuClassName="py-2 text-sm "
+          menuClassName="py-2 text-sm"
           onOutsideClick={() => setIsMenuOpen(false)}
           content={ActionsMenu}
-          contentProps={{ closeChat }}
+          contentProps={actionsMenuProps}
           trigger={
             <Button
               variant="inverse"

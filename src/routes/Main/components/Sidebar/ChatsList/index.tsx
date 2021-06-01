@@ -113,7 +113,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     [chats, deselectAllChats, updateUser]
   );
 
-  const blockChats = useCallback(
+  const blockUsers = useCallback(
     async (chatIds: string[]) => {
       if (!user?.id) {
         return;
@@ -164,7 +164,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
                   <Button
                     variant="link"
                     size="sm"
-                    onClick={() => blockChats(selectedChatIds)}
+                    onClick={() => blockUsers(selectedChatIds)}
                     disabled={!selectedChatIds.length}
                     title="Block"
                   >

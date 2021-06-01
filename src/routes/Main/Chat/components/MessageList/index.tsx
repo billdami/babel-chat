@@ -142,7 +142,7 @@ const MessageList: FC<MessageListProps> = ({
               <span>{message.content}</span>
             </div>
           ))}
-        {isLoading && <Spinner className="mx-2 md:mx-4 my-1" />}
+        {isLoading && <Spinner className="mx-2 md:mx-3 my-1" />}
       </div>
     </div>
   );

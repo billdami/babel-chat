@@ -82,7 +82,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         disabled={!canSend}
       />
       <Button type="submit" className="md:w-24" disabled={!isFormEnabled}>
-        {isMobile ? <Icon name="arrow-up" size="sm" className="my-1" /> : 'Send'}
+        {isMobile ? <Icon name="arrow-up" size="sm" className="inline-block" /> : 'Send'}
       </Button>
     </form>
   );
