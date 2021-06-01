@@ -1,4 +1,4 @@
-import React, { createElement, FC, memo, SVGProps } from 'react';
+import { createElement, FC, memo, SVGProps } from 'react';
 import cn from 'classnames';
 
 import User from '../Svgs/Icons/User';
