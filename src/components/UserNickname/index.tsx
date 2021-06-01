@@ -32,8 +32,8 @@ const UserNickname: FC<UserNicknameProps> = ({
       )}
     </span>
     {isCurrentUser && (
-      <span className={cn('ml-1 text-xs font-bold', mutedClassName)}>
-        <Icon name="user" size="sm" className="inline-block" title="This is you!" />
+      <span className={cn('ml-1 text-gray-500', mutedClassName)}>
+        <Icon name="user" size="xs" className="inline-block" title="This is you!" />
       </span>
     )}
     {isOffline && <span className={cn('ml-1 text-xs italic', mutedClassName)}>(offline)</span>}

@@ -86,7 +86,7 @@ const getSvg = (name: IconName) => {
 };
 
 const sizes = {
-  xs: 'h-2',
+  xs: 'h-3',
   sm: 'h-4',
   md: 'h-6',
   lg: 'h-8',
