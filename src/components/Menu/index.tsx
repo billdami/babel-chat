@@ -12,7 +12,7 @@ import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 
 export interface MenuContentProps {
-  sheet?: boolean;
+  isSheet?: boolean;
 }
 
 interface MenuProps<T extends MenuContentProps> {
@@ -22,7 +22,7 @@ interface MenuProps<T extends MenuContentProps> {
   contentProps: T;
   onOutsideClick?: () => void;
   placement?: Placement;
-  sheet?: boolean;
+  alwaysMenu?: boolean;
   triggerClassName?: string;
   menuClassName?: string;
 }
@@ -34,10 +34,14 @@ const Menu = <T extends MenuContentProps>({
   contentProps,
   onOutsideClick,
   placement = 'bottom-end',
-  sheet,
+  alwaysMenu = false,
   triggerClassName = '',
   menuClassName = '',
 }: PropsWithChildren<MenuProps<T>>) => {
+  // TODO bind to useIsMobile() once its converted to context provider
+  const isMobile = false;
+  const isSheet = !alwaysMenu && isMobile;
+
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
 
@@ -61,27 +65,26 @@ const Menu = <T extends MenuContentProps>({
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [handleOutsideClick]);
 
-  // TODO possibly just default sheet to isMobile (and use context provider for global match mobile listener)
-  return sheet ? (
+  return isSheet ? (
     // TODO mobile card/sheet view
     // TODO animate show/hide with react-spring and allow closing
     // via swipe down gesture with pmndrs/use-gesture
     // @see example: https://codesandbox.io/s/zuwji (from https://use-gesture.netlify.app/docs/examples/)
-    <div>{createElement<T>(content, { sheet, ...contentProps })}</div>
+    <div>{createElement<T>(content, { isSheet, ...contentProps })}</div>
   ) : (
     <>
       <div className={triggerClassName} ref={setReferenceElement}>
         {trigger}
       </div>
       {isOpen && (
-        // TODO animate show/hide with react-spring
+        // TODO animate show/hide with react-spring <Transition>
         <div
           className={cn('bg-white rounded shadow-lg', menuClassName)}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
         >
-          {createElement<T>(content, { sheet, ...contentProps })}
+          {createElement<T>(content, { isSheet, ...contentProps })}
         </div>
       )}
     </>

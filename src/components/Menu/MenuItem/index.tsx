@@ -14,8 +14,7 @@ const MenuItem: FC<MenuItemProps> = ({ children, className, ...rest }) => (
       leading-6 text-left text-gray-600
       hover:bg-gray-200 hover:bg-opacity-30
       focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-green-300
-      disabled:opacity-50
-      disabled:cursor-not-allowed`,
+      disabled:opacity-50 disabled:bg-transparent disabled:cursor-not-allowed`,
       className
     )}
     {...rest}

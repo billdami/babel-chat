@@ -36,7 +36,7 @@ interface ActionsMenuProps extends MenuContentProps {
 }
 
 const ActionsMenu: FC<ActionsMenuProps> = ({
-  sheet,
+  isSheet,
   user,
   isBlocked,
   canRemove,
@@ -218,6 +218,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
               variant="inverse"
               className="ml-2 flex-shrink-0"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              isActive={isMenuOpen}
               outline
             >
               <span className="hidden md:inline mr-2 text-sm">Chat menu</span>

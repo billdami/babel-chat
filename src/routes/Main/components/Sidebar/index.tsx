@@ -93,7 +93,12 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           content={UserMenu}
           contentProps={userMenuProps}
           trigger={
-            <Button variant="inverse" onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} outline>
+            <Button
+              variant="inverse"
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              isActive={isUserMenuOpen}
+              outline
+            >
               <Icon name="user" size="sm" className="inline-block" />
             </Button>
           }

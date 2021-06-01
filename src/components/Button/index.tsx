@@ -11,7 +11,6 @@ interface ButtonProps
   block?: boolean;
   fullWidth?: boolean;
   outline?: boolean;
-  // TODO use for active states (like a menu being open)
   isActive?: boolean;
 }
 
@@ -50,6 +49,22 @@ const outlineVariants = {
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500 disabled:text-green-500 disabled:no-underline disabled:text-green-500',
 };
 
+const activeVariants = {
+  primary: 'shadow shadow-inner text-white bg-green-500 border border-transparent',
+  secondary: 'shadow shadow-inner text-gray-500 bg-gray-100 border border-gray-500',
+  muted: 'text-gray-400 bg-gray-100 border border-gray-300',
+  inverse: 'shadow shadow-inner text-green-400 bg-gray-100 border border-transparent',
+  link: 'text-green-600 border border-transparent underline',
+};
+
+const activeOutlineVariants = {
+  primary: 'shadow-inner text-white border border-green-500 bg-green-500',
+  secondary: 'shadow-inner text-white border border-gray-500 bg-gray-500',
+  muted: 'shadow-inner text-white border border-gray-300 bg-gray-300',
+  inverse: 'shadow-inner text-green-500 border border-white bg-white',
+  link: 'text-green-600 border border-transparent underline',
+};
+
 const sizes = {
   sm: 'px-2 py-1 text-sm',
   md: 'px-4 py-2',
@@ -71,7 +86,13 @@ const Button: FC<ButtonProps> = ({
     type="button"
     className={cn(
       baseClasses,
-      outline ? outlineVariants[variant] : variants[variant],
+      isActive
+        ? outline
+          ? activeOutlineVariants[variant]
+          : activeVariants[variant]
+        : outline
+        ? outlineVariants[variant]
+        : variants[variant],
       sizes[size],
       className,
       {
