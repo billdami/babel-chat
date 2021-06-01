@@ -59,6 +59,7 @@ const useProvideNotifications = () => {
     // notification sound should play only when the number of unread increases
     if (numUnread > prevNumUnread && !isMuted) {
       // TODO implement notification sounds
+      // TODO debounce to only play sound once per second max
       console.log('You have new unread messages!');
     }
 

@@ -24,6 +24,7 @@ interface MessageHeaderProps {
   originChat?: ChatRecord | null;
   isLoading?: boolean;
   isBlocked?: boolean;
+  isSpamReported?: boolean;
 }
 
 interface ActionsMenuProps extends MenuContentProps {
@@ -82,7 +83,8 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
 const MessageHeader: FC<MessageHeaderProps> = ({
   destUser,
   originChat,
-  isBlocked,
+  isBlocked = false,
+  isSpamReported = false,
   isLoading = false,
 }) => {
   const history = useHistory();
@@ -100,9 +102,9 @@ const MessageHeader: FC<MessageHeaderProps> = ({
   const isSelf = user?.id === authUser?.uid;
 
   const canRemove = !isSelf && !!originChat?.id;
-  const canBlock = !isSelf && !isOffline && !!authUser?.uid && !!user?.id;
+  const canBlock = !isSelf && !isOffline && !isSpamReported && !!authUser?.uid && !!user?.id;
   // TODO only allow spam reports if the user has received at least once message from them
-  const canReportSpam = !isSelf && !isOffline && !!authUser?.uid && !!user?.id;
+  const canReportSpam = !isSelf && !isOffline && !isSpamReported && !!authUser?.uid && !!user?.id;
 
   const closeChat = useCallback(() => {
     setIsMenuOpen(false);

@@ -21,6 +21,7 @@ interface MessageListProps {
   destUser?: UserRecord | null;
   destUserId?: string;
   isBlocked?: boolean;
+  isSpamReported?: boolean;
 }
 
 const MessageList: FC<MessageListProps> = ({
@@ -29,6 +30,7 @@ const MessageList: FC<MessageListProps> = ({
   destUser,
   destUserId,
   isBlocked = false,
+  isSpamReported = false,
 }) => {
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
@@ -123,7 +125,9 @@ const MessageList: FC<MessageListProps> = ({
           // TODO create <Alert>
           <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-600 bg-yellow-100 border-l-4 border-yellow-600 rounded-sm rounded-tl-none rounded-bl-none">
             <Icon name="ban" className="mr-2 inline-block" size="sm" />
-            This user has been blocked.
+            {isSpamReported
+              ? 'This user has been reported as spam and is permanently blocked.'
+              : 'This user has been blocked.'}
             {/* TODO "Unblock" link button */}
           </div>
         )}

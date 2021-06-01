@@ -5,7 +5,7 @@ import { createChat, createChatMessage } from '../../../utils/chat';
 import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
-import { useUser, useUserBlocks } from '../../../hooks/useUserRecord';
+import { useUser, useUserBlocks, useUserSpamReports } from '../../../hooks/useUserRecord';
 import { getFirebaseTimestamp } from '../../../utils/firebase';
 
 import MessageForm from './components/MessageForm';
@@ -26,10 +26,16 @@ const Chat: FC<ChatProps> = () => {
   const [originChat, isLoadingOriginChat] = useChatByMembers(authUser?.uid, userId);
   const [destChat] = useChatByMembers(userId, authUser?.uid);
   const [userBlocks] = useUserBlocks(user?.id);
+  const [userSpamReports] = useUserSpamReports(user?.id);
 
   const isBlocked = useMemo<boolean>(
     () => (userBlocks?.map((b) => b.id) ?? []).includes(userId),
     [userBlocks, userId]
+  );
+
+  const isSpamReported = useMemo<boolean>(
+    () => (userSpamReports?.map((b) => b.id) ?? []).includes(userId),
+    [userSpamReports, userId]
   );
 
   // can't send if:
@@ -74,6 +80,7 @@ const Chat: FC<ChatProps> = () => {
         originChat={originChat}
         isLoading={isLoadingDestUser || isLoadingOriginChat}
         isBlocked={isBlocked}
+        isSpamReported={isSpamReported}
       />
       <MessageList
         originUser={user}
@@ -81,6 +88,7 @@ const Chat: FC<ChatProps> = () => {
         destUser={destUser}
         destUserId={userId}
         isBlocked={isBlocked}
+        isSpamReported={isSpamReported}
       />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
     </div>
