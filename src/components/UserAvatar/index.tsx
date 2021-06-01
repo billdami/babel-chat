@@ -7,7 +7,7 @@ import Identicon from '../Indenticon';
 interface UserAvatarProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   className?: string;
-  user?: User;
+  user?: User | null;
   size?: number;
 }
 

@@ -8,7 +8,7 @@ import { Gender, GenderOption, User } from '../../types/user';
 
 interface UserDetailsProps {
   className?: string;
-  user?: User;
+  user?: User | null;
   shortCountry?: boolean;
 }
 

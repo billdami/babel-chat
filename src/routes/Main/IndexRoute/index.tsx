@@ -5,7 +5,6 @@ import Button from '../../../components/Button';
 import Icon from '../../../components/Icon';
 import UserNickname from '../../../components/UserNickname';
 import { copyrightLine } from '../../../constants/app';
-import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import useDrawer from '../../../hooks/useDrawer';
 import useNotifications from '../../../hooks/useNotifications';
@@ -13,7 +12,6 @@ import useNotifications from '../../../hooks/useNotifications';
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
-  const { isSigningOut, signOut } = useAuth();
   const { user } = useCurrentUser();
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
   const { numUnread } = useNotifications();
@@ -49,20 +47,24 @@ const Index: FC<IndexProps> = () => {
             />
           )}
         </Button>
+        {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
       </div>
       <div className="flex-1 flex overflow-y-auto">
         <div className="flex-1 flex flex-col">
           <div className="flex-1">
             <div className="p-4">
+              {/*
+                TODO real content:
+                  - heading
+                  - logged in as details
+                  - general info / caution blurb ('give us feeback' link)
+                  - last 5 newest users (view all link)
+                  - last 5 most recently active chats (view all link)
+              */}
               <h2 className="text-lg font-bold">Welcome to babel chat!</h2>
               <div className="mb-4">
                 Logged in as {!!user && <UserNickname user={user} className="inline" />}
               </div>
-              <p className="mb-4">
-                <Button variant="secondary" onClick={signOut} disabled={isSigningOut} outline>
-                  {isSigningOut ? 'Signing out...' : 'Sign out'}
-                </Button>
-              </p>
               <p className="mb-4">
                 [TODO] main page content (newest users, view all users link, recent chats, view all
                 chats link, tips/help, etc)
