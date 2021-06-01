@@ -1,28 +1,43 @@
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import React, {
+  createElement,
+  FunctionComponent,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import cn from 'classnames';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 
-interface MenuProps {
+export interface MenuContentProps {
+  sheet?: boolean;
+}
+
+interface MenuProps<T extends MenuContentProps> {
   isOpen?: boolean;
   trigger: ReactNode;
+  content: FunctionComponent;
+  contentProps: T;
   onOutsideClick?: () => void;
   placement?: Placement;
-  card?: boolean;
+  sheet?: boolean;
   triggerClassName?: string;
   menuClassName?: string;
 }
 
-const Menu: FC<MenuProps> = ({
-  children,
+const Menu = <T extends MenuContentProps>({
   isOpen = false,
   trigger,
+  content,
+  contentProps,
   onOutsideClick,
   placement = 'bottom-end',
-  card = false,
+  sheet,
   triggerClassName = '',
   menuClassName = '',
-}) => {
+}: PropsWithChildren<MenuProps<T>>) => {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
 
@@ -46,21 +61,27 @@ const Menu: FC<MenuProps> = ({
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [handleOutsideClick]);
 
-  return card ? (
-    <div>TODO mobile card view</div>
+  // TODO possibly just default sheet to isMobile (and use context provider for global match mobile listener)
+  return sheet ? (
+    // TODO mobile card/sheet view
+    // TODO animate show/hide with react-spring and allow closing
+    // via swipe down gesture with pmndrs/use-gesture
+    // @see example: https://codesandbox.io/s/zuwji (from https://use-gesture.netlify.app/docs/examples/)
+    <div>{createElement<T>(content, { sheet, ...contentProps })}</div>
   ) : (
     <>
       <div className={triggerClassName} ref={setReferenceElement}>
         {trigger}
       </div>
       {isOpen && (
+        // TODO animate show/hide with react-spring
         <div
           className={cn('bg-white rounded shadow-lg', menuClassName)}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
         >
-          {children}
+          {createElement<T>(content, { sheet, ...contentProps })}
         </div>
       )}
     </>

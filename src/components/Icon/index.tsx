@@ -1,4 +1,4 @@
-import React, { FC, memo, SVGProps } from 'react';
+import React, { createElement, FC, memo, SVGProps } from 'react';
 import cn from 'classnames';
 
 import User from '../Svgs/Icons/User';
@@ -86,7 +86,7 @@ const sizes = {
 };
 
 const Icon: FC<IconProps> = memo(({ name, size = 'md', className = '', ...rest }) =>
-  React.createElement(getSvg(name), { className: cn(sizes[size], className), ...rest })
+  createElement(getSvg(name), { className: cn(sizes[size], className), ...rest })
 );
 
 export default Icon;

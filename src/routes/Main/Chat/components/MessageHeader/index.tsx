@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
-import Menu from '../../../../../components/Menu';
+import Menu, { MenuContentProps } from '../../../../../components/Menu';
 import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
@@ -20,6 +20,36 @@ interface MessageHeaderProps {
   isLoading?: boolean;
   isBlocked?: boolean;
 }
+
+interface ActionsMenuProps extends MenuContentProps {
+  closeChat?: () => void;
+}
+
+const ActionsMenu: FC<ActionsMenuProps> = ({ sheet, closeChat }) => (
+  <>
+    {/* TODO create <MenuItem> */}
+    <button
+      onClick={closeChat}
+      type="button"
+      className="flex items-center w-full px-4 py-1 text-left text-gray-600"
+    >
+      <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
+      Close chat
+    </button>
+    <button type="button" className="flex items-center w-full px-4 py-1 text-left text-gray-600">
+      <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
+      Remove from list
+    </button>
+    <button type="button" className="flex items-center w-full px-4 py-1 text-left text-gray-600">
+      <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
+      Block user
+    </button>
+    <button type="button" className="flex items-center w-full px-4 py-1 text-left text-red-600">
+      <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
+      Report spam
+    </button>
+  </>
+);
 
 const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading = false }) => {
   const history = useHistory();
@@ -86,10 +116,12 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           ))}
       </div>
       <div>
-        <Menu
+        <Menu<ActionsMenuProps>
           isOpen={isMenuOpen}
           menuClassName="py-2 text-sm "
           onOutsideClick={() => setIsMenuOpen(false)}
+          content={ActionsMenu}
+          contentProps={{ closeChat }}
           trigger={
             <Button
               variant="inverse"
@@ -101,41 +133,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
               <Icon name="ellipsis-vertical" size="sm" className="inline-block" />
             </Button>
           }
-        >
-          {/* TODO create <MenuItem> */}
-          <button
-            onClick={closeChat}
-            type="button"
-            className="flex items-center w-full px-4 py-1 text-left text-gray-600"
-          >
-            <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
-            Close chat
-          </button>
-          <button
-            onClick={closeChat}
-            type="button"
-            className="flex items-center w-full px-4 py-1 text-left text-gray-600"
-          >
-            <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
-            Remove from list
-          </button>
-          <button
-            onClick={closeChat}
-            type="button"
-            className="flex items-center w-full px-4 py-1 text-left text-gray-600"
-          >
-            <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
-            Block user
-          </button>
-          <button
-            onClick={closeChat}
-            type="button"
-            className="flex items-center w-full px-4 py-1 text-left text-red-600"
-          >
-            <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
-            Report spam
-          </button>
-        </Menu>
+        />
       </div>
     </div>
   );
