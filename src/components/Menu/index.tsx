@@ -1,49 +1,44 @@
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import cn from 'classnames';
+import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 
 interface MenuProps {
   isOpen?: boolean;
-  target: ReactNode;
+  trigger: ReactNode;
   onOutsideClick?: () => void;
+  placement?: Placement;
   card?: boolean;
-  targetClassName?: string;
+  triggerClassName?: string;
   menuClassName?: string;
 }
 
 const Menu: FC<MenuProps> = ({
   children,
   isOpen = false,
-  target,
+  trigger,
   onOutsideClick,
+  placement = 'bottom-end',
   card = false,
-  targetClassName = '',
+  triggerClassName = '',
   menuClassName = '',
 }) => {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
-  const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null);
 
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: 'bottom-end',
-    modifiers: [
-      { name: 'arrow', options: { element: arrowElement } },
-      { name: 'offset', options: { offset: [0, 4] } },
-    ],
+    placement: placement,
+    modifiers: [{ name: 'offset', options: { offset: [0, 4] } }, { name: 'flip' }],
   });
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        !popperElement?.contains(target) &&
-        !arrowElement?.contains(target) &&
-        !referenceElement?.contains(target)
-      ) {
+      if (!popperElement?.contains(target) && !referenceElement?.contains(target)) {
         onOutsideClick?.();
       }
     },
-    [onOutsideClick, popperElement, arrowElement, referenceElement]
+    [onOutsideClick, popperElement, referenceElement]
   );
 
   useEffect(() => {
@@ -55,8 +50,8 @@ const Menu: FC<MenuProps> = ({
     <div>TODO mobile card view</div>
   ) : (
     <>
-      <div className={targetClassName} ref={setReferenceElement}>
-        {target}
+      <div className={triggerClassName} ref={setReferenceElement}>
+        {trigger}
       </div>
       {isOpen && (
         <div
@@ -66,7 +61,6 @@ const Menu: FC<MenuProps> = ({
           {...attributes.popper}
         >
           {children}
-          <div ref={setArrowElement} style={styles.arrow}></div>
         </div>
       )}
     </>

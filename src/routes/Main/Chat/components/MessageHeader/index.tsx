@@ -90,7 +90,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
           isOpen={isMenuOpen}
           menuClassName="py-2 text-sm "
           onOutsideClick={() => setIsMenuOpen(false)}
-          target={
+          trigger={
             <Button
               variant="inverse"
               className="ml-2 flex-shrink-0"
