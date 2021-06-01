@@ -11,10 +11,13 @@ import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import UserStatus from '../../../../../components/UserStatus';
 import useAuth from '../../../../../hooks/useAuth';
+import useCurrentUser from '../../../../../hooks/useCurrentUser';
 import useDrawer from '../../../../../hooks/useDrawer';
 import useNotifications from '../../../../../hooks/useNotifications';
 import { ChatRecord } from '../../../../../types/chat';
 import { User, UserRecord } from '../../../../../types/user';
+import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import { blockUser, unblockUser, reportSpamUser } from '../../../../../utils/user';
 
 interface MessageHeaderProps {
   destUser?: UserRecord;
@@ -76,9 +79,15 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
   </>
 );
 
-const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading = false }) => {
+const MessageHeader: FC<MessageHeaderProps> = ({
+  destUser,
+  originChat,
+  isBlocked,
+  isLoading = false,
+}) => {
   const history = useHistory();
   const { user: authUser } = useAuth();
+  const { updateUser } = useCurrentUser();
   const { toggleDrawer } = useDrawer();
   const { numUnread } = useNotifications();
 
@@ -90,12 +99,10 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   const userDetailsExist = !!user?.nickname;
   const isSelf = user?.id === authUser?.uid;
 
-  // TODO
-  const isBlocked = false;
-  const canRemove = !isSelf;
-  const canBlock = !isSelf && !isOffline;
+  const canRemove = !isSelf && !!originChat?.id;
+  const canBlock = !isSelf && !isOffline && !!authUser?.uid && !!user?.id;
   // TODO only allow spam reports if the user has received at least once message from them
-  const canReportSpam = !isSelf && !isOffline;
+  const canReportSpam = !isSelf && !isOffline && !!authUser?.uid && !!user?.id;
 
   const closeChat = useCallback(() => {
     setIsMenuOpen(false);
@@ -103,33 +110,44 @@ const MessageHeader: FC<MessageHeaderProps> = ({ destUser, originChat, isLoading
   }, [history]);
 
   const removeChat = useCallback(() => {
-    // TODO
     if (canRemove) {
+      originChat?.ref?.remove();
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
       setIsMenuOpen(false);
       closeChat();
     }
-  }, [canRemove, closeChat]);
+  }, [canRemove, originChat, updateUser, closeChat]);
 
   const toggleBlock = useCallback(() => {
-    // TODO
-    if (canBlock) {
+    if (canBlock && authUser?.uid && user?.id) {
       // TODO modal confirm
+      if (isBlocked) {
+        unblockUser(authUser.uid, user.id);
+      } else {
+        blockUser(authUser.uid, user.id);
+        originChat?.ref?.remove();
+      }
 
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
       setIsMenuOpen(false);
+
       if (!isBlocked) {
         closeChat();
       }
     }
-  }, [canBlock, isBlocked, closeChat]);
+  }, [canBlock, isBlocked, authUser, updateUser, user, originChat, closeChat]);
 
   const reportSpam = useCallback(() => {
-    // TODO
-    if (canReportSpam) {
+    if (canReportSpam && authUser?.uid && user?.id) {
       // TODO modal confirm
+      blockUser(authUser.uid, user.id);
+      reportSpamUser(authUser.uid, user.id);
+      originChat?.ref?.remove();
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
       setIsMenuOpen(false);
       closeChat();
     }
-  }, [canReportSpam, closeChat]);
+  }, [canReportSpam, authUser, user, updateUser, originChat, closeChat]);
 
   const actionsMenuProps = useMemo<ActionsMenuProps>(
     () => ({

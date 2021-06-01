@@ -35,6 +35,7 @@ module.exports = {
       boxShadow: ['disabled', 'active'],
       backgroundColor: ['disabled', 'active', 'checked'],
       backgroundImage: ['checked'],
+      backgroundOpacity: ['active'],
       borderColor: ['checked'],
       textColor: ['disabled'],
       textDecoration: ['disabled'],

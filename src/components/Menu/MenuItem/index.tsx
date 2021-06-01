@@ -13,6 +13,7 @@ const MenuItem: FC<MenuItemProps> = ({ children, className, ...rest }) => (
       w-full px-4 py-1
       leading-6 text-left text-gray-600
       hover:bg-gray-200 hover:bg-opacity-30
+      active:bg-opacity-100
       focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-green-300
       disabled:opacity-50 disabled:bg-transparent disabled:cursor-not-allowed`,
       className
