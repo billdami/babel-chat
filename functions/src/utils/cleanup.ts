@@ -91,5 +91,9 @@ export const cleanupDatabase = async (env: 'production' | 'development'): Promis
   // delete any /spam_reports whose key does not have a matching /users key
   await deleteOrphanedData(db, 'spam_reports');
 
+  // TODO [future] delete old expired spam_users
+
+  // TODO [future] delete old expired banned_ips
+
   return deleteAppInstance();
 };

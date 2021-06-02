@@ -91,6 +91,11 @@
           }
         }
       }
+    },
+    "spam_users": {
+      ".indexOn": ["dateConvicted"],
+      // all authenticated users can read all spam_users
+      ".read": "root.child('APP_OFFLINE').val() !== true && auth != null"
     }
   }
 }

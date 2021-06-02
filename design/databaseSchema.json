@@ -141,24 +141,32 @@
       }
     }
   },
-  "spam_reports": {
+  "spam_users": {
     "user5": {
-      "spam_report1": {
-        "dateCreated": 123456789,
-        "user": "user1"
-      },
-      "spam_report2": {
-        "dateCreated": 123456789,
-        "user": "user2"
+      "dateConvicted": 123456789
+    }
+  },
+  "spam_ips": {
+    "1_1_1_1": {
+      "dateLastReport": 123456789,
+      "numReports": 5,
+      "numRepeatOffenses": 1,
+      "numBans": 0,
+      "reporterIps": {
+        "2_2_2_2": 123456789,
+        "3_3_3_3": 123456789,
+        "4_4_4_4": 123456789,
+        "5_5_5_5": 123456789,
+        "6_6_6_6": 123456789
       }
     }
   },
   "banned_ips": {
-    "1.1.1.1": {
+    "1_1_1_1": {
       "dateBanned": 123456789,
       "dateExpires": 123456789
     },
-    "2.2.2.2": {
+    "2_2_2_2": {
       "dateBanned": 123456789,
       "dateExpires": null
     }

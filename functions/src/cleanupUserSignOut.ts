@@ -76,10 +76,10 @@ const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunctio
             .catch(() => {})
         );
 
-        // delete /spam_reports/{userId}
+        // delete /spam_users/{userId}
         operations.push(
           db
-            .ref(`spam_reports/${userId}`)
+            .ref(`spam_users/${userId}`)
             .remove()
             .catch(() => {})
         );
