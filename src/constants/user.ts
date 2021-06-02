@@ -60,7 +60,7 @@ export const STATUSES: StatusOption[] = [
   {
     value: Status.OFFLINE,
     label: 'Offline',
-    bgColor: 'bg-white',
-    borderColor: 'border-gray-400',
+    bgColor: 'bg-red-400',
+    borderColor: 'border-white',
   },
 ];
