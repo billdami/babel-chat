@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  FocusEvent as ReactFocusEvent,
-  MouseEvent as ReactMouseEvent,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import Badge from '../../../../../../components/Badge';
@@ -68,33 +61,6 @@ const ListItem: FC<ListItemProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const menuProps = useMemo(
-    () => ({
-      markChatRead: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsMenuOpen(false);
-        setIsFocused(false);
-        markChatRead([chat.id]);
-      },
-      blockUser: () => (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsMenuOpen(false);
-        setIsFocused(false);
-        blockUser([chat.id]);
-      },
-      removeChat: () => (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsMenuOpen(false);
-        setIsFocused(false);
-        removeChat([chat.id]);
-      },
-    }),
-    [chat, markChatRead, blockUser, removeChat]
-  );
-
   const onMouseEnter = useCallback(
     (event: ReactMouseEvent<HTMLAnchorElement, MouseEvent>) => !isMobile && setIsFocused(true),
     [isMobile]
@@ -112,6 +78,48 @@ const ListItem: FC<ListItemProps> = ({
       setIsMenuOpen(!isMenuOpen);
     },
     [isMenuOpen]
+  );
+
+  const menuMarkChatRead = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsMenuOpen(false);
+      setIsFocused(false);
+      markChatRead([chat.id]);
+    },
+    [chat, markChatRead]
+  );
+
+  const menuBlockUser = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsMenuOpen(false);
+      setIsFocused(false);
+      blockUser([chat.id]);
+    },
+    [chat, blockUser]
+  );
+
+  const menuRemoveChat = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsMenuOpen(false);
+      setIsFocused(false);
+      removeChat([chat.id]);
+    },
+    [chat, removeChat]
+  );
+
+  const menuProps = useMemo(
+    () => ({
+      markChatRead: menuMarkChatRead,
+      blockUser: menuBlockUser,
+      removeChat: menuRemoveChat,
+    }),
+    [menuMarkChatRead, menuBlockUser, menuRemoveChat]
   );
 
   return (
@@ -164,7 +172,7 @@ const ListItem: FC<ListItemProps> = ({
             content={ChatMenu}
             contentProps={menuProps}
             trigger={
-              <Button variant="link" size="sm" onClick={onTriggerClick} isActive={isMenuOpen}>
+              <Button variant="muted" size="sm" onClick={onTriggerClick} isActive={isMenuOpen}>
                 <Icon name="ellipsis" size="sm" className="inline-block" />
               </Button>
             }
