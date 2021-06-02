@@ -15,7 +15,7 @@ import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
 import Input from '../../../../../components/Input';
 import { MAX_MESSAGE_LEN } from '../../../../../constants/chat';
-import useIsMobile from '../../../../../hooks/useIsMobile';
+import useMedia from '../../../../../hooks/useMedia';
 
 interface MessageFormProps {
   canSend: boolean;
@@ -24,7 +24,7 @@ interface MessageFormProps {
 
 const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
   const { userId } = useParams<ChatRouteParams>();
-  const isMobile = useIsMobile();
+  const { isMobile } = useMedia();
 
   const [newMessage, setNewMessage] = useState<string>('');
 

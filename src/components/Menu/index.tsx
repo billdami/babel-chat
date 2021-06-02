@@ -11,6 +11,8 @@ import cn from 'classnames';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 
+import useMedia from '../../hooks/useMedia';
+
 export interface MenuContentProps {
   isSheet?: boolean;
 }
@@ -25,6 +27,7 @@ interface MenuProps<T extends MenuContentProps> {
   alwaysMenu?: boolean;
   triggerClassName?: string;
   menuClassName?: string;
+  sheetClassName?: string;
 }
 
 const Menu = <T extends MenuContentProps>({
@@ -37,9 +40,9 @@ const Menu = <T extends MenuContentProps>({
   alwaysMenu = false,
   triggerClassName = '',
   menuClassName = '',
+  sheetClassName = '',
 }: PropsWithChildren<MenuProps<T>>) => {
-  // TODO bind to useIsMobile() once its converted to context provider
-  const isMobile = false;
+  const { isMobile } = useMedia();
   const isSheet = !alwaysMenu && isMobile;
 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
@@ -70,7 +73,24 @@ const Menu = <T extends MenuContentProps>({
     // TODO animate show/hide with react-spring and allow closing
     // via swipe down gesture with pmndrs/use-gesture
     // @see example: https://codesandbox.io/s/zuwji (from https://use-gesture.netlify.app/docs/examples/)
-    <div>{createElement<T>(content, { isSheet, ...contentProps })}</div>
+    <>
+      <div className={triggerClassName} ref={setReferenceElement}>
+        {trigger}
+      </div>
+      {/* TODO createPortal to render sheet in <body> */}
+      {/* TODO createPortal to render backdrop in <body> */}
+      {isOpen && (
+        // TODO animate show/hide with react-spring <Transition>
+        <div
+          className={cn(
+            'absolute bottom-0 left-0 right-0 rounded-t shadow-lg border bg-white',
+            sheetClassName
+          )}
+        >
+          {createElement<T>(content, { isSheet, ...contentProps })}
+        </div>
+      )}
+    </>
   ) : (
     <>
       <div className={triggerClassName} ref={setReferenceElement}>
