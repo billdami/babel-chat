@@ -207,7 +207,10 @@ const MessageHeader: FC<MessageHeaderProps> = ({
             <div className="flex items-center min-w-0">
               <div className="hidden md:block relative flex-shrink-0 mr-2">
                 <UserAvatar user={user} />
-                <UserStatus user={user} className="absolute -top-1 -left-1 ml-px mt-px shadow" />
+                <UserStatus
+                  user={!isOffline ? user : null}
+                  className="absolute -top-1 -left-1 ml-px mt-px shadow"
+                />
               </div>
               <div className="truncate">
                 <div className="flex items-center">

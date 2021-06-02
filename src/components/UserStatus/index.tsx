@@ -8,7 +8,7 @@ import { getStatus } from '../../utils/time';
 
 interface UserStatusProps {
   className?: string;
-  user?: User;
+  user?: User | null;
 }
 
 const statusMap = STATUSES.reduce(
