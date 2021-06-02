@@ -26,7 +26,6 @@ const Radio: FC<RadioProps> = ({
         w-4
         h-4
         mt-1
-        mr-2
         bg-no-repeat
         bg-center
         bg-contain
@@ -44,7 +43,7 @@ const Radio: FC<RadioProps> = ({
         disabled:cursor-not-allowed"
       {...rest}
     />
-    <label htmlFor={id} className={labelClassName}>
+    <label htmlFor={id} className={cn(labelClassName, 'pl-2')}>
       {label}
       {children}
     </label>

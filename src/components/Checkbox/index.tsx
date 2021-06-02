@@ -48,17 +48,19 @@ const Checkbox: FC<CheckboxProps> = ({
         disabled:opacity-50
         disabled:cursor-not-allowed`,
         {
-          'mt-1 mr-3': !standalone,
+          'mt-1': !standalone,
           'bg-check-indeterminate bg-green-500 border-green-500 ': isIndeterminate,
         },
         inputClassName
       )}
       {...rest}
     />
-    <label htmlFor={id} className={labelClassName}>
-      {label}
-      {children}
-    </label>
+    {!standalone && (
+      <label htmlFor={id} className={cn(labelClassName, 'pl-3')}>
+        {label}
+        {children}
+      </label>
+    )}
   </div>
 );
 
