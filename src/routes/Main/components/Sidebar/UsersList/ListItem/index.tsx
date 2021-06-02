@@ -34,7 +34,10 @@ const ListItem: FC<ListItemProps> = ({ user, blockedIds }) => {
         onClick={closeDrawer}
       >
         <div className="relative flex-shrink-0 mr-2">
-          <UserStatus user={user} className="absolute -top-1 -left-1 ml-px mt-px shadow" />
+          <UserStatus
+            user={user}
+            className="absolute -bottom-1 -right-1 mb-px mr-px border-gray-100"
+          />
           <UserAvatar user={user} />
         </div>
         <div className="truncate">

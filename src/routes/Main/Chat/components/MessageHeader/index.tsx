@@ -209,7 +209,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
                 <UserAvatar user={user} />
                 <UserStatus
                   user={!isOffline ? user : null}
-                  className="absolute -top-1 -left-1 ml-px mt-px shadow"
+                  className="absolute -bottom-1 -right-1 mb-px mr-px border-white shadow"
                 />
               </div>
               <div className="truncate">
@@ -220,7 +220,10 @@ const MessageHeader: FC<MessageHeaderProps> = ({
                     className="md:text-lg md:leading-5"
                     mutedClassName="text-green-200"
                   />
-                  <UserStatus user={user} className="md:hidden ml-2 flex-shrink-0" />
+                  <UserStatus
+                    user={!isOffline ? user : null}
+                    className="md:hidden ml-2 flex-shrink-0 border-white shadow"
+                  />
                 </div>
                 <UserDetails user={user} className="text-xs md:text-sm leading-3 text-green-200" />
               </div>

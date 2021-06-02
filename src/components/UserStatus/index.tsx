@@ -23,12 +23,7 @@ const UserStatus: FC<UserStatusProps> = ({ className = '', user }) => {
 
   return (
     <span
-      className={cn(
-        'w-2 h-2 rounded-full border transition-color',
-        statusInfo.bgColor,
-        statusInfo.borderColor,
-        className
-      )}
+      className={cn('w-2 h-2 rounded-full border transition-color', statusInfo.bgColor, className)}
       // TODO make this a popper.js tooltip
       title={`${statusInfo.label}${
         status !== Status.ACTIVE && lastActive.relativeTime
