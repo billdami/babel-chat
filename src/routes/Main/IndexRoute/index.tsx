@@ -66,10 +66,6 @@ const Index: FC<IndexProps> = () => {
               <div className="mb-4">
                 Logged in as {!!user && <UserNickname user={user} className="inline" />}
               </div>
-              <p className="mb-4">
-                [TODO] main page content (newest users, view all users link, recent chats, view all
-                chats link, tips/help, etc)
-              </p>
               <div className="mb-4">
                 <Button variant="secondary" className="md:hidden" onClick={showAllUsers} outline>
                   View all users

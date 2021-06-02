@@ -23,9 +23,10 @@ const PrivacyPolicy: FC<PrivacyPolicyListProps> = () => {
           <h2 className="font-bold text-xl text-gray-600 mb-4">Privacy Policy</h2>
 
           <p className="mb-4">
-            At babel chat, accessible from https://babelchat.online, one of our main priorities is
-            the privacy of our visitors. This Privacy Policy document contains types of information
-            that is collected and recorded by babel chat and how we use it.
+            At babel chat, accessible from{' '}
+            <Anchor href="https://babelchat.online">https://babelchat.online</Anchor>, one of our
+            main priorities is the privacy of our visitors. This Privacy Policy document contains
+            types of information that is collected and recorded by babel chat and how we use it.
           </p>
 
           <p className="mb-4">

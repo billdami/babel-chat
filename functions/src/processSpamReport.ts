@@ -87,6 +87,7 @@ const funcProcessSpamReport = (env: 'production' | 'development'): CloudFunction
           // if the ip has hit the number of reports threshold, mark the user as a spammer
           if (spamIpData.numReports >= SPAM_REPORT_COUNT_THRESHOLD) {
             await spamIpRef.update({
+              dateLastConviction: serverTimestamp,
               numRepeatOffenses: admin.database.ServerValue.increment(1),
               numReports: 0,
             });
