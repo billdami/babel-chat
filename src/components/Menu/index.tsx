@@ -83,7 +83,7 @@ const Menu = <T extends MenuContentProps>({
         // TODO animate show/hide with react-spring <Transition>
         <div
           className={cn(
-            'absolute bottom-0 left-0 right-0 rounded-t shadow-lg border bg-white',
+            'z-50 absolute bottom-0 left-0 right-0 rounded-t shadow-lg border bg-white',
             sheetClassName
           )}
         >
@@ -99,7 +99,7 @@ const Menu = <T extends MenuContentProps>({
       {isOpen && (
         // TODO animate show/hide with react-spring <Transition>
         <div
-          className={cn('bg-white rounded shadow-lg', menuClassName)}
+          className={cn('z-50 bg-white rounded shadow-lg', menuClassName)}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}

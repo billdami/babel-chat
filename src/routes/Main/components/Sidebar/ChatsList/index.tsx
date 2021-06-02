@@ -211,6 +211,9 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
             selectedChatIds={selectedChatIds}
             isEditing={isEditing}
             toggleChatSelection={toggleChatSelection}
+            markChatRead={markChatsRead}
+            blockUser={blockUsers}
+            removeChat={removeChats}
           />
         ))}
         {!visibleChats.length && !isLoading && (
