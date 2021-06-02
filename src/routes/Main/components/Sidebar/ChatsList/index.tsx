@@ -138,7 +138,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
   // TODO apply sorting
   return (
     <div className="ChatsList pb-2">
-      {(!!chats?.length || isEditing) && (
+      {(!!visibleChats?.length || isEditing) && (
         <div className="px-3 py-1 mb-1 bg-gray-200 shadow-inner">
           {isEditing ? (
             <div className="flex justify-between items-center">
@@ -213,6 +213,9 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
             toggleChatSelection={toggleChatSelection}
           />
         ))}
+        {!visibleChats.length && !isLoading && (
+          <div className="px-3 py-8 text-gray-400 text-center text-sm">No chats found 😿</div>
+        )}
         {isLoading && <Spinner className="mx-3 my-2" />}
       </ul>
     </div>

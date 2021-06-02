@@ -25,14 +25,14 @@ const Main: FC<MainListProps> = () => {
   const { path /*url*/ } = useRouteMatch();
   const { isDrawerOpen, closeDrawer } = useDrawer();
   const { user, isUserLoading, updateUser } = useCurrentUser();
-  const { isSigningOut, hasSignedOut, signOut } = useAuth();
+  const { isSigningIn, isSigningOut, hasSignedOut, signOut } = useAuth();
 
   // if the user becomes deleted while signed in, auto log out
   useEffect(() => {
-    if (!user?.id && !isUserLoading && !isSigningOut && !hasSignedOut) {
+    if (!user?.id && !isUserLoading && !isSigningIn && !isSigningOut && !hasSignedOut) {
       signOut();
     }
-  }, [user, isUserLoading, isSigningOut, hasSignedOut, signOut]);
+  }, [user, isUserLoading, isSigningIn, isSigningOut, hasSignedOut, signOut]);
 
   // when the app is first opened (or reopened), update the user's last active status
   useEffect(() => {

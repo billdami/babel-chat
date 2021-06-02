@@ -45,7 +45,7 @@ const UserMenu: FC<UserMenuProps> = ({ user, signOut, openGiveFeedback }) => (
     </div>
     <MenuItem onClick={openGiveFeedback}>
       <Icon name="message-pen" size="sm" className="inline-block mr-2 text-gray-400" />
-      Give us feedback!
+      Give us feedback
     </MenuItem>
     <MenuItem onClick={signOut}>
       <Icon name="right-from-bracket" size="sm" className="inline-block mr-2 text-gray-400" />

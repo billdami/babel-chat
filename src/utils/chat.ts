@@ -28,8 +28,9 @@ export const createChat = async (
     toUserDetails: destUser.val(),
     isPinned: false,
     isTyping: false,
-    dateStarted: getFirebaseTimestamp(),
+    hasMessagesFromOtherUser: !isInitiator,
     dateLastSeen: isInitiator ? getFirebaseTimestamp() : null,
+    dateStarted: getFirebaseTimestamp(),
     dateLastMessage: null,
   });
 
@@ -55,10 +56,12 @@ export const createChatMessage = async (
 
   // update both chats with the sent date of the new message
   // and the date last seen for the sender's chat
+  // and flag the dest chat as having messages from the other user
   db.ref().update({
     [`chats/${originUserId}/${destUserId}/dateLastSeen`]: dateSent,
     [`chats/${originUserId}/${destUserId}/dateLastMessage`]: dateSent,
     [`chats/${destUserId}/${originUserId}/dateLastMessage`]: dateSent,
+    [`chats/${destUserId}/${originUserId}/hasMessagesFromOtherUser`]: true,
   });
 
   return messageRef;

@@ -238,7 +238,7 @@ const SignIn: FC<SignInListProps> = () => {
           <Link to="/privacy-policy" target="_blank">
             privacy policy
           </Link>{' '}
-          &middot;{' '}
+          &bull;{' '}
           <Link to="/terms-of-use" target="_blank">
             terms of use
           </Link>

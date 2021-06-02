@@ -3,6 +3,7 @@ import React, { FC, useCallback } from 'react';
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
 import Icon from '../../../components/Icon';
+import Link from '../../../components/Link';
 import UserNickname from '../../../components/UserNickname';
 import { copyrightLine } from '../../../constants/app';
 import useCurrentUser from '../../../hooks/useCurrentUser';
@@ -81,7 +82,18 @@ const Index: FC<IndexProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex-shrink-0 px-4 py-4 text-sm text-gray-400">{copyrightLine}</div>
+          <div className="flex-shrink-0 px-4 py-4 text-sm text-gray-400">
+            {copyrightLine} <span className="hidden md:inline">&bull;</span>{' '}
+            <span className="block md:inline">
+              <Link to="/privacy-policy" target="_blank">
+                privacy policy
+              </Link>{' '}
+              &bull;{' '}
+              <Link to="/terms-of-use" target="_blank">
+                terms of use
+              </Link>
+            </span>
+          </div>
         </div>
       </div>
     </div>

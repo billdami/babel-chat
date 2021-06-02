@@ -60,7 +60,8 @@
           // authenticated users can create chats in ANY chat list
           // authenticated users can update chats where the parent id or chat id matches their own user ID
           // authenticated users can delete chats where the parent id matches their own user ID
-          // TODO make this more granular so user can only update certain properties on foreign chats (dateLastMessage, isTyping, etc)
+          // TODO make this more granular so user can only update certain properties on foreign chats
+          // (e.g. dateLastMessage, hasMessagesFromOtherUser, isTyping, etc)
           ".write": "root.child('APP_OFFLINE').val() !== true &&
             auth != null && (
               !data.exists() ||

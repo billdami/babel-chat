@@ -70,6 +70,7 @@
         },
         "isPinned": false,
         "isTyping": false,
+        "hasMessagesFromOtherUser": true,
         "dateStarted": 123456789,
         "dateLastSeen": 123456789,
         "dateLastMessage": 123456789
@@ -89,6 +90,7 @@
         },
         "isPinned": false,
         "isTyping": false,
+        "hasMessagesFromOtherUser": true,
         "dateStarted": 123456789,
         "dateLastSeen": 123456789,
         "dateLastMessage": 123456789
@@ -110,6 +112,7 @@
         },
         "isPinned": true,
         "isTyping": true,
+        "hasMessagesFromOtherUser": true,
         "dateStarted": 123456789,
         "dateLastSeen": 123456789,
         "dateLastMessage": 123456789

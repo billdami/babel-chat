@@ -103,8 +103,13 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const canRemove = !isSelf && !!originChat?.id;
   const canBlock = !isSelf && !isOffline && !isSpamReported && !!authUser?.uid && !!user?.id;
-  // TODO only allow spam reports if the user has received at least once message from them
-  const canReportSpam = !isSelf && !isOffline && !isSpamReported && !!authUser?.uid && !!user?.id;
+  const canReportSpam =
+    !isSelf &&
+    !isOffline &&
+    !isSpamReported &&
+    originChat?.hasMessagesFromOtherUser &&
+    !!authUser?.uid &&
+    !!user?.id;
 
   const closeChat = useCallback(() => {
     setIsMenuOpen(false);
@@ -241,7 +246,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
               isActive={isMenuOpen}
               outline
             >
-              <span className="hidden md:inline mr-2 text-sm">Chat menu</span>
+              <span className="hidden md:inline mr-2 text-sm">Chat options</span>
               <Icon name="ellipsis-vertical" size="sm" className="inline-block" />
             </Button>
           }
