@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
-// TODO all passing a optional callback instead of a value that is debounced
-// @see https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
+// TODO replace with https://github.com/xnimorz/use-debounce
 export default function useDebounce<T>(value: T, delay: number = 250): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 

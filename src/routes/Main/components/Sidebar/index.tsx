@@ -32,22 +32,34 @@ interface UserMenuProps extends MenuContentProps {
   user?: User | null;
   signOut?: () => void;
   openGiveFeedback?: () => void;
+  closeMenu?: () => void;
 }
 
-const UserMenu: FC<UserMenuProps> = ({ user, signOut, openGiveFeedback }) => (
+const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback, closeMenu }) => (
   <>
-    <div className="flex items-center px-4 pb-2 mb-2 border-b border-gray-100">
-      <UserAvatar user={user} className="mr-2 border border-gray-200" />
-      <div>
-        <UserNickname user={user} className="text-gray-800" />
-        <UserDetails user={user} className="text-gray-400" shortCountry />
+    <div
+      className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
+        'px-4': !isSheet,
+      })}
+    >
+      <div className="flex items-center min-w-0">
+        <UserAvatar user={user} className="flex-shrink-0 mr-2 border border-gray-200" />
+        <div className="min-w-0">
+          <UserNickname user={user} className="text-gray-800" />
+          <UserDetails user={user} className="text-gray-400" shortCountry />
+        </div>
       </div>
+      {isSheet && (
+        <Button size="sm" variant="muted" className="flex-shrink-0" onClick={closeMenu} outline>
+          <Icon name="x-mark" size="sm" />
+        </Button>
+      )}
     </div>
-    <MenuItem onClick={openGiveFeedback}>
+    <MenuItem onClick={openGiveFeedback} isSheet={isSheet}>
       <Icon name="message-pen" size="sm" className="inline-block mr-2 text-gray-400" />
       Give us feedback
     </MenuItem>
-    <MenuItem onClick={signOut}>
+    <MenuItem onClick={signOut} isSheet={isSheet}>
       <Icon name="right-from-bracket" size="sm" className="inline-block mr-2 text-gray-400" />
       Sign out
     </MenuItem>
@@ -70,14 +82,16 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
+  const closeMenu = useCallback(() => setIsUserMenuOpen(false), []);
+
   const openGiveFeedback = useCallback(() => {
     //TODO
     setIsUserMenuOpen(false);
   }, []);
 
   const userMenuProps = useMemo(
-    () => ({ user, signOut, openGiveFeedback }),
-    [user, signOut, openGiveFeedback]
+    () => ({ user, signOut, openGiveFeedback, closeMenu }),
+    [user, signOut, openGiveFeedback, closeMenu]
   );
 
   return (
@@ -89,6 +103,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         <Menu<UserMenuProps>
           isOpen={isUserMenuOpen}
           menuClassName="py-2 text-sm"
+          sheetClassName="py-4 px-4 text-sm"
           onOutsideClick={() => setIsUserMenuOpen(false)}
           content={UserMenu}
           contentProps={userMenuProps}

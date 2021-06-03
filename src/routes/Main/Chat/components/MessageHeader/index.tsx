@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import cn from 'classnames';
 
 import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
@@ -37,6 +38,7 @@ interface ActionsMenuProps extends MenuContentProps {
   removeChat?: () => void;
   toggleBlock?: () => void;
   reportSpam?: () => void;
+  closeMenu?: () => void;
 }
 
 const ActionsMenu: FC<ActionsMenuProps> = ({
@@ -50,29 +52,41 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
   removeChat,
   toggleBlock,
   reportSpam,
+  closeMenu,
 }) => (
   <>
-    <div className="flex items-center px-4 pb-2 mb-2 border-b border-gray-100">
-      <UserAvatar user={user} className="mr-2 border border-gray-200" />
-      <div>
-        <UserNickname user={user} className="text-gray-800" />
-        <UserDetails user={user} className="text-gray-400" shortCountry />
+    <div
+      className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
+        'px-4': !isSheet,
+      })}
+    >
+      <div className="flex items-center min-w-0">
+        <UserAvatar user={user} className="flex-shrink-0 mr-2 border border-gray-200" />
+        <div className="min-w-0">
+          <UserNickname user={user} className="text-gray-800" />
+          <UserDetails user={user} className="text-gray-400" shortCountry />
+        </div>
       </div>
+      {isSheet && (
+        <Button size="sm" variant="muted" className="flex-shrink-0" onClick={closeMenu} outline>
+          <Icon name="x-mark" size="sm" />
+        </Button>
+      )}
     </div>
-    <MenuItem onClick={removeChat} disabled={!canRemove}>
+    <MenuItem isSheet={isSheet} onClick={removeChat} disabled={!canRemove}>
       <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
       Remove from list
     </MenuItem>
-    <MenuItem onClick={toggleBlock} disabled={!canBlock}>
+    <MenuItem isSheet={isSheet} onClick={toggleBlock} disabled={!canBlock}>
       <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
       {isBlocked ? 'Unblock user' : 'Block user'}
     </MenuItem>
-    <MenuItem onClick={reportSpam} disabled={!canReportSpam}>
+    <MenuItem isSheet={isSheet} onClick={reportSpam} disabled={!canReportSpam}>
       <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
       Report spam
     </MenuItem>
     <div className="mt-2 pt-2 border-t border-gray-100">
-      <MenuItem onClick={closeChat}>
+      <MenuItem isSheet={isSheet} onClick={closeChat}>
         <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
         Close chat
       </MenuItem>
@@ -110,6 +124,8 @@ const MessageHeader: FC<MessageHeaderProps> = ({
     originChat?.hasMessagesFromOtherUser &&
     !!authUser?.uid &&
     !!user?.id;
+
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
   const closeChat = useCallback(() => {
     setIsMenuOpen(false);
@@ -167,6 +183,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       removeChat,
       toggleBlock,
       reportSpam,
+      closeMenu,
     }),
     [
       user,
@@ -178,6 +195,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       removeChat,
       toggleBlock,
       reportSpam,
+      closeMenu,
     ]
   );
 
@@ -241,6 +259,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
         <Menu<ActionsMenuProps>
           isOpen={isMenuOpen}
           menuClassName="py-2 text-sm"
+          sheetClassName="py-4 px-4 text-sm"
           onOutsideClick={() => setIsMenuOpen(false)}
           content={ActionsMenu}
           contentProps={actionsMenuProps}

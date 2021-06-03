@@ -44,7 +44,7 @@ const outlineVariants = {
   secondary:
     'active:shadow-inner text-gray-500 border border-gray-500 hover:bg-gray-500 hover:text-white disabled:bg-transparent disabled:text-gray-500',
   muted:
-    'active:shadow-inner text-gray-400 border border-gray-300 hover:bg-gray-300 hover:text-white disabled:bg-transparent disabled:text-gray-400',
+    'active:shadow-inner text-gray-400 border border-gray-200 hover:bg-gray-200 hover:text-white disabled:bg-transparent disabled:text-gray-400',
   inverse:
     'active:shadow-inner text-green-200 border border-green-300 hover:bg-white hover:border-white hover:text-green-500 disabled:bg-transparent disabled:border-green-300 disabled:text-green-200',
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500 disabled:text-green-500 disabled:no-underline disabled:text-green-500',

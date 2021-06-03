@@ -59,7 +59,8 @@ const useProvideNotifications = () => {
     // notification sound should play only when the number of unread increases
     if (numUnread > prevNumUnread && !isMuted) {
       // TODO implement notification sounds
-      // TODO debounce to only play sound once per second max
+      // TODO useThrottledCallback so sounds dont play more than once a second
+      // @see (https://github.com/xnimorz/use-debounce#usethrottledcallback)
       console.log('You have new unread messages!');
     }
 
