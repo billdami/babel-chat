@@ -38,7 +38,7 @@ interface ActionsMenuProps extends MenuContentProps {
   closeChat?: () => void;
   removeChat?: () => void;
   confirmToggleBlock?: () => void;
-  reportSpam?: () => void;
+  confirmReporSpam?: () => void;
   closeMenu?: () => void;
 }
 
@@ -52,7 +52,7 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
   closeChat,
   removeChat,
   confirmToggleBlock,
-  reportSpam,
+  confirmReporSpam,
   closeMenu,
 }) => (
   <>
@@ -90,7 +90,7 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
       />
       {isBlocked ? 'Unblock user' : 'Block user'}
     </MenuItem>
-    <MenuItem isSheet={isSheet} onClick={reportSpam} disabled={!canReportSpam}>
+    <MenuItem isSheet={isSheet} onClick={confirmReporSpam} disabled={!canReportSpam}>
       <Icon
         name="octagon-exclamation"
         size="sm"
@@ -126,6 +126,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isConfirmBlockOpen, setIsConfirmBlockOpen] = useState<boolean>(false);
+  const [isConfirmReportSpamOpen, setIsConfirmReportSpamOpen] = useState<boolean>(false);
 
   // use the main user record to display details, but fall back to the chat's copy (e.g. if they signed out)
   const isOffline = !destUser?.id;
@@ -198,6 +199,11 @@ const MessageHeader: FC<MessageHeaderProps> = ({
     setIsConfirmBlockOpen(true);
   }, []);
 
+  const confirmReporSpam = useCallback(() => {
+    setIsMenuOpen(false);
+    setIsConfirmReportSpamOpen(true);
+  }, []);
+
   const actionsMenuProps = useMemo<ActionsMenuProps>(
     () => ({
       user,
@@ -208,7 +214,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       closeChat,
       removeChat,
       confirmToggleBlock,
-      reportSpam,
+      confirmReporSpam,
       closeMenu,
     }),
     [
@@ -220,7 +226,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       closeChat,
       removeChat,
       confirmToggleBlock,
-      reportSpam,
+      confirmReporSpam,
       closeMenu,
     ]
   );
@@ -329,11 +335,36 @@ const MessageHeader: FC<MessageHeaderProps> = ({
                 Are you sure you want to block <UserNickname user={user} className="inline" />?
               </div>
               <div className="mb-4">
-                You will no longer receive messages from (or send messages to) them, until you
-                unblock them.
+                You will no longer receive messages from (or be able to send messages to) them,
+                until you unblock them.
               </div>
             </>
           )
+        }
+      />
+      <DialogConfirm
+        isOpen={isConfirmReportSpamOpen}
+        onCancel={() => setIsConfirmReportSpamOpen(false)}
+        onConfirm={reportSpam}
+        icon="ban"
+        iconClassName="bg-red-100 text-red-400"
+        title="Report spam"
+        confirmText="Report"
+        message={
+          <>
+            <div className="mb-4">
+              <span className="text-red-500 font-bold uppercase">Warning!</span> This action is
+              irreversible and <span className="font-bold">cannot be undone</span>.
+            </div>
+            <div className="mb-4">
+              Are you sure you want to report <UserNickname user={user} className="inline" /> for
+              spamming?
+            </div>
+            <div className="mb-4">
+              This will also <span className="font-bold">permanently</span> block this user, and you
+              will no longer receive messages from (or be able to send messages to) them.
+            </div>
+          </>
         }
       />
     </div>
