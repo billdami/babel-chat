@@ -19,7 +19,7 @@ import { ChatRecord } from '../../../../../types/chat';
 import { User, UserRecord } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { blockUser, unblockUser, reportSpamUser } from '../../../../../utils/user';
-import Dialog from '../../../../../components/Dialog';
+import DialogConfirm from '../../../../../components/DialogConfirm';
 
 interface MessageHeaderProps {
   destUser?: UserRecord;
@@ -306,69 +306,36 @@ const MessageHeader: FC<MessageHeaderProps> = ({
           }
         />
       </div>
-      {/* TODO create generic <ConfirmDialog> */}
-      <Dialog
+      <DialogConfirm
         isOpen={isConfirmBlockOpen}
-        onOutsideClick={() => setIsConfirmBlockOpen(false)}
-        onEscapeKey={() => setIsConfirmBlockOpen(false)}
-      >
-        <div className="p-4">
-          <div className="flex items-start">
-            <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-gray-100">
-              <Icon name="ban" className="h-6 w-6 text-gray-500" />
-            </div>
-            <div className="ml-3 flex-1">
-              <div className="flex justify-between items-start">
-                <div className="text-lg leading-6 text-gray-900">
-                  {isBlocked ? 'Unblock user' : 'Block user'}
-                </div>
-                <Button
-                  size="sm"
-                  variant="muted"
-                  className="flex-shrink-0"
-                  onClick={() => setIsConfirmBlockOpen(false)}
-                  outline
-                >
-                  <Icon name="x-mark" size="sm" />
-                </Button>
+        onCancel={() => setIsConfirmBlockOpen(false)}
+        onConfirm={toggleBlock}
+        icon="ban"
+        title={isBlocked ? 'Unblock user' : 'Block user'}
+        confirmText={isBlocked ? 'Unblock' : 'Block'}
+        message={
+          isBlocked ? (
+            <>
+              <div className="mb-4">
+                Are you sure you want to unblock <UserNickname user={user} className="inline" />?
               </div>
-              <div className="my-2 text-sm text-gray-600">
-                {isBlocked ? (
-                  <>
-                    <div className="mb-4">
-                      Are you sure you want to unblock{' '}
-                      <UserNickname user={user} className="inline" />?
-                    </div>
-                    <div className="mb-4">
-                      You will receive messages and notifications from this user again.
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="mb-4">
-                      Are you sure you want to block <UserNickname user={user} className="inline" />
-                      ?
-                    </div>
-                    <div className="mb-4">
-                      You will no longer receive messages from (or send messages to) them, until you
-                      unblock them.
-                    </div>
-                  </>
-                )}
+              <div className="mb-4">
+                You will receive messages and notifications from this user again.
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-end px-4 py-3 bg-gray-50">
-          {/* TODO focus on "Cancel" button on open */}
-          <Button variant="link" onClick={() => setIsConfirmBlockOpen(false)}>
-            Nevermind
-          </Button>
-          <Button className="ml-2" onClick={toggleBlock}>
-            {isBlocked ? 'Unblock' : 'Block'}
-          </Button>
-        </div>
-      </Dialog>
+            </>
+          ) : (
+            <>
+              <div className="mb-4">
+                Are you sure you want to block <UserNickname user={user} className="inline" />?
+              </div>
+              <div className="mb-4">
+                You will no longer receive messages from (or send messages to) them, until you
+                unblock them.
+              </div>
+            </>
+          )
+        }
+      />
     </div>
   );
 };

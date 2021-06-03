@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import cn from 'classnames';
 
-interface DialogProps {
+export interface DialogProps {
   isOpen?: boolean;
   className?: string;
   onOutsideClick?: () => void;
@@ -69,7 +69,7 @@ const Dialog: FC<DialogProps> = ({
       // TODO animate backdrop (opacity) and modal (opacity, scale) show/hide with react-spring <Transition>
       createPortal(
         <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center md:block md:items-end sm:p-0">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center md:block md:items-end md:p-0">
             {/* TODO create <Backdrop> */}
             <div className="fixed inset-0 bg-gray-900 bg-opacity-60" aria-hidden="true"></div>
             {/* this element tricks the browser into centering the modal contents */}
