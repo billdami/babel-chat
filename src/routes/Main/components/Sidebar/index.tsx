@@ -4,12 +4,6 @@ import cn from 'classnames';
 import Button from '../../../../components/Button';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import useAuth from '../../../../hooks/useAuth';
-import { useChats } from '../../../../hooks/useChatRecord';
-import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
-import useDrawer from '../../../../hooks/useDrawer';
-import useNotifications from '../../../../hooks/useNotifications';
-import useCurrentUser from '../../../../hooks/useCurrentUser';
 import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import Link from '../../../../components/Link';
 import Icon from '../../../../components/Icon';
@@ -18,6 +12,13 @@ import UserNickname from '../../../../components/UserNickname';
 import UserDetails from '../../../../components/UserDetails';
 import Menu, { MenuContentProps } from '../../../../components/Menu';
 import MenuItem from '../../../../components/Menu/MenuItem';
+import DialogFeedback from '../../../../components/DialogFeedback';
+import useAuth from '../../../../hooks/useAuth';
+import { useChats } from '../../../../hooks/useChatRecord';
+import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
+import useDrawer from '../../../../hooks/useDrawer';
+import useNotifications from '../../../../hooks/useNotifications';
+import useCurrentUser from '../../../../hooks/useCurrentUser';
 import { User } from '../../../../types/user';
 import { ChatRecord } from '../../../../types/chat';
 
@@ -88,6 +89,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const [chats, isLoadingChats] = useChats(authUser?.uid);
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
@@ -99,8 +101,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const closeMenu = useCallback(() => setIsUserMenuOpen(false), []);
 
   const openGiveFeedback = useCallback(() => {
-    //TODO
     setIsUserMenuOpen(false);
+    setIsFeedbackDialogOpen(true);
   }, []);
 
   const userMenuProps = useMemo(
@@ -165,6 +167,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           }
         />
       </TabList>
+      <DialogFeedback
+        isOpen={isFeedbackDialogOpen}
+        onCancel={() => setIsFeedbackDialogOpen(false)}
+      />
     </div>
   );
 };
