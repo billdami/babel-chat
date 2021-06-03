@@ -9,6 +9,7 @@ interface MenuItemProps
 const MenuItem: FC<MenuItemProps> = ({ children, className, isSheet, ...rest }) => (
   <button
     type="button"
+    role="menuitem"
     className={cn(
       `flex items-center w-full
       leading-6 text-left text-gray-600

@@ -120,6 +120,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
               variant="inverse"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               isActive={isUserMenuOpen}
+              aria-haspopup={true}
+              aria-expanded={isUserMenuOpen}
               outline
             >
               <Icon name="user" size="sm" className="inline-block" />

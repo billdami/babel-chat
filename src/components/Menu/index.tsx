@@ -5,6 +5,7 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -71,10 +72,20 @@ const Menu = <T extends MenuContentProps>({
     [isOpen, onOutsideClick, popperElement, referenceElement, sheetElement, isSheet]
   );
 
+  // TODO also allow close on Escape press
+  // TODO wrap this logic up into a useEventListener() hook
+  const handleOutsideClickRef = useRef(handleOutsideClick);
+
   useEffect(() => {
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, [handleOutsideClick]);
+    document.removeEventListener('click', handleOutsideClickRef.current);
+    handleOutsideClickRef.current = handleOutsideClick;
+
+    if (isOpen) {
+      document.addEventListener('click', handleOutsideClickRef.current);
+    }
+
+    return () => document.removeEventListener('click', handleOutsideClickRef.current);
+  }, [isOpen, handleOutsideClick]);
 
   return isSheet ? (
     // TODO allow closing via swipe down gesture with pmndrs/use-gesture
@@ -85,12 +96,14 @@ const Menu = <T extends MenuContentProps>({
         {trigger}
       </div>
       {isOpen &&
-        // TODO animate show/hide with react-spring <Transition>
+        // TODO animate backdrop (opacity) and sheet (slide up/down) show/hide with react-spring <Transition>
         createPortal(
           <>
-            <div className="z-40 absolute inset-0 bg-black bg-opacity-60"></div>
+            {/* TODO create <Backdrop> */}
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-60" aria-hidden="true"></div>
             <div
               ref={setSheetElement}
+              role="menu"
               className={cn(
                 'z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border bg-white',
                 sheetClassName
@@ -108,10 +121,11 @@ const Menu = <T extends MenuContentProps>({
         {trigger}
       </div>
       {isOpen && (
-        // TODO animate show/hide with react-spring <Transition>
+        // TODO animate show/hide (opacity, scale) with react-spring <Transition>
         <div
-          className={cn('z-50 bg-white rounded shadow-lg', menuClassName)}
           ref={setPopperElement}
+          role="menu"
+          className={cn('z-10 bg-white rounded shadow-lg', menuClassName)}
           style={styles.popper}
           {...attributes.popper}
         >
