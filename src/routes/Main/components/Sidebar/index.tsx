@@ -13,6 +13,7 @@ import UserDetails from '../../../../components/UserDetails';
 import Menu, { MenuContentProps } from '../../../../components/Menu';
 import MenuItem from '../../../../components/Menu/MenuItem';
 import DialogFeedback from '../../../../components/DialogFeedback';
+import DialogConfirm from '../../../../components/DialogConfirm';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
 import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
@@ -32,12 +33,18 @@ interface SidebarProps {
 
 interface UserMenuProps extends MenuContentProps {
   user?: User | null;
-  signOut?: () => void;
+  openConfirmSignOut?: () => void;
   openGiveFeedback?: () => void;
   closeMenu?: () => void;
 }
 
-const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback, closeMenu }) => (
+const UserMenu: FC<UserMenuProps> = ({
+  isSheet,
+  user,
+  openConfirmSignOut,
+  openGiveFeedback,
+  closeMenu,
+}) => (
   <>
     <div
       className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
@@ -65,7 +72,7 @@ const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback,
       />
       Give us feedback
     </MenuItem>
-    <MenuItem onClick={signOut} isSheet={isSheet}>
+    <MenuItem onClick={openConfirmSignOut} isSheet={isSheet}>
       <Icon
         name="right-from-bracket"
         size="sm"
@@ -90,6 +97,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
+  const [isSignOutConfirmOpen, setIsSignOutConfirmOpen] = useState<boolean>(false);
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
@@ -105,9 +113,23 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
     setIsFeedbackDialogOpen(true);
   }, []);
 
+  const openConfirmSignOut = useCallback(() => {
+    setIsUserMenuOpen(false);
+    setIsSignOutConfirmOpen(true);
+  }, []);
+
+  const closeConfirmSignOut = useCallback(() => {
+    setIsSignOutConfirmOpen(false);
+  }, []);
+
+  const confirmSignOut = useCallback(() => {
+    closeConfirmSignOut();
+    signOut();
+  }, [closeConfirmSignOut, signOut]);
+
   const userMenuProps = useMemo(
-    () => ({ user, signOut, openGiveFeedback, closeMenu }),
-    [user, signOut, openGiveFeedback, closeMenu]
+    () => ({ user, openConfirmSignOut, openGiveFeedback, closeMenu }),
+    [user, openConfirmSignOut, openGiveFeedback, closeMenu]
   );
 
   return (
@@ -170,6 +192,15 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
       <DialogFeedback
         isOpen={isFeedbackDialogOpen}
         onCancel={() => setIsFeedbackDialogOpen(false)}
+      />
+      <DialogConfirm
+        isOpen={isSignOutConfirmOpen}
+        onCancel={closeConfirmSignOut}
+        onConfirm={confirmSignOut}
+        confirmText="Sign out"
+        title="Sign out"
+        icon="right-from-bracket"
+        message="Are you sure you want to sign out?"
       />
     </div>
   );

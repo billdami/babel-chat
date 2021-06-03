@@ -344,7 +344,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
         isOpen={isConfirmReportSpamOpen}
         onCancel={() => setIsConfirmReportSpamOpen(false)}
         onConfirm={reportSpam}
-        icon="ban"
+        icon="octagon-exclamation"
         iconClassName="bg-red-100 text-red-400"
         title="Report spam"
         confirmText="Report"
