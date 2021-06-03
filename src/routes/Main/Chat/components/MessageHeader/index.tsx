@@ -165,7 +165,6 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const toggleBlock = useCallback(() => {
     if (canBlock && authUser?.uid && user?.id) {
-      // TODO modal confirm
       if (isBlocked) {
         unblockUser(authUser.uid, user.id);
       } else {
@@ -184,7 +183,6 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const reportSpam = useCallback(() => {
     if (canReportSpam && authUser?.uid && user?.id) {
-      // TODO modal confirm
       blockUser(authUser.uid, user.id);
       reportSpamUser(authUser.uid, user.id);
       originChat?.ref?.remove();

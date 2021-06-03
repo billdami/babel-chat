@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useEffect, useRef } from 'react';
 import cn from 'classnames';
 
 import Button from '../Button';
@@ -25,11 +25,29 @@ const DialogConfirm: FC<DialogConfirmProps> = ({
   icon,
   onCancel,
   onConfirm,
+  isOpen,
   ...rest
 }) => {
+  const bodyElementRef = useRef<HTMLDivElement | null>(null);
+
+  // focus on the dialog body on open, to make it easier to tab to the dialog controls
+  // TODO eventually the rest of the page should become "inert", so tab focusing is trapped in the dialog
+  // TODO make this a reusable useAutofocus() hook
+  useEffect(() => {
+    if (isOpen) {
+      // give the modal time to animate in
+      setTimeout(() => bodyElementRef.current?.focus(), 200);
+    }
+  }, [isOpen]);
+
   return (
-    <Dialog onEscapeKey={() => onCancel()} onOutsideClick={() => onCancel()} {...rest}>
-      <div className="p-4">
+    <Dialog
+      isOpen={isOpen}
+      onEscapeKey={() => onCancel()}
+      onOutsideClick={() => onCancel()}
+      {...rest}
+    >
+      <div className="p-4 focus:outline-none" tabIndex={0} ref={bodyElementRef}>
         <div className="flex items-start">
           {!!icon && (
             <div
@@ -59,7 +77,6 @@ const DialogConfirm: FC<DialogConfirmProps> = ({
         </div>
       </div>
       <div className="flex justify-end px-4 py-3 bg-gray-50">
-        {/* TODO focus on "Cancel" button on open */}
         <Button variant="link" onClick={() => onCancel()}>
           {cancelText}
         </Button>

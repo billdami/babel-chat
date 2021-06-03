@@ -3,6 +3,7 @@ import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import Button from '../../../../../components/Button';
 import Checkbox from '../../../../../components/Checkbox';
+import DialogConfirm from '../../../../../components/DialogConfirm';
 import Icon from '../../../../../components/Icon';
 import Spinner from '../../../../../components/Spinner';
 import useCurrentUser from '../../../../../hooks/useCurrentUser';
@@ -26,6 +27,8 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedChatIds, setSelectedChatIds] = useState<string[]>([]);
+  const [confirmedChatIds, setConfirmedChatIds] = useState<string[]>([]);
+  const [isConfirmBlockOpen, setIsConfirmBlockOpen] = useState<boolean>(false);
 
   const currentChatId = useMemo<string | undefined>(
     () =>
@@ -113,27 +116,36 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     [chats, deselectAllChats, updateUser]
   );
 
-  const blockUsers = useCallback(
-    async (chatIds: string[]) => {
-      if (!user?.id) {
-        return;
-      }
+  const blockUsers = useCallback(async () => {
+    if (!user?.id) {
+      return;
+    }
 
-      // TODO show confirmation modal before blocking users
-      try {
-        const ops: Promise<any>[] = [];
-        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
-        chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
-        await Promise.all(ops.filter(Boolean));
-        await removeChats(chatIds);
-        deselectAllChats();
-        updateUser({ dateLastActive: getFirebaseTimestamp() });
-      } catch (err) {
-        // TODO handle
-      }
-    },
-    [user, chats, deselectAllChats, removeChats, updateUser]
-  );
+    try {
+      setIsConfirmBlockOpen(false);
+      const ops: Promise<any>[] = [];
+      const chatRecs = confirmedChatIds
+        .map((id) => chats?.find((c) => c.id === id))
+        .filter(Boolean);
+      chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
+      await Promise.all(ops.filter(Boolean));
+      await removeChats(confirmedChatIds);
+      deselectAllChats();
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
+    } catch (err) {
+      // TODO handle
+    }
+  }, [confirmedChatIds, user, chats, deselectAllChats, removeChats, updateUser]);
+
+  const confirmBlockUsers = useCallback((chatIds: string[]) => {
+    setConfirmedChatIds(chatIds);
+    setIsConfirmBlockOpen(true);
+  }, []);
+
+  const cancelBlockUsers = useCallback(() => {
+    setConfirmedChatIds([]);
+    setIsConfirmBlockOpen(false);
+  }, []);
 
   // TODO apply sorting
   return (
@@ -173,7 +185,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
                   <Button
                     variant="link"
                     size="sm"
-                    onClick={() => blockUsers(selectedChatIds)}
+                    onClick={() => confirmBlockUsers(selectedChatIds)}
                     disabled={!selectedChatIds.length}
                     title="Block"
                   >
@@ -212,7 +224,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
             isEditing={isEditing}
             toggleChatSelection={toggleChatSelection}
             markChatRead={markChatsRead}
-            blockUser={blockUsers}
+            blockUser={confirmBlockUsers}
             removeChat={removeChats}
           />
         ))}
@@ -221,6 +233,27 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
         )}
         {isLoading && <Spinner className="mx-3 my-2" />}
       </ul>
+      <DialogConfirm
+        isOpen={isConfirmBlockOpen}
+        onCancel={cancelBlockUsers}
+        onConfirm={blockUsers}
+        icon="ban"
+        title={confirmedChatIds.length === 1 ? 'Block user' : 'Block users'}
+        confirmText="Block"
+        message={
+          <>
+            <div className="mb-4">
+              {confirmedChatIds.length === 1
+                ? 'Are you sure you want to block this user?'
+                : 'Are you sure you want to block these users?'}
+            </div>
+            <div className="mb-4">
+              You will no longer receive messages from (or be able to send messages to) them, until
+              you unblock them.
+            </div>
+          </>
+        }
+      />
     </div>
   );
 };
