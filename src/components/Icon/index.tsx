@@ -1,13 +1,16 @@
 import { createElement, FC, memo, SVGProps } from 'react';
 import cn from 'classnames';
 
+import ArrowDownAZ from '../Svgs/Icons/ArrowDownAZ';
 import ArrowUp from '../Svgs/Icons/ArrowUp';
 import Ban from '../Svgs/Icons/Ban';
 import Bars from '../Svgs/Icons/Bars';
 import Ellipsis from '../Svgs/Icons/Ellipsis';
 import EllipsisVertical from '../Svgs/Icons/EllipsisVertical';
+import Filter from '../Svgs/Icons/Filter';
 import Ghost from '../Svgs/Icons/Ghost';
 import Message from '../Svgs/Icons/Message';
+import MagnifyingGlass from '../Svgs/Icons/MagnifyingGlass';
 import MessageCheck from '../Svgs/Icons/MessageCheck';
 import MessageExclamation from '../Svgs/Icons/MessageExclamation';
 import MessagePen from '../Svgs/Icons/MessagePen';
@@ -22,12 +25,15 @@ import XMark from '../Svgs/Icons/XMark';
 type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type IconName =
+  | 'arrow-down-a-z'
   | 'arrow-up'
   | 'ban'
   | 'bars'
   | 'ellipsis'
   | 'ellipsis-vertical'
+  | 'filter'
   | 'ghost'
+  | 'magnifying-glass'
   | 'message'
   | 'message-check'
   | 'message-exclamation'
@@ -48,6 +54,8 @@ interface IconProps extends SVGProps<SVGSVGElement> {
 
 const getSvg = (name: IconName) => {
   switch (name) {
+    case 'arrow-down-a-z':
+      return ArrowDownAZ;
     case 'arrow-up':
       return ArrowUp;
     case 'ban':
@@ -58,8 +66,12 @@ const getSvg = (name: IconName) => {
       return Ellipsis;
     case 'ellipsis-vertical':
       return EllipsisVertical;
+    case 'filter':
+      return Filter;
     case 'ghost':
       return Ghost;
+    case 'magnifying-glass':
+      return MagnifyingGlass;
     case 'message':
       return Message;
     case 'message-check':
