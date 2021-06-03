@@ -117,6 +117,9 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const canRemove = !isSelf && !!originChat?.id;
   const canBlock = !isSelf && !isOffline && !isSpamReported && !!authUser?.uid && !!user?.id;
+  // TODO [BUG] if a user removes or blocks a chat containing messages from the other user
+  // on re-open of the chat view for that user, they can no longer report as spam until
+  // the other messages them again (not a huge deal, but probably should fix eventually)
   const canReportSpam =
     !isSelf &&
     !isOffline &&
