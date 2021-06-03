@@ -63,11 +63,13 @@ const Dialog: FC<DialogProps> = ({
     return () => document.removeEventListener('keyup', handleEscapeKeyRef.current);
   }, [isOpen, handleEscapeKey]);
 
+  // TODO don't allow tabbing to content outside of dialog (inert attributes)
+  // ex: document.querySelector("#root").setAttribute("inert", isOpen);
+  // @see https://github.com/WICG/inert
+  // @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert
+  // TODO animate backdrop (opacity) and modal (opacity, scale) show/hide with react-spring <Transition>
   return isOpen
-    ? // TODO don't allow tabbing to content outside of dialog (inert attributes)
-      // @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert
-      // TODO animate backdrop (opacity) and modal (opacity, scale) show/hide with react-spring <Transition>
-      createPortal(
+    ? createPortal(
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center md:block md:items-end md:p-0">
             {/* TODO create <Backdrop> */}
