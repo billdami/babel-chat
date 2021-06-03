@@ -172,7 +172,14 @@ const ListItem: FC<ListItemProps> = ({
             content={ChatMenu}
             contentProps={menuProps}
             trigger={
-              <Button variant="muted" size="sm" onClick={onTriggerClick} isActive={isMenuOpen}>
+              <Button
+                variant="muted"
+                size="sm"
+                onClick={onTriggerClick}
+                isActive={isMenuOpen}
+                aria-haspopup={true}
+                aria-expanded={isMenuOpen}
+              >
                 <Icon name="ellipsis" size="sm" className="inline-block" />
               </Button>
             }

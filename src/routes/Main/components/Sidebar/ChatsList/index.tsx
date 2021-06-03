@@ -3,6 +3,7 @@ import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import Button from '../../../../../components/Button';
 import Checkbox from '../../../../../components/Checkbox';
+import DialogConfirm from '../../../../../components/DialogConfirm';
 import Icon from '../../../../../components/Icon';
 import Spinner from '../../../../../components/Spinner';
 import useCurrentUser from '../../../../../hooks/useCurrentUser';
@@ -14,18 +15,19 @@ import { ChatRouteParams } from '../../../Chat';
 import ListItem from './ListItem';
 
 interface ChatsListProps {
-  chats?: ChatRecord[];
+  chats: ChatRecord[];
   isLoading: boolean;
-  blockedIds: string[];
 }
 
-const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
+const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   const history = useHistory();
   const location = useLocation();
   const { user, updateUser } = useCurrentUser();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedChatIds, setSelectedChatIds] = useState<string[]>([]);
+  const [confirmedChatIds, setConfirmedChatIds] = useState<string[]>([]);
+  const [isConfirmBlockOpen, setIsConfirmBlockOpen] = useState<boolean>(false);
 
   const currentChatId = useMemo<string | undefined>(
     () =>
@@ -34,13 +36,8 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     [location.pathname]
   );
 
-  const visibleChats = useMemo<ChatRecord[]>(
-    () => chats?.filter((c) => !blockedIds.includes(c.id)) ?? [],
-    [chats, blockedIds]
-  );
-
   const selectAllChats = useCallback(() => {
-    setSelectedChatIds([...(chats?.map((c) => c.id) ?? [])]);
+    setSelectedChatIds([...(chats.map((c) => c.id) ?? [])]);
   }, [chats]);
 
   const deselectAllChats = useCallback(() => {
@@ -78,7 +75,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     async (chatIds: string[]) => {
       try {
         const ops: Promise<any>[] = [];
-        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
         chatRecs.forEach((chat) => ops.push(chat!.ref?.remove().catch(() => {})));
 
         // if one of the removed chats is currently being viewed, navigate to the index
@@ -100,7 +97,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     async (chatIds: string[]) => {
       try {
         const ops: Promise<any>[] = [];
-        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
         const update = { dateLastSeen: getFirebaseTimestamp() };
         chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
         await Promise.all(ops.filter(Boolean));
@@ -113,41 +110,48 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     [chats, deselectAllChats, updateUser]
   );
 
-  const blockUsers = useCallback(
-    async (chatIds: string[]) => {
-      if (!user?.id) {
-        return;
-      }
+  const blockUsers = useCallback(async () => {
+    if (!user?.id) {
+      return;
+    }
 
-      // TODO show confirmation modal before blocking users
-      try {
-        const ops: Promise<any>[] = [];
-        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
-        chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
-        await Promise.all(ops.filter(Boolean));
-        await removeChats(chatIds);
-        deselectAllChats();
-        updateUser({ dateLastActive: getFirebaseTimestamp() });
-      } catch (err) {
-        // TODO handle
-      }
-    },
-    [user, chats, deselectAllChats, removeChats, updateUser]
-  );
+    try {
+      setIsConfirmBlockOpen(false);
+      const ops: Promise<any>[] = [];
+      const chatRecs = confirmedChatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+      chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
+      await Promise.all(ops.filter(Boolean));
+      await removeChats(confirmedChatIds);
+      deselectAllChats();
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
+    } catch (err) {
+      // TODO handle
+    }
+  }, [confirmedChatIds, user, chats, deselectAllChats, removeChats, updateUser]);
+
+  const confirmBlockUsers = useCallback((chatIds: string[]) => {
+    setConfirmedChatIds(chatIds);
+    setIsConfirmBlockOpen(true);
+  }, []);
+
+  const cancelBlockUsers = useCallback(() => {
+    setConfirmedChatIds([]);
+    setIsConfirmBlockOpen(false);
+  }, []);
 
   // TODO apply sorting
   return (
     <div className="ChatsList pb-2">
-      {(!!visibleChats?.length || isEditing) && (
+      {(!!chats.length || isEditing) && (
         <div className="px-3 py-1 mb-1 bg-gray-200 shadow-inner">
           {isEditing ? (
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <Checkbox
                   onChange={onToggleAllChange}
-                  checked={selectedChatIds.length === chats?.length}
+                  checked={!!chats.length && selectedChatIds.length === chats.length}
                   isIndeterminate={
-                    !!selectedChatIds.length && selectedChatIds.length !== chats?.length
+                    !!selectedChatIds.length && selectedChatIds.length !== chats.length
                   }
                   inputClassName="bg-white"
                   standalone
@@ -173,7 +177,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
                   <Button
                     variant="link"
                     size="sm"
-                    onClick={() => blockUsers(selectedChatIds)}
+                    onClick={() => confirmBlockUsers(selectedChatIds)}
                     disabled={!selectedChatIds.length}
                     title="Block"
                   >
@@ -204,7 +208,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
         </div>
       )}
       <ul>
-        {visibleChats.map((chat) => (
+        {chats.map((chat) => (
           <ListItem
             key={chat.id}
             chat={chat}
@@ -212,15 +216,36 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
             isEditing={isEditing}
             toggleChatSelection={toggleChatSelection}
             markChatRead={markChatsRead}
-            blockUser={blockUsers}
+            blockUser={confirmBlockUsers}
             removeChat={removeChats}
           />
         ))}
-        {!visibleChats.length && !isLoading && (
+        {!chats.length && !isLoading && (
           <div className="px-3 py-8 text-gray-400 text-center text-sm">No chats found 😿</div>
         )}
         {isLoading && <Spinner className="mx-3 my-2" />}
       </ul>
+      <DialogConfirm
+        isOpen={isConfirmBlockOpen}
+        onCancel={cancelBlockUsers}
+        onConfirm={blockUsers}
+        icon="ban"
+        title={confirmedChatIds.length === 1 ? 'Block user' : 'Block users'}
+        confirmText="Block"
+        message={
+          <>
+            <div className="mb-4">
+              {confirmedChatIds.length === 1
+                ? 'Are you sure you want to block this user?'
+                : 'Are you sure you want to block these users?'}
+            </div>
+            <div className="mb-4">
+              You will no longer receive messages from (or be able to send messages to) them, until
+              you unblock them.
+            </div>
+          </>
+        }
+      />
     </div>
   );
 };

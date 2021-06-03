@@ -4,12 +4,6 @@ import cn from 'classnames';
 import Button from '../../../../components/Button';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import useAuth from '../../../../hooks/useAuth';
-import { useChats } from '../../../../hooks/useChatRecord';
-import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
-import useDrawer from '../../../../hooks/useDrawer';
-import useNotifications from '../../../../hooks/useNotifications';
-import useCurrentUser from '../../../../hooks/useCurrentUser';
 import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import Link from '../../../../components/Link';
 import Icon from '../../../../components/Icon';
@@ -18,7 +12,15 @@ import UserNickname from '../../../../components/UserNickname';
 import UserDetails from '../../../../components/UserDetails';
 import Menu, { MenuContentProps } from '../../../../components/Menu';
 import MenuItem from '../../../../components/Menu/MenuItem';
+import DialogFeedback from '../../../../components/DialogFeedback';
+import useAuth from '../../../../hooks/useAuth';
+import { useChats } from '../../../../hooks/useChatRecord';
+import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
+import useDrawer from '../../../../hooks/useDrawer';
+import useNotifications from '../../../../hooks/useNotifications';
+import useCurrentUser from '../../../../hooks/useCurrentUser';
 import { User } from '../../../../types/user';
+import { ChatRecord } from '../../../../types/chat';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
@@ -56,11 +58,19 @@ const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback,
       )}
     </div>
     <MenuItem onClick={openGiveFeedback} isSheet={isSheet}>
-      <Icon name="message-pen" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="message-pen"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Give us feedback
     </MenuItem>
     <MenuItem onClick={signOut} isSheet={isSheet}>
-      <Icon name="right-from-bracket" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="right-from-bracket"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Sign out
     </MenuItem>
     {/* TODO [future] avatar editor */}
@@ -72,21 +82,27 @@ const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback,
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user: authUser, signOut } = useAuth();
   const { user } = useCurrentUser();
-  const { activeTab } = useDrawer();
+  const { activeTab, closeDrawer } = useDrawer();
   const { numUnread } = useNotifications();
   const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(authUser?.uid);
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
+
+  const visibleChats = useMemo<ChatRecord[]>(
+    () => chats?.filter((c) => !blockedIds.includes(c.id)) ?? [],
+    [chats, blockedIds]
+  );
 
   const closeMenu = useCallback(() => setIsUserMenuOpen(false), []);
 
   const openGiveFeedback = useCallback(() => {
-    //TODO
     setIsUserMenuOpen(false);
+    setIsFeedbackDialogOpen(true);
   }, []);
 
   const userMenuProps = useMemo(
@@ -97,7 +113,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   return (
     <div className={cn('flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 text-white">
-        <Link to="/main" className="py-1 px-2 bg-white border border-white">
+        <Link to="/main" onClick={closeDrawer} className="py-1 px-2 bg-white border border-white">
           <LogoIcon className="h-8" />
         </Link>
         <Menu<UserMenuProps>
@@ -112,6 +128,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
               variant="inverse"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               isActive={isUserMenuOpen}
+              aria-haspopup={true}
+              aria-expanded={isUserMenuOpen}
               outline
             >
               <Icon name="user" size="sm" className="inline-block" />
@@ -133,14 +151,14 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ChatsList chats={chats} isLoading={isLoadingChats} blockedIds={blockedIds} />
+        <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />
         <SidebarTab
           tabId="tab-chats"
           label="Chats"
-          count={chats?.length}
+          count={visibleChats?.length}
           numUnread={numUnread}
           unreadTooltip={
             numUnread
@@ -149,6 +167,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           }
         />
       </TabList>
+      <DialogFeedback
+        isOpen={isFeedbackDialogOpen}
+        onCancel={() => setIsFeedbackDialogOpen(false)}
+      />
     </div>
   );
 };

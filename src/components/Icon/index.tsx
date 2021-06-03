@@ -21,7 +21,7 @@ import XMark from '../Svgs/Icons/XMark';
 
 type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-type IconName =
+export type IconName =
   | 'arrow-up'
   | 'ban'
   | 'bars'

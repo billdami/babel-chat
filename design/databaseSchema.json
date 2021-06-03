@@ -9,8 +9,7 @@
       "dateLastMessage": 123456789,
       "dateSignedIn": 123456789,
       "gender": "MALE",
-      "nickname": "Bill",
-      "isSpammer": false
+      "nickname": "Bill"
     },
     "user5": {
       "uuid": 4567,
@@ -21,8 +20,7 @@
       "dateLastMessage": 123456789,
       "dateSignedIn": 123456789,
       "gender": "UNSPECIFIED",
-      "nickname": "Anonymous user",
-      "isSpammer": false
+      "nickname": "Anonymous user"
     }
   },
   "user_uuids": {
@@ -169,6 +167,33 @@
     "2_2_2_2": {
       "dateBanned": 123456789,
       "dateExpires": null
+    }
+  },
+  "feedback_messages": {
+    "feedback_message1": {
+      "dateCreated": 123456789,
+      "email": "joetester@test.com",
+      "message": "this is feedback.",
+      "user": {
+        "uuid": 1234,
+        "age": 99,
+        "agreedToToS": true,
+        "country": "USA",
+        "dateLastActive": 123456789,
+        "dateLastMessage": 123456789,
+        "dateSignedIn": 123456789,
+        "gender": "MALE",
+        "nickname": "Bill"
+      },
+      "browser": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+        "href": "https://babelchat.online/main",
+        "pathname": "/main",
+        "screenHeight": 1080,
+        "screenWidth": 1920,
+        "screenAvailHeight": 1060,
+        "screenAvailWidth": 1520
+      }
     }
   }
 }

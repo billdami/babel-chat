@@ -96,6 +96,20 @@
       ".indexOn": ["dateConvicted"],
       // all authenticated users can read all spam_users
       ".read": "root.child('APP_OFFLINE').val() !== true && auth != null"
+    },
+    "feedback_messages": {
+      // no one can read messages (except admins)
+      ".read": "false",
+      "$feedback_message_id": {
+        // all authenticated users can write new messages
+        ".write": "root.child('APP_OFFLINE').val() !== true && auth != null && !data.exists() && newData.exists()",
+        "message": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000"
+        },
+        "email": {
+          ".validate": "!newData.isString() || newData.val().length <= 255"
+        }
+      }
     }
   }
 }

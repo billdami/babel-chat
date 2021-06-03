@@ -1,8 +1,8 @@
-import React, { DetailedHTMLProps, InputHTMLAttributes, forwardRef } from 'react';
+import React, { DetailedHTMLProps, TextareaHTMLAttributes, forwardRef } from 'react';
 import cn from 'classnames';
 
-interface InputProps
-  extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+interface TextareaProps
+  extends DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> {
   fullWidth?: boolean;
 }
 
@@ -24,11 +24,11 @@ disabled:opacity-50
 disabled:bg-gray-200
 disabled:cursor-not-allowed`;
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, fullWidth = false, ...rest }, ref) => (
-    <input
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, fullWidth = false, value, ...rest }, ref) => (
+    <textarea
       ref={ref}
-      type="text"
+      value={value}
       className={cn(baseClasses, className, {
         'w-full': fullWidth,
       })}
@@ -37,4 +37,4 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   )
 );
 
-export default Input;
+export default Textarea;

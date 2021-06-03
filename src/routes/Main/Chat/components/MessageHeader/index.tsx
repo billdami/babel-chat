@@ -19,6 +19,7 @@ import { ChatRecord } from '../../../../../types/chat';
 import { User, UserRecord } from '../../../../../types/user';
 import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { blockUser, unblockUser, reportSpamUser } from '../../../../../utils/user';
+import DialogConfirm from '../../../../../components/DialogConfirm';
 
 interface MessageHeaderProps {
   destUser?: UserRecord;
@@ -36,8 +37,8 @@ interface ActionsMenuProps extends MenuContentProps {
   canReportSpam?: boolean;
   closeChat?: () => void;
   removeChat?: () => void;
-  toggleBlock?: () => void;
-  reportSpam?: () => void;
+  confirmToggleBlock?: () => void;
+  confirmReporSpam?: () => void;
   closeMenu?: () => void;
 }
 
@@ -50,8 +51,8 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
   canReportSpam,
   closeChat,
   removeChat,
-  toggleBlock,
-  reportSpam,
+  confirmToggleBlock,
+  confirmReporSpam,
   closeMenu,
 }) => (
   <>
@@ -74,20 +75,36 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
       )}
     </div>
     <MenuItem isSheet={isSheet} onClick={removeChat} disabled={!canRemove}>
-      <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="trash-can"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Remove from list
     </MenuItem>
-    <MenuItem isSheet={isSheet} onClick={toggleBlock} disabled={!canBlock}>
-      <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
+    <MenuItem isSheet={isSheet} onClick={confirmToggleBlock} disabled={!canBlock}>
+      <Icon
+        name="ban"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       {isBlocked ? 'Unblock user' : 'Block user'}
     </MenuItem>
-    <MenuItem isSheet={isSheet} onClick={reportSpam} disabled={!canReportSpam}>
-      <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
+    <MenuItem isSheet={isSheet} onClick={confirmReporSpam} disabled={!canReportSpam}>
+      <Icon
+        name="octagon-exclamation"
+        size="sm"
+        className={cn('inline-block text-red-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Report spam
     </MenuItem>
     <div className="mt-2 pt-2 border-t border-gray-100">
       <MenuItem isSheet={isSheet} onClick={closeChat}>
-        <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
+        <Icon
+          name="x-mark"
+          size="sm"
+          className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+        />
         Close chat
       </MenuItem>
     </div>
@@ -108,6 +125,8 @@ const MessageHeader: FC<MessageHeaderProps> = ({
   const { numUnread } = useNotifications();
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isConfirmBlockOpen, setIsConfirmBlockOpen] = useState<boolean>(false);
+  const [isConfirmReportSpamOpen, setIsConfirmReportSpamOpen] = useState<boolean>(false);
 
   // use the main user record to display details, but fall back to the chat's copy (e.g. if they signed out)
   const isOffline = !destUser?.id;
@@ -117,6 +136,9 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const canRemove = !isSelf && !!originChat?.id;
   const canBlock = !isSelf && !isOffline && !isSpamReported && !!authUser?.uid && !!user?.id;
+  // TODO [BUG] if a user removes or blocks a chat containing messages from the other user
+  // on re-open of the chat view for that user, they can no longer report as spam until
+  // the other messages them again (not a huge deal, but probably should fix eventually)
   const canReportSpam =
     !isSelf &&
     !isOffline &&
@@ -143,7 +165,6 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const toggleBlock = useCallback(() => {
     if (canBlock && authUser?.uid && user?.id) {
-      // TODO modal confirm
       if (isBlocked) {
         unblockUser(authUser.uid, user.id);
       } else {
@@ -152,7 +173,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       }
 
       updateUser({ dateLastActive: getFirebaseTimestamp() });
-      setIsMenuOpen(false);
+      setIsConfirmBlockOpen(false);
 
       if (!isBlocked) {
         closeChat();
@@ -162,7 +183,6 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const reportSpam = useCallback(() => {
     if (canReportSpam && authUser?.uid && user?.id) {
-      // TODO modal confirm
       blockUser(authUser.uid, user.id);
       reportSpamUser(authUser.uid, user.id);
       originChat?.ref?.remove();
@@ -171,6 +191,16 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       closeChat();
     }
   }, [canReportSpam, authUser, user, updateUser, originChat, closeChat]);
+
+  const confirmToggleBlock = useCallback(() => {
+    setIsMenuOpen(false);
+    setIsConfirmBlockOpen(true);
+  }, []);
+
+  const confirmReporSpam = useCallback(() => {
+    setIsMenuOpen(false);
+    setIsConfirmReportSpamOpen(true);
+  }, []);
 
   const actionsMenuProps = useMemo<ActionsMenuProps>(
     () => ({
@@ -181,8 +211,8 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       canReportSpam,
       closeChat,
       removeChat,
-      toggleBlock,
-      reportSpam,
+      confirmToggleBlock,
+      confirmReporSpam,
       closeMenu,
     }),
     [
@@ -193,8 +223,8 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       canReportSpam,
       closeChat,
       removeChat,
-      toggleBlock,
-      reportSpam,
+      confirmToggleBlock,
+      confirmReporSpam,
       closeMenu,
     ]
   );
@@ -264,10 +294,13 @@ const MessageHeader: FC<MessageHeaderProps> = ({
           content={ActionsMenu}
           contentProps={actionsMenuProps}
           trigger={
+            // create a <MenuTrigger> component
             <Button
               variant="inverse"
               className="ml-2 flex-shrink-0"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-haspopup={true}
+              aria-expanded={isMenuOpen}
               isActive={isMenuOpen}
               outline
             >
@@ -277,6 +310,61 @@ const MessageHeader: FC<MessageHeaderProps> = ({
           }
         />
       </div>
+      <DialogConfirm
+        isOpen={isConfirmBlockOpen}
+        onCancel={() => setIsConfirmBlockOpen(false)}
+        onConfirm={toggleBlock}
+        icon="ban"
+        title={isBlocked ? 'Unblock user' : 'Block user'}
+        confirmText={isBlocked ? 'Unblock' : 'Block'}
+        message={
+          isBlocked ? (
+            <>
+              <div className="mb-4">
+                Are you sure you want to unblock <UserNickname user={user} className="inline" />?
+              </div>
+              <div className="mb-4">
+                You will receive messages and notifications from this user again.
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mb-4">
+                Are you sure you want to block <UserNickname user={user} className="inline" />?
+              </div>
+              <div className="mb-4">
+                You will no longer receive messages from (or be able to send messages to) them,
+                until you unblock them.
+              </div>
+            </>
+          )
+        }
+      />
+      <DialogConfirm
+        isOpen={isConfirmReportSpamOpen}
+        onCancel={() => setIsConfirmReportSpamOpen(false)}
+        onConfirm={reportSpam}
+        icon="ban"
+        iconClassName="bg-red-100 text-red-400"
+        title="Report spam"
+        confirmText="Report"
+        message={
+          <>
+            <div className="mb-4">
+              <span className="text-red-500 font-bold uppercase">Warning!</span> This action is
+              irreversible and <span className="font-bold">cannot be undone</span>.
+            </div>
+            <div className="mb-4">
+              Are you sure you want to report <UserNickname user={user} className="inline" /> for
+              spamming?
+            </div>
+            <div className="mb-4">
+              This will also <span className="font-bold">permanently</span> block this user, and you
+              will no longer receive messages from (or be able to send messages to) them.
+            </div>
+          </>
+        }
+      />
     </div>
   );
 };

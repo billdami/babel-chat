@@ -3,7 +3,7 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 
-import { NewUserDetails, User } from '../types/user';
+import { NewUserDetails, User, UserRecord } from '../types/user';
 
 import { generateRandomNickname, generateRandomUUID } from './random';
 import { getFirebaseTimestamp } from './firebase';
@@ -79,4 +79,45 @@ export const reportSpamUser = async (
   const db = firebase.database();
   const ref = db.ref(`user_spam_reports/${originUserId}/${blockedUserId}`);
   await ref.set({ dateCreated: getFirebaseTimestamp() });
+};
+
+export const createFeedbackMessage = async (
+  email: string,
+  message: string,
+  userRec: UserRecord
+): Promise<firebase.database.Reference> => {
+  const db = firebase.database();
+  const messagesRef = db.ref('feedback_messages');
+
+  const user = {
+    id: userRec.id,
+    uuid: userRec.uuid,
+    nickname: userRec.nickname,
+    country: userRec.country,
+    age: userRec.age,
+    gender: userRec.gender,
+    agreedToToS: userRec.agreedToToS,
+    dateSignedIn: userRec.dateSignedIn,
+    dateLastActive: userRec.dateLastActive,
+  };
+
+  const browser = {
+    ua: navigator?.userAgent,
+    href: window.location?.href,
+    pathname: window.location?.pathname,
+    screenHeight: window.screen?.height,
+    screenWidth: window.screen?.width,
+    screenAvailHeight: window.screen?.availHeight,
+    screenAvailWidth: window.screen?.availWidth,
+  };
+
+  const messageRef = await messagesRef.push({
+    dateCreated: getFirebaseTimestamp(),
+    email,
+    message,
+    user,
+    browser,
+  });
+
+  return messageRef;
 };
