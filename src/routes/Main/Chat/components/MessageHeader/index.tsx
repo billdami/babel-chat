@@ -74,20 +74,36 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
       )}
     </div>
     <MenuItem isSheet={isSheet} onClick={removeChat} disabled={!canRemove}>
-      <Icon name="trash-can" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="trash-can"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Remove from list
     </MenuItem>
     <MenuItem isSheet={isSheet} onClick={toggleBlock} disabled={!canBlock}>
-      <Icon name="ban" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="ban"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       {isBlocked ? 'Unblock user' : 'Block user'}
     </MenuItem>
     <MenuItem isSheet={isSheet} onClick={reportSpam} disabled={!canReportSpam}>
-      <Icon name="octagon-exclamation" size="sm" className="inline-block mr-2 text-red-400" />
+      <Icon
+        name="octagon-exclamation"
+        size="sm"
+        className={cn('inline-block text-red-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Report spam
     </MenuItem>
     <div className="mt-2 pt-2 border-t border-gray-100">
       <MenuItem isSheet={isSheet} onClick={closeChat}>
-        <Icon name="x-mark" size="sm" className="inline-block mr-2 text-gray-400" />
+        <Icon
+          name="x-mark"
+          size="sm"
+          className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+        />
         Close chat
       </MenuItem>
     </div>

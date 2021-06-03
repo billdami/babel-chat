@@ -56,11 +56,19 @@ const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback,
       )}
     </div>
     <MenuItem onClick={openGiveFeedback} isSheet={isSheet}>
-      <Icon name="message-pen" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="message-pen"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Give us feedback
     </MenuItem>
     <MenuItem onClick={signOut} isSheet={isSheet}>
-      <Icon name="right-from-bracket" size="sm" className="inline-block mr-2 text-gray-400" />
+      <Icon
+        name="right-from-bracket"
+        size="sm"
+        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
+      />
       Sign out
     </MenuItem>
     {/* TODO [future] avatar editor */}
@@ -72,7 +80,7 @@ const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback,
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user: authUser, signOut } = useAuth();
   const { user } = useCurrentUser();
-  const { activeTab } = useDrawer();
+  const { activeTab, closeDrawer } = useDrawer();
   const { numUnread } = useNotifications();
   const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
@@ -97,7 +105,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   return (
     <div className={cn('flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 text-white">
-        <Link to="/main" className="py-1 px-2 bg-white border border-white">
+        <Link to="/main" onClick={closeDrawer} className="py-1 px-2 bg-white border border-white">
           <LogoIcon className="h-8" />
         </Link>
         <Menu<UserMenuProps>

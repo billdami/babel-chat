@@ -88,7 +88,7 @@ const Menu = <T extends MenuContentProps>({
         // TODO animate show/hide with react-spring <Transition>
         createPortal(
           <>
-            <div className="z-40 absolute inset-0 bg-black bg-opacity-30"></div>
+            <div className="z-40 absolute inset-0 bg-black bg-opacity-60"></div>
             <div
               ref={setSheetElement}
               className={cn(
