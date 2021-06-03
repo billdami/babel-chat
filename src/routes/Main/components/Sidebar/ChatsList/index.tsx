@@ -15,12 +15,11 @@ import { ChatRouteParams } from '../../../Chat';
 import ListItem from './ListItem';
 
 interface ChatsListProps {
-  chats?: ChatRecord[];
+  chats: ChatRecord[];
   isLoading: boolean;
-  blockedIds: string[];
 }
 
-const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
+const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   const history = useHistory();
   const location = useLocation();
   const { user, updateUser } = useCurrentUser();
@@ -37,13 +36,8 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     [location.pathname]
   );
 
-  const visibleChats = useMemo<ChatRecord[]>(
-    () => chats?.filter((c) => !blockedIds.includes(c.id)) ?? [],
-    [chats, blockedIds]
-  );
-
   const selectAllChats = useCallback(() => {
-    setSelectedChatIds([...(chats?.map((c) => c.id) ?? [])]);
+    setSelectedChatIds([...(chats.map((c) => c.id) ?? [])]);
   }, [chats]);
 
   const deselectAllChats = useCallback(() => {
@@ -81,7 +75,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     async (chatIds: string[]) => {
       try {
         const ops: Promise<any>[] = [];
-        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
         chatRecs.forEach((chat) => ops.push(chat!.ref?.remove().catch(() => {})));
 
         // if one of the removed chats is currently being viewed, navigate to the index
@@ -103,7 +97,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     async (chatIds: string[]) => {
       try {
         const ops: Promise<any>[] = [];
-        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
         const update = { dateLastSeen: getFirebaseTimestamp() };
         chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
         await Promise.all(ops.filter(Boolean));
@@ -124,9 +118,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
     try {
       setIsConfirmBlockOpen(false);
       const ops: Promise<any>[] = [];
-      const chatRecs = confirmedChatIds
-        .map((id) => chats?.find((c) => c.id === id))
-        .filter(Boolean);
+      const chatRecs = confirmedChatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
       chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
       await Promise.all(ops.filter(Boolean));
       await removeChats(confirmedChatIds);
@@ -150,16 +142,16 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
   // TODO apply sorting
   return (
     <div className="ChatsList pb-2">
-      {(!!visibleChats?.length || isEditing) && (
+      {(!!chats.length || isEditing) && (
         <div className="px-3 py-1 mb-1 bg-gray-200 shadow-inner">
           {isEditing ? (
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <Checkbox
                   onChange={onToggleAllChange}
-                  checked={selectedChatIds.length === chats?.length}
+                  checked={!!chats.length && selectedChatIds.length === chats.length}
                   isIndeterminate={
-                    !!selectedChatIds.length && selectedChatIds.length !== chats?.length
+                    !!selectedChatIds.length && selectedChatIds.length !== chats.length
                   }
                   inputClassName="bg-white"
                   standalone
@@ -216,7 +208,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
         </div>
       )}
       <ul>
-        {visibleChats.map((chat) => (
+        {chats.map((chat) => (
           <ListItem
             key={chat.id}
             chat={chat}
@@ -228,7 +220,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
             removeChat={removeChats}
           />
         ))}
-        {!visibleChats.length && !isLoading && (
+        {!chats.length && !isLoading && (
           <div className="px-3 py-8 text-gray-400 text-center text-sm">No chats found 😿</div>
         )}
         {isLoading && <Spinner className="mx-3 my-2" />}

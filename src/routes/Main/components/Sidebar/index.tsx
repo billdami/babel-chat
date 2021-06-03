@@ -19,6 +19,7 @@ import UserDetails from '../../../../components/UserDetails';
 import Menu, { MenuContentProps } from '../../../../components/Menu';
 import MenuItem from '../../../../components/Menu/MenuItem';
 import { User } from '../../../../types/user';
+import { ChatRecord } from '../../../../types/chat';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
@@ -90,6 +91,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
+  const visibleChats = useMemo<ChatRecord[]>(
+    () => chats?.filter((c) => !blockedIds.includes(c.id)) ?? [],
+    [chats, blockedIds]
+  );
+
   const closeMenu = useCallback(() => setIsUserMenuOpen(false), []);
 
   const openGiveFeedback = useCallback(() => {
@@ -143,14 +149,14 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ChatsList chats={chats} isLoading={isLoadingChats} blockedIds={blockedIds} />
+        <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />
         <SidebarTab
           tabId="tab-chats"
           label="Chats"
-          count={chats?.length}
+          count={visibleChats?.length}
           numUnread={numUnread}
           unreadTooltip={
             numUnread
