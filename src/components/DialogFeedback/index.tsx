@@ -86,7 +86,18 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
           <div className="my-2">
             {hasSubmitted ? (
               <>
-                <div className="mb-4">Thanks! (TODO)</div>
+                {/* TODO create <Alert> */}
+                <div className="flex items-start my-6 px-6 py-4 text-sm text-green-700 bg-green-100 bg-opacity-60 border-l-4 border-green-500 rounded-sm rounded-tl-none rounded-bl-none">
+                  <Icon
+                    name="message-check"
+                    className="mt-1 mr-2 inline-block flex-shrink-0"
+                    size="sm"
+                  />
+                  <div>
+                    <span className="font-bold">Thanks!</span> Your message has been received. We
+                    appreciate your feedback!
+                  </div>
+                </div>
               </>
             ) : (
               <>
