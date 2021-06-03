@@ -1,5 +1,7 @@
 import React, { FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-// import cn from 'classnames';
+
+import useCurrentUser from '../../hooks/useCurrentUser';
+import { createFeedbackMessage } from '../../utils/user';
 
 import Button from '../Button';
 import Dialog, { DialogProps } from '../Dialog';
@@ -14,9 +16,12 @@ interface DialogFeedbackProps extends DialogProps {
 }
 
 const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, ...rest }) => {
+  const { user } = useCurrentUser();
+
   const [message, setMessage] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
   // TODO focus on the textarea instead
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -24,14 +29,25 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
   const isFormValid = useMemo<boolean>(() => message?.trim().length > 0, [message]);
 
   const submit = useCallback(
-    (event: FormEvent) => {
+    async (event: FormEvent) => {
       event.preventDefault();
-      setIsSubmitting(true);
 
-      setIsSubmitting(false);
-      onSubmit?.();
+      if (!isFormValid || !user) {
+        return;
+      }
+
+      try {
+        setIsSubmitting(true);
+        await createFeedbackMessage(email.trim(), message.trim(), user);
+        setHasSubmitted(true);
+        setIsSubmitting(false);
+        onSubmit?.();
+      } catch (err) {
+        // TODO error handling
+        setIsSubmitting(false);
+      }
     },
-    [onSubmit]
+    [isFormValid, email, message, user, onSubmit]
   );
 
   const cancel = useCallback(() => {
@@ -43,6 +59,7 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
     if (!isOpen) {
       setMessage('');
       setEmail('');
+      setHasSubmitted(false);
     }
   }, [isOpen]);
 
@@ -67,54 +84,73 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
             </Button>
           </div>
           <div className="my-2">
-            <p className="mb-4 text-sm text-gray-600">
-              Want to report an issue, or have a suggestion on how we can make babel chat even
-              better? Send us a message using the form below, we'd love to hear from you!
-            </p>
-            <div className="mb-4">
-              <Input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                placeholder="Email address (optional)"
-                className="mb-2"
-                fullWidth
-              />
-              <div className="text-xs text-gray-400">
-                Only provide an email address if you'd like to hear back from us.
-              </div>
-            </div>
-            <Textarea
-              ref={textareaRef}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              maxLength={1000}
-              rows={5}
-              className="mb-2"
-              fullWidth
-            />
-            <div className="text-xs text-gray-400">1,000 characters max</div>
+            {hasSubmitted ? (
+              <>
+                <div className="mb-4">Thanks! (TODO)</div>
+              </>
+            ) : (
+              <>
+                <p className="mb-4 text-sm text-gray-600">
+                  Want to report an issue, or have a suggestion on how we can make babel chat even
+                  better? Send us a message using the form below, we'd love to hear from you!
+                </p>
+                <div className="mb-4">
+                  <Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    placeholder="Email address (optional)"
+                    className="mb-2"
+                    fullWidth
+                  />
+                  <div className="text-xs text-gray-400">
+                    Only provide an email address if you'd like to hear back from us.
+                  </div>
+                </div>
+                <Textarea
+                  ref={textareaRef}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  maxLength={1000}
+                  rows={5}
+                  placeholder="Message"
+                  className="mb-2"
+                  fullWidth
+                />
+                <div className="text-xs text-gray-400">1,000 characters max</div>
+              </>
+            )}
           </div>
         </div>
         <div className="flex justify-end px-4 py-3 bg-gray-50">
-          <Button variant="link" onClick={cancel}>
-            Cancel
-          </Button>
-          <Button type="submit" className="ml-2" disabled={!isFormValid || isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Spinner
-                  size="sm"
-                  variant="inverse"
-                  className="inline-block mr-2"
-                  deferRender={false}
-                />
-                Submitting...
-              </>
-            ) : (
-              'Submit'
-            )}
-          </Button>
+          {hasSubmitted ? (
+            <>
+              <Button variant="link" onClick={cancel}>
+                Close
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="link" onClick={cancel}>
+                Cancel
+              </Button>
+              <Button type="submit" className="ml-2" disabled={!isFormValid || isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Spinner
+                      size="sm"
+                      variant="inverse"
+                      className="inline-block mr-2"
+                      deferRender={false}
+                    />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit'
+                )}
+              </Button>
+            </>
+          )}
         </div>
       </form>
     </Dialog>
