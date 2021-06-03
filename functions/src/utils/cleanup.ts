@@ -29,28 +29,6 @@ export const deleteOrphanedData = async (
   }
 };
 
-export const deleteOrphanedSessions = async (db: admin.database.Database) => {
-  try {
-    const auth = admin.auth();
-    const result = await auth.listUsers(1000);
-    const userIds: string[] = [];
-
-    for (const authUser of result.users) {
-      const user = await db.ref(`users/${authUser.uid}`).get();
-      if (!user.exists()) {
-        userIds.push(authUser.uid);
-      }
-    }
-
-    if (userIds.length) {
-      await auth.deleteUsers(userIds);
-      functions.logger.info(`deleted ${userIds.length} orphaned user sessions`);
-    }
-  } catch (err) {
-    functions.logger.error('auth users delete failed', err, { structuredData: true });
-  }
-};
-
 export const cleanupDatabase = async (env: 'production' | 'development'): Promise<void> => {
   const app = setupApp(env);
   const db = app.database();
@@ -113,8 +91,9 @@ export const cleanupDatabase = async (env: 'production' | 'development'): Promis
   // delete any /spam_reports whose key does not have a matching /users key
   await deleteOrphanedData(db, 'spam_reports');
 
-  // delete old/orphaned firebase anonymous sessions that no longer have an associated user
-  await deleteOrphanedSessions(db);
+  // TODO [future] delete old expired spam_users
+
+  // TODO [future] delete old expired banned_ips
 
   return deleteAppInstance();
 };

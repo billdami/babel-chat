@@ -8,6 +8,7 @@ export interface Chat {
   toUserDetails: User;
   isPinned: boolean;
   isTyping: boolean;
+  hasMessagesFromOtherUser: boolean;
   dateStarted: Date;
   dateLastSeen: Date;
   dateLastMessage: Date;

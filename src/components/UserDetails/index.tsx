@@ -8,10 +8,11 @@ import { Gender, GenderOption, User } from '../../types/user';
 
 interface UserDetailsProps {
   className?: string;
-  user?: User;
+  user?: User | null;
+  shortCountry?: boolean;
 }
 
-const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
+const UserDetails: FC<UserDetailsProps> = ({ className = '', user, shortCountry = false }) => {
   const gender = useMemo<GenderOption | undefined>(
     () => GENDERS.find((g) => g.value === user?.gender),
     [user]
@@ -26,19 +27,21 @@ const UserDetails: FC<UserDetailsProps> = ({ className = '', user }) => {
   const hasGender = gender?.value !== UNSPECIFIED;
   const hasCountry = country?.value && country?.value !== UNSPECIFIED;
   const hasAgeOrGender = hasAge || hasGender;
+  const fullyAnon =
+    user?.age === UNSPECIFIED &&
+    user?.gender === Gender.UNSPECIFIED &&
+    user?.country === Country.UNSPECIFIED;
 
   return (
     <h3 className={cn('truncate', className)}>
-      {user?.age === UNSPECIFIED &&
-      user?.gender === Gender.UNSPECIFIED &&
-      user?.country === Country.UNSPECIFIED ? (
+      {fullyAnon ? (
         <span className="italic">Anonymous</span>
       ) : (
         <>
           {hasAge && `${user?.age}yr old`}
           {hasGender && `${hasAge ? ` ${gender?.label.toLowerCase()}` : gender?.label}`}
           {hasAgeOrGender && hasCountry && ', '}
-          {hasCountry && country?.label}
+          {hasCountry && (shortCountry ? country?.value : country?.label)}
         </>
       )}
     </h3>

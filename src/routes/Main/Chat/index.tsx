@@ -5,7 +5,7 @@ import { createChat, createChatMessage } from '../../../utils/chat';
 import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import { useChatByMembers } from '../../../hooks/useChatRecord';
-import { useUser } from '../../../hooks/useUserRecord';
+import { useUser, useUserBlocks, useUserSpamReports } from '../../../hooks/useUserRecord';
 import { getFirebaseTimestamp } from '../../../utils/firebase';
 
 import MessageForm from './components/MessageForm';
@@ -23,13 +23,29 @@ const Chat: FC<ChatProps> = () => {
   const { user: authUser } = useAuth();
   const { user, updateUser } = useCurrentUser();
   const [destUser, isLoadingDestUser] = useUser(userId);
-  const [chat] = useChatByMembers(authUser?.uid, userId);
+  const [originChat, isLoadingOriginChat] = useChatByMembers(authUser?.uid, userId);
   const [destChat] = useChatByMembers(userId, authUser?.uid);
+  const [userBlocks] = useUserBlocks(user?.id);
+  const [userSpamReports] = useUserSpamReports(user?.id);
 
-  // can't send if: not logged in, dest user doesn't exist, or dest user is yourself
+  const isBlocked = useMemo<boolean>(
+    () => (userBlocks?.map((b) => b.id) ?? []).includes(userId),
+    [userBlocks, userId]
+  );
+
+  const isSpamReported = useMemo<boolean>(
+    () => (userSpamReports?.map((b) => b.id) ?? []).includes(userId),
+    [userSpamReports, userId]
+  );
+
+  // can't send if:
+  // - not logged in
+  // - dest user doesn't exist
+  // - dest user is blocked
+  // - dest user is yourself
   const canSendMessage = useMemo<boolean>(
-    () => !!destUser?.id && !!authUser && !!userId && destUser?.id !== authUser?.uid,
-    [destUser, authUser, userId]
+    () => !!destUser?.id && !isBlocked && !!authUser && !!userId && destUser?.id !== authUser?.uid,
+    [destUser, authUser, userId, isBlocked]
   );
 
   const onMessageSubmit = useCallback(
@@ -39,7 +55,7 @@ const Chat: FC<ChatProps> = () => {
       }
 
       // create chat for origin user, if it doesnt exist
-      if (!chat?.id) {
+      if (!originChat?.id) {
         createChat(authUser.uid, userId, true);
       }
 
@@ -54,13 +70,26 @@ const Chat: FC<ChatProps> = () => {
       // update the last active date for the user
       updateUser({ dateLastActive: getFirebaseTimestamp() });
     },
-    [canSendMessage, chat, destChat, userId, authUser, updateUser]
+    [canSendMessage, originChat, destChat, userId, authUser, updateUser]
   );
 
   return (
     <div className="Chat flex flex-col flex-1 min-w-0">
-      <MessageHeader destUser={destUser} originChat={chat} isLoading={isLoadingDestUser} />
-      <MessageList originUser={user} originChat={chat} destUser={destUser} />
+      <MessageHeader
+        destUser={destUser}
+        originChat={originChat}
+        isLoading={isLoadingDestUser || isLoadingOriginChat}
+        isBlocked={isBlocked}
+        isSpamReported={isSpamReported}
+      />
+      <MessageList
+        originUser={user}
+        originChat={originChat}
+        destUser={destUser}
+        destUserId={userId}
+        isBlocked={isBlocked}
+        isSpamReported={isSpamReported}
+      />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
     </div>
   );

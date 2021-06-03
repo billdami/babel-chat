@@ -89,8 +89,12 @@ const useProvideAuth = () => {
     try {
       setIsSigngingOut(true);
 
-      if (uid && shouldDelete) {
-        await deleteUser(uid);
+      try {
+        if (uid && shouldDelete) {
+          await deleteUser(uid);
+        }
+      } catch (err) {
+        // silently ingore user delete failures
       }
 
       await firebase.auth().signOut();

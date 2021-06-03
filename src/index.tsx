@@ -6,15 +6,18 @@ import ReactDOM from 'react-dom';
 
 import App from './components/App';
 import { ProvideAuth } from './hooks/useAuth';
-import reportWebVitals from './reportWebVitals';
 import { ProvideDrawer } from './hooks/useDrawer';
+import { ProvideMedia } from './hooks/useMedia';
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
     <ProvideAuth>
-      <ProvideDrawer>
-        <App />
-      </ProvideDrawer>
+      <ProvideMedia>
+        <ProvideDrawer>
+          <App />
+        </ProvideDrawer>
+      </ProvideMedia>
     </ProvideAuth>
   </React.StrictMode>,
   document.getElementById('root')

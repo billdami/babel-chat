@@ -61,4 +61,14 @@ export interface UserFirebaseRecord {
   dateLastActive: Object;
 }
 
+export interface UserBlock {
+  dateCreated: Date;
+}
+
+export interface UserSpamReport {
+  dateCreated: Date;
+}
+
 export type UserRecord = Val<User, 'id', 'ref'>;
+export type UserBlockRecord = Val<UserBlock, 'id', 'ref'>;
+export type UserSpamReportRecord = Val<UserSpamReport, 'id', 'ref'>;

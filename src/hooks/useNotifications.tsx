@@ -13,6 +13,7 @@ import { ChatRecord } from '../types/chat';
 import useAuth from './useAuth';
 import { useChats } from './useChatRecord';
 import usePrevious from './usePrevious';
+import { useUserBlocks } from './useUserRecord';
 
 interface NotificationsContext {
   unreadChats: ChatRecord[];
@@ -31,12 +32,18 @@ const notificationsContext = createContext<NotificationsContext>({
 const useProvideNotifications = () => {
   const { user } = useAuth();
   const [chats] = useChats(user?.uid);
+  const [userBlocks] = useUserBlocks(user?.uid);
 
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
+  const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
+
   const unreadChats = useMemo<ChatRecord[]>(
-    () => chats?.filter((c) => !c.dateLastSeen || c.dateLastSeen < c.dateLastMessage) ?? [],
-    [chats]
+    () =>
+      chats?.filter(
+        (c) => (!c.dateLastSeen || c.dateLastSeen < c.dateLastMessage) && !blockedIds.includes(c.id)
+      ) ?? [],
+    [chats, blockedIds]
   );
   const numUnread = unreadChats.length;
 
@@ -52,6 +59,8 @@ const useProvideNotifications = () => {
     // notification sound should play only when the number of unread increases
     if (numUnread > prevNumUnread && !isMuted) {
       // TODO implement notification sounds
+      // TODO useThrottledCallback so sounds dont play more than once a second
+      // @see (https://github.com/xnimorz/use-debounce#usethrottledcallback)
       console.log('You have new unread messages!');
     }
 

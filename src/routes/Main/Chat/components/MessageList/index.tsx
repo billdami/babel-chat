@@ -9,24 +9,36 @@ import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
 import usePageVisibility from '../../../../../hooks/usePageVisibility';
 import Spinner from '../../../../../components/Spinner';
+import Icon from '../../../../../components/Icon';
 
 interface AuthorsMap {
-  [id: string]: User & { isSelf?: boolean };
+  [id: string]: (User & { isSelf?: boolean }) | undefined | null;
 }
 
 interface MessageListProps {
   originUser?: UserRecord | null;
   originChat?: ChatRecord | null;
   destUser?: UserRecord | null;
+  destUserId?: string;
+  isBlocked?: boolean;
+  isSpamReported?: boolean;
 }
 
-const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser }) => {
+const MessageList: FC<MessageListProps> = ({
+  originUser,
+  originChat,
+  destUser,
+  destUserId,
+  isBlocked = false,
+  isSpamReported = false,
+}) => {
   // TODO create a usePagination() hook to allow for infinite paging of messages
   // TODO handle messagesError
-  const [messages, isLoading] = useChatMessages(originUser?.id, destUser?.id);
+  const [messages, isLoading] = useChatMessages(originUser?.id, destUserId);
   const isPageVisible = usePageVisibility();
   const prevIsPageVisible = usePrevious<boolean>(isPageVisible);
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
+  const prevChatId = usePrevious<string | undefined>(originChat?.id);
 
   const isFirstMount = useRef<boolean>(true);
   const containerElement = useRef<HTMLDivElement>(null);
@@ -37,11 +49,20 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
       map[originUser.id] = { ...originUser, isSelf: true };
     }
 
-    if (destUser?.id) {
-      map[destUser.id] = destUser;
+    if (destUserId) {
+      map[destUserId] = destUser?.id ? destUser : originChat?.toUserDetails;
     }
+
+    if (destUser?.id && !map[destUser?.id]) {
+      map[destUser?.id] = destUser;
+    }
+
+    if (originChat?.id && !map[originChat?.id]) {
+      map[originChat?.id] = originChat?.toUserDetails;
+    }
+
     return map;
-  }, [originUser, destUser]);
+  }, [originUser, originChat, destUser, destUserId]);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -55,6 +76,14 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
       originChat.ref.update({ dateLastSeen: getFirebaseTimestamp() });
     }
   }, [prevMessages, messages, originChat, isPageVisible, prevIsPageVisible]);
+
+  useEffect(() => {
+    // if the chat just became created (i.e. the other user sent the first message while the user
+    // is viewing the chat between them) then immediately update the dateLastSeen
+    if (!prevChatId && originChat?.id) {
+      originChat.ref?.update({ dateLastSeen: getFirebaseTimestamp() });
+    }
+  }, [originChat, prevChatId]);
 
   useLayoutEffect(() => {
     const el = containerElement.current;
@@ -83,25 +112,41 @@ const MessageList: FC<MessageListProps> = ({ originUser, originChat, destUser })
   }, [prevMessages, messages]);
 
   return (
+    // TODO figure out timing issues when transitioning between chats (so theres no flicker of messages, etc.)
     <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
       <div className="py-1">
         {originUser && destUser && originUser.id === destUser.id && (
-          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-600 bg-yellow-100 rounded">
+          // TODO create <Alert>
+          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-600 bg-yellow-100 border-l-4 border-yellow-600 rounded-sm rounded-tl-none rounded-bl-none">
             Sorry, you can't talk to yourself on babel chat. 😛
           </div>
         )}
-        {/* TODO show "welcome" CTA when there are no messages yet, e.g. "Nothing here yet... Introduce yourself and say hi!" */}
-        {messages?.map((message) => (
-          <div key={message.id} className="px-2 md:px-4">
-            <span
-              className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
-            >
-              {authors[message.author]?.isSelf ? 'Me' : authors[message.author]?.nickname}:
-            </span>{' '}
-            <span>{message.content}</span>
+        {isBlocked && (
+          // TODO create <Alert>
+          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-600 bg-yellow-100 border-l-4 border-yellow-600 rounded-sm rounded-tl-none rounded-bl-none">
+            <Icon name="ban" className="mr-2 inline-block" size="sm" />
+            {isSpamReported
+              ? 'This user has been reported as spam and is permanently blocked.'
+              : 'This user has been blocked.'}
+            {/* TODO "Unblock" link button */}
           </div>
-        ))}
-        {isLoading && <Spinner className="mx-2 md:mx-4 my-1" />}
+        )}
+        {/* TODO show "welcome" CTA when there are no messages yet, e.g. "Nothing here yet... Introduce yourself and say hi!" */}
+        {!isBlocked &&
+          messages?.map((message) => (
+            <div key={message.id} className="px-2 md:px-3">
+              <span
+                className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
+              >
+                {authors[message.author]?.isSelf
+                  ? 'Me'
+                  : authors[message.author]?.nickname || 'Unknown'}
+                :
+              </span>{' '}
+              <span>{message.content}</span>
+            </div>
+          ))}
+        {isLoading && <Spinner className="mx-2 md:mx-3 my-1" />}
       </div>
     </div>
   );

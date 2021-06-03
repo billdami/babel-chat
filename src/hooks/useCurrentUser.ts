@@ -7,12 +7,13 @@ import { useUser } from './useUserRecord';
 
 interface CurrentUserHook {
   user?: UserRecord | null;
+  isUserLoading: boolean;
   updateUser: (values: Partial<UserFirebaseRecord>) => Promise<void> | void;
 }
 
 const useCurrentUser = (): CurrentUserHook => {
   const { user: authUser } = useAuth();
-  const [user /*isUserLoading, userError*/] = useUser(authUser?.uid);
+  const [user, isUserLoading /*userError*/] = useUser(authUser?.uid);
 
   const updateUser = useCallback(
     (values: Partial<UserFirebaseRecord>) => {
@@ -23,6 +24,7 @@ const useCurrentUser = (): CurrentUserHook => {
 
   return {
     user,
+    isUserLoading,
     updateUser,
   };
 };

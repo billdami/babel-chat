@@ -5,6 +5,7 @@ import { CloudFunction } from 'firebase-functions';
 import { DataSnapshot } from 'firebase-functions/lib/providers/database';
 
 import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './utils/constants';
+import { setupApp } from './utils/firebase';
 
 const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunction<DataSnapshot> =>
   functions.database
@@ -14,19 +15,16 @@ const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunctio
     .onDelete(
       async (snapshot: functions.database.DataSnapshot, context: functions.EventContext) => {
         const userId: string = context.params.userId;
-        // TODO make this better - store db URLs in firebase configs
-        const app = admin.initializeApp({
-          ...JSON.parse(process.env.FIREBASE_CONFIG ?? '{}'),
-          databaseURL:
-            env === 'production'
-              ? `https://${DB_NAME_PRODUCTION}.firebaseio.com/`
-              : `https://${DB_NAME_DEVELOPMENT}.firebaseio.com/`,
-        });
+        const app = setupApp(env);
         const db = app.database();
+        const auth = admin.auth();
         const deleteAppInstance = () => app.delete().catch(() => {});
 
         // when a user is deleted:
         const operations = [];
+
+        // ensure the associated session is deleted
+        operations.push(auth.deleteUser(userId).catch(() => {}));
 
         // ensure the associated user_uuids is deleted
         operations.push(
@@ -78,10 +76,10 @@ const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunctio
             .catch(() => {})
         );
 
-        // delete /spam_reports/{userId}
+        // delete /spam_users/{userId}
         operations.push(
           db
-            .ref(`spam_reports/${userId}`)
+            .ref(`spam_users/${userId}`)
             .remove()
             .catch(() => {})
         );

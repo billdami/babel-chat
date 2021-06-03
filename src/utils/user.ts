@@ -59,3 +59,24 @@ export const logUser = (userId: string): Promise<Response> => {
     body: new URLSearchParams({ userId }),
   });
 };
+
+export const blockUser = async (originUserId: string, blockedUserId: string): Promise<void> => {
+  const db = firebase.database();
+  const ref = db.ref(`user_blocks/${originUserId}/${blockedUserId}`);
+  await ref.set({ dateCreated: getFirebaseTimestamp() });
+};
+
+export const unblockUser = async (originUserId: string, blockedUserId: string): Promise<void> => {
+  const db = firebase.database();
+  const ref = db.ref(`user_blocks/${originUserId}/${blockedUserId}`);
+  await ref.remove();
+};
+
+export const reportSpamUser = async (
+  originUserId: string,
+  blockedUserId: string
+): Promise<void> => {
+  const db = firebase.database();
+  const ref = db.ref(`user_spam_reports/${originUserId}/${blockedUserId}`);
+  await ref.set({ dateCreated: getFirebaseTimestamp() });
+};

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import cn from 'classnames';
 
 import Button from '../../../../components/Button';
@@ -6,11 +6,19 @@ import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
-import { useUsers } from '../../../../hooks/useUserRecord';
+import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
 import useDrawer from '../../../../hooks/useDrawer';
 import useNotifications from '../../../../hooks/useNotifications';
+import useCurrentUser from '../../../../hooks/useCurrentUser';
 import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import Link from '../../../../components/Link';
+import Icon from '../../../../components/Icon';
+import UserAvatar from '../../../../components/UserAvatar';
+import UserNickname from '../../../../components/UserNickname';
+import UserDetails from '../../../../components/UserDetails';
+import Menu, { MenuContentProps } from '../../../../components/Menu';
+import MenuItem from '../../../../components/Menu/MenuItem';
+import { User } from '../../../../types/user';
 
 import ChatsList from './ChatsList';
 import UsersList from './UsersList';
@@ -20,23 +28,96 @@ interface SidebarProps {
   className?: string;
 }
 
+interface UserMenuProps extends MenuContentProps {
+  user?: User | null;
+  signOut?: () => void;
+  openGiveFeedback?: () => void;
+  closeMenu?: () => void;
+}
+
+const UserMenu: FC<UserMenuProps> = ({ isSheet, user, signOut, openGiveFeedback, closeMenu }) => (
+  <>
+    <div
+      className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
+        'px-4': !isSheet,
+      })}
+    >
+      <div className="flex items-center min-w-0">
+        <UserAvatar user={user} className="flex-shrink-0 mr-2 border border-gray-200" />
+        <div className="min-w-0">
+          <UserNickname user={user} className="text-gray-800" />
+          <UserDetails user={user} className="text-gray-400" shortCountry />
+        </div>
+      </div>
+      {isSheet && (
+        <Button size="sm" variant="muted" className="flex-shrink-0" onClick={closeMenu} outline>
+          <Icon name="x-mark" size="sm" />
+        </Button>
+      )}
+    </div>
+    <MenuItem onClick={openGiveFeedback} isSheet={isSheet}>
+      <Icon name="message-pen" size="sm" className="inline-block mr-2 text-gray-400" />
+      Give us feedback
+    </MenuItem>
+    <MenuItem onClick={signOut} isSheet={isSheet}>
+      <Icon name="right-from-bracket" size="sm" className="inline-block mr-2 text-gray-400" />
+      Sign out
+    </MenuItem>
+    {/* TODO [future] avatar editor */}
+    {/* TODO [future] mute sounds toggle */}
+    {/* TODO [future] dark mode switch */}
+  </>
+);
+
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
-  const { user } = useAuth();
+  const { user: authUser, signOut } = useAuth();
+  const { user } = useCurrentUser();
   const { activeTab } = useDrawer();
   const { numUnread } = useNotifications();
-
+  const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
-  const [chats, isLoadingChats] = useChats(user?.uid);
+  const [chats, isLoadingChats] = useChats(authUser?.uid);
+
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+
+  const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
+
+  const closeMenu = useCallback(() => setIsUserMenuOpen(false), []);
+
+  const openGiveFeedback = useCallback(() => {
+    //TODO
+    setIsUserMenuOpen(false);
+  }, []);
+
+  const userMenuProps = useMemo(
+    () => ({ user, signOut, openGiveFeedback, closeMenu }),
+    [user, signOut, openGiveFeedback, closeMenu]
+  );
 
   return (
-    <div className={cn('SideBar flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
-      <div className="SidebarHeader flex-shrink-0 flex justify-between items-center py-2 px-4 bg-green-600 text-white">
+    <div className={cn('flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
+      <div className="flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 text-white">
         <Link to="/main" className="py-1 px-2 bg-white border border-white">
           <LogoIcon className="h-8" />
         </Link>
-        <Button variant="inverse" outline>
-          &#8942;
-        </Button>
+        <Menu<UserMenuProps>
+          isOpen={isUserMenuOpen}
+          menuClassName="py-2 text-sm"
+          sheetClassName="py-4 px-4 text-sm"
+          onOutsideClick={() => setIsUserMenuOpen(false)}
+          content={UserMenu}
+          contentProps={userMenuProps}
+          trigger={
+            <Button
+              variant="inverse"
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              isActive={isUserMenuOpen}
+              outline
+            >
+              <Icon name="user" size="sm" className="inline-block" />
+            </Button>
+          }
+        />
       </div>
       <TabPanel
         id="tab-users"
@@ -44,7 +125,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <UsersList users={users} isLoading={isLoadingUsers} />
+        <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
       </TabPanel>
       <TabPanel
         id="tab-chats"
@@ -52,7 +133,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ChatsList chats={chats} isLoading={isLoadingChats} />
+        <ChatsList chats={chats} isLoading={isLoadingChats} blockedIds={blockedIds} />
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />

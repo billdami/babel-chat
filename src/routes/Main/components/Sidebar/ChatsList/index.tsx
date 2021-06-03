@@ -1,52 +1,224 @@
-import React, { FC } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
-import Badge from '../../../../../components/Badge';
+import Button from '../../../../../components/Button';
+import Checkbox from '../../../../../components/Checkbox';
+import Icon from '../../../../../components/Icon';
 import Spinner from '../../../../../components/Spinner';
-import UserNickname from '../../../../../components/UserNickname';
-import useDrawer from '../../../../../hooks/useDrawer';
+import useCurrentUser from '../../../../../hooks/useCurrentUser';
 import { ChatRecord } from '../../../../../types/chat';
+import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import { blockUser } from '../../../../../utils/user';
+import { ChatRouteParams } from '../../../Chat';
+
+import ListItem from './ListItem';
 
 interface ChatsListProps {
   chats?: ChatRecord[];
   isLoading: boolean;
+  blockedIds: string[];
 }
 
-const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
-  const { closeDrawer } = useDrawer();
+const ChatsList: FC<ChatsListProps> = ({ chats, isLoading, blockedIds }) => {
+  const history = useHistory();
+  const location = useLocation();
+  const { user, updateUser } = useCurrentUser();
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [selectedChatIds, setSelectedChatIds] = useState<string[]>([]);
+
+  const currentChatId = useMemo<string | undefined>(
+    () =>
+      (matchPath(location.pathname, { path: '/main/chat/:userId' })?.params as ChatRouteParams)
+        ?.userId,
+    [location.pathname]
+  );
+
+  const visibleChats = useMemo<ChatRecord[]>(
+    () => chats?.filter((c) => !blockedIds.includes(c.id)) ?? [],
+    [chats, blockedIds]
+  );
+
+  const selectAllChats = useCallback(() => {
+    setSelectedChatIds([...(chats?.map((c) => c.id) ?? [])]);
+  }, [chats]);
+
+  const deselectAllChats = useCallback(() => {
+    setSelectedChatIds([]);
+  }, []);
+
+  const onToggleAllChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      return event.target.checked ? selectAllChats() : deselectAllChats();
+    },
+    [selectAllChats, deselectAllChats]
+  );
+
+  const toggleChatSelection = useCallback(
+    (chat: ChatRecord) => {
+      if (selectedChatIds.includes(chat.id)) {
+        setSelectedChatIds(selectedChatIds.filter((id) => id !== chat.id));
+      } else {
+        setSelectedChatIds([...selectedChatIds, chat.id]);
+      }
+    },
+    [selectedChatIds]
+  );
+
+  const startEditing = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const stopEditing = useCallback(() => {
+    setIsEditing(false);
+    deselectAllChats();
+  }, [deselectAllChats]);
+
+  const removeChats = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        chatRecs.forEach((chat) => ops.push(chat!.ref?.remove().catch(() => {})));
+
+        // if one of the removed chats is currently being viewed, navigate to the index
+        if (currentChatId && chatIds.includes(currentChatId)) {
+          history.push('/main');
+        }
+
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, currentChatId, history, updateUser]
+  );
+
+  const markChatsRead = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        const update = { dateLastSeen: getFirebaseTimestamp() };
+        chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
+  const blockUsers = useCallback(
+    async (chatIds: string[]) => {
+      if (!user?.id) {
+        return;
+      }
+
+      // TODO show confirmation modal before blocking users
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats?.find((c) => c.id === id)).filter(Boolean);
+        chatRecs.forEach((chat) => ops.push(blockUser(user.id, chat!.id).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        await removeChats(chatIds);
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [user, chats, deselectAllChats, removeChats, updateUser]
+  );
 
   // TODO apply sorting
   return (
-    <div className="ChatsList py-2">
-      <ul>
-        {chats?.map((chat) => (
-          <li key={chat.id}>
-            <NavLink
-              className="block
-                w-full
-                px-3 py-1
-                text-left
-                hover:bg-opacity-50 hover:bg-gray-200
-                focus:outline-none
-                focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
-              activeClassName="bg-gray-200 hover:bg-opacity-100"
-              to={`/main/chat/${chat.id}`}
-              onClick={closeDrawer}
-            >
-              <div className="flex items-center justify-between">
-                <UserNickname user={chat.toUserDetails} className="text-gray-800" />
-                {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
-                  <Badge
-                    className=""
-                    tooltip="There are unread message(s)"
-                    size="md"
-                    pulse={false}
-                  />
+    <div className="ChatsList pb-2">
+      {(!!visibleChats?.length || isEditing) && (
+        <div className="px-3 py-1 mb-1 bg-gray-200 shadow-inner">
+          {isEditing ? (
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <Checkbox
+                  onChange={onToggleAllChange}
+                  checked={selectedChatIds.length === chats?.length}
+                  isIndeterminate={
+                    !!selectedChatIds.length && selectedChatIds.length !== chats?.length
+                  }
+                  inputClassName="bg-white"
+                  standalone
+                />
+                {!!selectedChatIds.length && (
+                  <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-sm font-bold">
+                    {selectedChatIds.length}
+                  </span>
                 )}
               </div>
-            </NavLink>
-          </li>
+
+              <div className="flex">
+                <div className="flex mr-1">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => markChatsRead(selectedChatIds)}
+                    disabled={!selectedChatIds.length}
+                    title="Mark as read"
+                  >
+                    <Icon name="message-check" size="sm" />
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => blockUsers(selectedChatIds)}
+                    disabled={!selectedChatIds.length}
+                    title="Block"
+                  >
+                    <Icon name="ban" size="sm" />
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => removeChats(selectedChatIds)}
+                    disabled={!selectedChatIds.length}
+                    title="Remove"
+                  >
+                    <Icon name="trash-can" size="sm" />
+                  </Button>
+                </div>
+                <Button variant="link" size="sm" className="-mr-2" onClick={stopEditing}>
+                  Done
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex justify-end">
+              <Button variant="link" size="sm" className="-mr-2" onClick={startEditing}>
+                Edit chats
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+      <ul>
+        {visibleChats.map((chat) => (
+          <ListItem
+            key={chat.id}
+            chat={chat}
+            selectedChatIds={selectedChatIds}
+            isEditing={isEditing}
+            toggleChatSelection={toggleChatSelection}
+            markChatRead={markChatsRead}
+            blockUser={blockUsers}
+            removeChat={removeChats}
+          />
         ))}
+        {!visibleChats.length && !isLoading && (
+          <div className="px-3 py-8 text-gray-400 text-center text-sm">No chats found 😿</div>
+        )}
         {isLoading && <Spinner className="mx-3 my-2" />}
       </ul>
     </div>
