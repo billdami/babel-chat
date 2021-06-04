@@ -141,9 +141,9 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
 
   // TODO apply sorting
   return (
-    <div className="ChatsList pb-2">
+    <div className="pb-2">
       {(!!chats.length || isEditing) && (
-        <div className="px-3 py-1 mb-1 bg-gray-200 shadow-inner">
+        <div className="px-3 py-2 mb-1 bg-gray-200 bg-opacity-70">
           {isEditing ? (
             <div className="flex justify-between items-center">
               <div className="flex items-center">
