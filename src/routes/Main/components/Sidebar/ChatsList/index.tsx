@@ -166,7 +166,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
               <div className="flex">
                 <div className="flex mr-1">
                   <Button
-                    variant="link"
+                    variant="muted"
                     size="sm"
                     onClick={() => markChatsRead(selectedChatIds)}
                     disabled={!selectedChatIds.length}
@@ -175,8 +175,9 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                     <Icon name="message-check" size="sm" />
                   </Button>
                   <Button
-                    variant="link"
+                    variant="muted"
                     size="sm"
+                    className="ml-1"
                     onClick={() => confirmBlockUsers(selectedChatIds)}
                     disabled={!selectedChatIds.length}
                     title="Block"
@@ -184,8 +185,9 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                     <Icon name="ban" size="sm" />
                   </Button>
                   <Button
-                    variant="link"
+                    variant="muted"
                     size="sm"
+                    className="ml-1"
                     onClick={() => removeChats(selectedChatIds)}
                     disabled={!selectedChatIds.length}
                     title="Remove"

@@ -20,12 +20,17 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   return (
     <div className="pb-2">
       <div className="flex px-3 py-2 mb-1 bg-gray-200 bg-opacity-70">
-        <Input placeholder="Search" inputSize="sm" className="bg-opacity-100" fullWidth />
+        <Input
+          placeholder="Search users"
+          inputSize="sm"
+          className="bg-opacity-60 focus:bg-opacity-100"
+          fullWidth
+        />
         <div className="flex ml-2">
-          <Button size="sm" variant="secondary">
+          <Button size="sm" variant="muted">
             <Icon name="filter" size="sm" className="inline" />
           </Button>
-          <Button size="sm" variant="secondary" className="ml-1">
+          <Button size="sm" variant="muted" className="ml-1">
             <Icon name="arrow-down-a-z" size="sm" className="inline" />
           </Button>
         </div>
