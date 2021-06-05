@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { UserRecord, UserSort } from '../../../../../types/user';
+import { UserRecord, UserSort, UserFilter } from '../../../../../types/user';
 import Spinner from '../../../../../components/Spinner';
 import Input from '../../../../../components/Input';
 import Button from '../../../../../components/Button';
@@ -104,21 +104,25 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [isSortMenuOpen, setIsSortMenuOpen] = useState<boolean>(false);
-  const [sorts] = useState<UserSort[]>(defaultSorts);
+  const [filters, setFilters] = useState<UserFilter[]>([]);
+  const [sorts /*, setSorts*/] = useState<UserSort[]>(defaultSorts);
 
-  const [debouncedSorts] = useDebounce<UserSort[]>(sorts, 250);
   const [debouncedSearchTerm] = useDebounce<string>(searchTerm, 250);
+  const [debouncedFilters] = useDebounce<UserFilter[]>(filters, 250);
+  const [debouncedSorts] = useDebounce<UserSort[]>(sorts, 250);
 
   const filteredUsers = useMemo<UserRecord[]>(() => {
     const term = debouncedSearchTerm.trim();
     const _users = users ?? [];
-    return term ? _users.filter((u) => filterUserRecords(u, term)) : _users;
-  }, [users, debouncedSearchTerm]);
+    const _filters = debouncedFilters; //TODO filter out "empty" filters
+    return term ? _users.filter((u) => filterUserRecords(u, term, _filters)) : _users;
+  }, [users, debouncedSearchTerm, debouncedFilters]);
 
   const sortedUsers = useMemo<UserRecord[]>(() => {
     const currentTime = new Date().getTime();
-    return debouncedSorts.length
-      ? filteredUsers.sort((a, b) => sortUserRecords(a, b, debouncedSorts, currentTime))
+    const _sorts = debouncedSorts.filter((s) => !!s.property);
+    return _sorts.length
+      ? filteredUsers.sort((a, b) => sortUserRecords(a, b, _sorts, currentTime))
       : filteredUsers;
   }, [filteredUsers, debouncedSorts]);
 
@@ -128,7 +132,8 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
 
   const clearFilters = useCallback(() => {
     setSearchTerm('');
-    // TODO clear advanced filters
+    setFilters([]);
+    setIsFiltersOpen(false);
   }, []);
 
   return (

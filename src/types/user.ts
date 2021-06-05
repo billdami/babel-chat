@@ -2,11 +2,6 @@ import { Val } from 'react-firebase-hooks/database/dist/database/types';
 
 import { Country } from './country';
 
-export interface UserSort {
-  property: 'status' | 'nickname' | 'country' | 'age' | 'gender';
-  isDescending: boolean;
-}
-
 export type Age = 'UNSPECIFIED' | number;
 
 export enum Status {
@@ -77,3 +72,32 @@ export interface UserSpamReport {
 export type UserRecord = Val<User, 'id', 'ref'>;
 export type UserBlockRecord = Val<UserBlock, 'id', 'ref'>;
 export type UserSpamReportRecord = Val<UserSpamReport, 'id', 'ref'>;
+
+export type AgeFilterValue = Age | '' | undefined;
+
+export interface UserSort {
+  property: 'status' | 'nickname' | 'country' | 'age' | 'gender';
+  isDescending: boolean;
+}
+
+export interface UserNicknameFilter {
+  property: 'nickname';
+  value: string;
+}
+
+export interface UserCountryFilter {
+  property: 'country';
+  value: Country;
+}
+
+export interface UserAgeFilter {
+  property: 'age';
+  value: [AgeFilterValue, AgeFilterValue];
+}
+
+export interface UserGenderFilter {
+  property: 'gender';
+  value: Gender;
+}
+
+export type UserFilter = UserNicknameFilter | UserCountryFilter | UserAgeFilter | UserGenderFilter;

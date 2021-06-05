@@ -3,7 +3,7 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 
-import { Gender, NewUserDetails, User, UserRecord, UserSort } from '../types/user';
+import { Gender, NewUserDetails, User, UserFilter, UserRecord, UserSort } from '../types/user';
 import { Country } from '../types/country';
 import { UNSPECIFIED } from '../constants/user';
 
@@ -172,7 +172,7 @@ export const sortUserRecords = (
   return 0;
 };
 
-export const filterUserRecords = (user: UserRecord, term: string) => {
+export const filterUserRecords = (user: UserRecord, term: string, filters: UserFilter[]) => {
   // TODO [future] parse advanced query syntax (e.g.  “gender:female age:25-50 country:US”, "age:>25", "nickname:"foo"")
   const cleanedTerm = term.trim().toLocaleUpperCase();
   const fullNickname = `${user.nickname.toLocaleUpperCase()}#${user.uuid}`;
