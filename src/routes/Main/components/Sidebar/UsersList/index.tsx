@@ -126,18 +126,35 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
     setIsFiltersOpen(!isFiltersOpen);
   }, [isFiltersOpen]);
 
+  const clearFilters = useCallback(() => {
+    setSearchTerm('');
+    // TODO clear advanced filters
+  }, []);
+
   return (
     <div className="pb-2">
       <div className="mb-1">
         <div className="flex px-3 py-2 bg-gray-200 bg-opacity-70">
-          <Input
-            placeholder="Search users"
-            inputSize="sm"
-            className="bg-opacity-60 focus:bg-opacity-100"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            fullWidth
-          />
+          <div className="relative flex-1">
+            <Input
+              placeholder="Search users"
+              inputSize="sm"
+              className="bg-opacity-60 focus:bg-opacity-100 pr-8"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              fullWidth
+            />
+            {!!searchTerm.length && (
+              <button
+                type="button"
+                className="absolute right-0 top-0 px-3 py-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                onClick={() => setSearchTerm('')}
+              >
+                <Icon name="x-mark" size="sm" />
+              </button>
+            )}
+          </div>
+
           {/* TODO clear button overlay when search term is not empty */}
           <div className="flex ml-2">
             <Button
@@ -176,7 +193,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
         {/* TODO animate this show/hide with react-spring */}
         {/* TODO maybe set a max height and scroll */}
         {isFiltersOpen && (
-          <div className="py-2 bg-gray-300 bg-opacity-50 shadow-inner">
+          <div className="py-2 text-sm bg-gray-300 bg-opacity-50 shadow-inner">
             Filters ui
             {/* TODO checkbox option to hide blocked users that is enabled by default */}
           </div>
@@ -186,7 +203,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
         <div className="px-3 mb-1 text-sm text-gray-600">
           <span className="font-bold">{sortedUsers.length}</span> of{' '}
           <span className="font-bold">{users?.length}</span> users shown.
-          <Button variant="link" size="sm" className="inline-block">
+          <Button variant="link" size="sm" className="inline-block" onClick={clearFilters}>
             Clear filters
           </Button>
         </div>
@@ -196,7 +213,12 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
           <ListItem key={user.id} user={user} blockedIds={blockedIds} />
         ))}
         {!sortedUsers.length && !isLoading && (
-          <div className="px-3 py-8 text-gray-400 text-center text-sm">No users found 😿</div>
+          <div className="px-3 py-8 text-gray-400 text-center text-sm">
+            No users found.
+            <Button variant="link" size="sm" className="inline-block" onClick={clearFilters}>
+              Clear filters
+            </Button>
+          </div>
         )}
       </ul>
       {isLoading && <Spinner className="mx-3 my-2" />}

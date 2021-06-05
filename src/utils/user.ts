@@ -175,6 +175,7 @@ export const sortUserRecords = (
 export const filterUserRecords = (user: UserRecord, term: string) => {
   // TODO [future] parse advanced query syntax (e.g.  “gender:female age:25-50 country:US”, "age:>25", "nickname:"foo"")
   const cleanedTerm = term.trim().toLocaleUpperCase();
+  const fullNickname = `${user.nickname.toLocaleUpperCase()}#${user.uuid}`;
   // TODO whats the fastest way to find a string in another string?
-  return user.nickname.toLocaleUpperCase().indexOf(cleanedTerm) !== -1;
+  return fullNickname.indexOf(cleanedTerm) !== -1;
 };
