@@ -2,6 +2,11 @@ import { Val } from 'react-firebase-hooks/database/dist/database/types';
 
 import { Country } from './country';
 
+export interface UserSort {
+  property: 'status' | 'nickname' | 'country' | 'age' | 'gender';
+  isDescending: boolean;
+}
+
 export type Age = 'UNSPECIFIED' | number;
 
 export enum Status {

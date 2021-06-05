@@ -3,11 +3,14 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 
-import { NewUserDetails, User, UserRecord } from '../types/user';
+import { Gender, NewUserDetails, User, UserRecord, UserSort } from '../types/user';
+import { Country } from '../types/country';
+import { UNSPECIFIED } from '../constants/user';
 
 import { generateRandomNickname, generateRandomUUID } from './random';
 import { getFirebaseTimestamp } from './firebase';
 import { env, envVar } from './env';
+import { getStatusSorting } from './time';
 
 export const createUser = async (
   id: string,
@@ -120,4 +123,51 @@ export const createFeedbackMessage = async (
   });
 
   return messageRef;
+};
+
+export const sortUserRecords = (
+  a: UserRecord,
+  b: UserRecord,
+  sorts: UserSort[],
+  currentTime: number
+) => {
+  for (let sort of sorts) {
+    let d = 0;
+    let aVal;
+    let bVal;
+
+    switch (sort.property) {
+      case 'nickname':
+        aVal = `${a.nickname}#${a.uuid}`;
+        bVal = `${b.nickname}#${b.uuid}`;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'country':
+        aVal = a.country === Country.UNSPECIFIED ? 'ZZ' : a.country;
+        bVal = b.country === Country.UNSPECIFIED ? 'ZZ' : b.country;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'gender':
+        aVal = a.gender === Gender.UNSPECIFIED ? 'ZZ' : a.gender;
+        bVal = b.gender === Gender.UNSPECIFIED ? 'ZZ' : b.gender;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'age':
+        aVal = a.age === UNSPECIFIED ? 999 : a.age;
+        bVal = b.age === UNSPECIFIED ? 999 : b.age;
+        d = sort.isDescending ? bVal - aVal : aVal - bVal;
+        break;
+      case 'status':
+        aVal = getStatusSorting(currentTime, a.dateLastActive);
+        bVal = getStatusSorting(currentTime, b.dateLastActive);
+        d = sort.isDescending ? bVal - aVal : aVal - bVal;
+        break;
+    }
+
+    if (d !== 0) {
+      return d;
+    }
+  }
+
+  return 0;
 };
