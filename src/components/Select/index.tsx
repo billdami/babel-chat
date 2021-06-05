@@ -16,7 +16,6 @@ interface SelectProps
 const baseClasses = `
 appearance-none
 block
-w-full
 pl-3
 pr-7
 py-2
