@@ -171,6 +171,7 @@ const SignIn: FC<SignInListProps> = () => {
               onChange={(e) =>
                 setAge(e.target.value !== UNSPECIFIED ? Number(e.target.value) : UNSPECIFIED)
               }
+              fullWidth
             />
           </FormControl>
 
