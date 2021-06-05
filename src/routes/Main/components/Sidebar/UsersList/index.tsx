@@ -20,6 +20,8 @@ interface UsersListProps {
 
 interface SortMenuProps extends MenuContentProps {}
 
+const MAX_FILTERS = 20;
+
 const defaultSorts: UserSort[] = [
   {
     property: 'status',
@@ -104,12 +106,19 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [isSortMenuOpen, setIsSortMenuOpen] = useState<boolean>(false);
+  // const [showBlockedUsers /*, setShowBlockedUsers*/] = useState<boolean>(false);
   const [filters, setFilters] = useState<UserFilter[]>([]);
   const [sorts /*, setSorts*/] = useState<UserSort[]>(defaultSorts);
 
   const [debouncedSearchTerm] = useDebounce<string>(searchTerm, 250);
   const [debouncedFilters] = useDebounce<UserFilter[]>(filters, 250);
   const [debouncedSorts] = useDebounce<UserSort[]>(sorts, 250);
+
+  const hasMaxFilters = filters.length >= MAX_FILTERS;
+
+  // TODO move blocked users filter into its own useMemo, as users filtered out by blocking
+  // should not show as as "has filters state", and should not be included in the tab count
+  // blockedIds, showBlockedUsers
 
   const filteredUsers = useMemo<UserRecord[]>(() => {
     const term = debouncedSearchTerm.trim();
@@ -136,6 +145,28 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
     setIsFiltersOpen(false);
   }, []);
 
+  const addFilter = useCallback(() => {
+    if (hasMaxFilters) {
+      return;
+    }
+
+    setFilters([...filters, { property: 'country', value: '' }]);
+  }, [hasMaxFilters, filters]);
+
+  const removeFilter = useCallback(
+    (filter: UserFilter) => {
+      setFilters(filters.filter((f) => f !== filter));
+    },
+    [filters]
+  );
+
+  const updateFilter = useCallback(
+    (oldValue: UserFilter, newValue: UserFilter) => {
+      setFilters(filters.map((f) => (f !== oldValue ? f : newValue)));
+    },
+    [filters]
+  );
+
   return (
     <div className="pb-2">
       <div className="mb-1">
@@ -159,8 +190,6 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
               </button>
             )}
           </div>
-
-          {/* TODO clear button overlay when search term is not empty */}
           <div className="flex ml-2">
             <Button
               size="sm"
@@ -197,9 +226,70 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
         </div>
         {/* TODO animate this show/hide with react-spring */}
         {/* TODO maybe set a max height and scroll */}
+        {/* TODO move this into UsersList/AdvancedFilters component */}
         {isFiltersOpen && (
-          <div className="py-2 text-sm bg-gray-300 bg-opacity-50 shadow-inner">
-            Filters ui
+          <div className="pt-3 pb-2 text-sm bg-gray-300 bg-opacity-50 shadow-inner">
+            {filters.map((f, i) => (
+              // TODO animate adding/removing filters with react-spring
+              <div className="flex items-center px-3 mb-2" key={i}>
+                <div className="flex-shrink-0">
+                  <Select
+                    options={[{ value: 'country', label: 'Country' }]}
+                    inputSize="sm"
+                    className="w-24 bg-opacity-60 focus:bg-opacity-100"
+                  />
+                </div>
+                <div className="ml-2 flex-1">
+                  <Select
+                    options={[{ value: 'US', label: 'United States' }]}
+                    inputSize="sm"
+                    className="bg-opacity-60 focus:bg-opacity-100"
+                    fullWidth
+                  />
+                </div>
+                <div className="ml-1 flex-shrink-0">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    title="Remove filter"
+                    onClick={() => removeFilter(f)}
+                  >
+                    <Icon
+                      name="trash-can"
+                      size="sm"
+                      className="inline-block"
+                      title="Remove filter"
+                    />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            {!filters.length ? (
+              <div className="flex flex-col items-center justify-center text-center py-2 text-gray-500">
+                <div className="text-sm">Add filters to find users to chat with!</div>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="inline-block"
+                  onClick={addFilter}
+                  disabled={hasMaxFilters}
+                >
+                  Add a filter...
+                </Button>
+              </div>
+            ) : (
+              <div className="px-3">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="inline-block -ml-2"
+                  onClick={addFilter}
+                  disabled={hasMaxFilters}
+                >
+                  Add another filter...
+                </Button>
+              </div>
+            )}
             {/* TODO checkbox option to hide blocked users that is enabled by default */}
           </div>
         )}
