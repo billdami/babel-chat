@@ -1,7 +1,14 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useMemo,
+  useState,
+  MouseEvent as ReactMouseEvent,
+} from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { UserRecord, UserSort, UserFilter } from '../../../../../types/user';
+import { UserRecord, UserSort, UserSortProperty, UserFilter } from '../../../../../types/user';
 import Spinner from '../../../../../components/Spinner';
 import Input from '../../../../../components/Input';
 import Button from '../../../../../components/Button';
@@ -18,17 +25,21 @@ interface UsersListProps {
   blockedIds: string[];
 }
 
-interface SortMenuProps extends MenuContentProps {}
+interface SortMenuProps extends MenuContentProps {
+  sorts?: UserSort[];
+  updateSort?: (sort: UserSort, updates: Partial<UserSort>) => void;
+  closeSortMenu?: () => void;
+}
 
 const MAX_FILTERS = 20;
 
 const defaultSorts: UserSort[] = [
   {
-    property: 'status',
+    property: 'country',
     isDescending: false,
   },
   {
-    property: 'country',
+    property: 'status',
     isDescending: false,
   },
 ];
@@ -60,47 +71,73 @@ const SortOptions = [
   },
 ];
 
-const SortMenu: FC<SortMenuProps> = ({ isSheet }) => (
-  <>
-    <div className="flex items-end justify-between mb-2 px-4">
-      <div className="text-gray-600 font-bold">Sort users by</div>
-      {isSheet && (
-        <Button size="sm" variant="muted" className="flex-shrink-0" outline>
-          <Icon name="x-mark" size="sm" />
-        </Button>
-      )}
-    </div>
-    <div className="flex px-4 py-2 border-t border-b border-gray-100">
-      <Select className="w-full md:w-40" options={SortOptions} />
-      <Button
-        variant="secondary"
-        size="sm"
-        className="ml-2 flex-shrink-0"
-        title="Toggle sort direction"
-      >
-        <Icon name="arrow-down-a-z" size="sm" title="Toggle sort direction" />
-      </Button>
-    </div>
-    <div className="flex px-4 py-2 border-b border-gray-100">
-      <Select className="w-full md:w-40" options={SortOptions} />
-      <Button
-        variant="secondary"
-        size="sm"
-        className="ml-2 flex-shrink-0"
-        title="Toggle sort direction"
-      >
-        <Icon name="arrow-down-a-z" size="sm" title="Toggle sort direction" />
-      </Button>
-    </div>
-    {isSheet && (
-      <div className="mt-4 mb-2 mx-4">
-        <Button variant="secondary" fullWidth>
-          Done
-        </Button>
+const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu }) => {
+  const onSortPropertyChange = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>, sort?: UserSort) => {
+      if (sort) {
+        updateSort?.(sort, { property: event.target.value as UserSortProperty });
+      }
+    },
+    [updateSort]
+  );
+
+  const onDirectionToggle = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>, sort?: UserSort) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (sort) {
+        updateSort?.(sort, { isDescending: !sort.isDescending });
+      }
+    },
+    [updateSort]
+  );
+
+  return (
+    <>
+      <div className="flex items-end justify-between mb-2 px-4">
+        <div className="text-gray-600 font-bold">Sort users by</div>
+        {isSheet && (
+          <Button size="sm" variant="muted" className="flex-shrink-0" outline>
+            <Icon name="x-mark" size="sm" />
+          </Button>
+        )}
       </div>
-    )}
-  </>
-);
+      <div className="border-t border-gray-100">
+        {sorts?.map((sort, index) => (
+          <div className="flex px-4 py-2 border-b border-gray-100" key={index}>
+            <Select
+              className="w-full md:w-40"
+              inputSize="sm"
+              options={SortOptions}
+              value={sort.property}
+              onChange={(e) => onSortPropertyChange(e, sort)}
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              className="ml-2 flex-shrink-0"
+              title="Toggle sort direction"
+              onClick={(e) => onDirectionToggle(e, sort)}
+            >
+              <Icon
+                name={sort.isDescending ? 'arrow-down-z-a' : 'arrow-down-a-z'}
+                size="sm"
+                title="Toggle sort direction"
+              />
+            </Button>
+          </div>
+        ))}
+      </div>
+      {isSheet && (
+        <div className="mt-4 mb-2 mx-4">
+          <Button variant="secondary" onClick={closeSortMenu} fullWidth>
+            Done
+          </Button>
+        </div>
+      )}
+    </>
+  );
+};
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -108,7 +145,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   const [isSortMenuOpen, setIsSortMenuOpen] = useState<boolean>(false);
   // const [showBlockedUsers /*, setShowBlockedUsers*/] = useState<boolean>(false);
   const [filters, setFilters] = useState<UserFilter[]>([]);
-  const [sorts /*, setSorts*/] = useState<UserSort[]>(defaultSorts);
+  const [sorts, setSorts] = useState<UserSort[]>(defaultSorts);
 
   const [debouncedSearchTerm] = useDebounce<string>(searchTerm, 250);
   const [debouncedFilters] = useDebounce<UserFilter[]>(filters, 250);
@@ -134,6 +171,20 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
       ? filteredUsers.sort((a, b) => sortUserRecords(a, b, _sorts, currentTime))
       : filteredUsers;
   }, [filteredUsers, debouncedSorts]);
+
+  const updateSort = useCallback(
+    (sort: UserSort, updates: Partial<UserSort>) => {
+      setSorts(sorts.map((s) => (s === sort ? { ...sort, ...updates } : s)));
+    },
+    [sorts]
+  );
+
+  const closeSortMenu = useCallback(() => setIsSortMenuOpen(false), []);
+
+  const sortMenuProps = useMemo<SortMenuProps>(
+    () => ({ sorts, updateSort, closeSortMenu }),
+    [sorts, updateSort, closeSortMenu]
+  );
 
   const toggleFiltersPanel = useCallback(() => {
     setIsFiltersOpen(!isFiltersOpen);
@@ -203,8 +254,8 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
             <Menu
               isOpen={isSortMenuOpen}
               content={SortMenu}
-              contentProps={{}}
-              onOutsideClick={() => setIsSortMenuOpen(false)}
+              contentProps={sortMenuProps}
+              onOutsideClick={closeSortMenu}
               menuClassName="py-2 text-sm"
               sheetClassName="py-2 text-sm"
               triggerClassName="ml-1"
@@ -228,7 +279,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
         {/* TODO maybe set a max height and scroll */}
         {/* TODO move this into UsersList/AdvancedFilters component */}
         {isFiltersOpen && (
-          <div className="pt-3 pb-2 text-sm bg-gray-300 bg-opacity-50 shadow-inner">
+          <div className="pt-3 pb-2 text-sm bg-gray-200 bg-opacity-70 shadow-inner">
             {filters.map((f, i) => (
               // TODO animate adding/removing filters with react-spring
               <div className="flex items-center px-3 mb-2" key={i}>

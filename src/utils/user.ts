@@ -172,6 +172,10 @@ export const sortUserRecords = (
   return 0;
 };
 
+export const groupUserFilters = (filters: UserFilter[]) => {
+  //TODO group together filters of the same type, so that can be OR'ed together when filtering
+};
+
 export const filterUserRecords = (user: UserRecord, term: string, filters: UserFilter[]) => {
   // TODO [future] parse advanced query syntax (e.g.  “gender:female age:25-50 country:US”, "age:>25", "nickname:"foo"")
   const cleanedTerm = term.trim().toLocaleUpperCase();
