@@ -1,23 +1,18 @@
-import React, {
-  ChangeEvent,
-  FC,
-  useCallback,
-  useMemo,
-  useState,
-  MouseEvent as ReactMouseEvent,
-} from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { UserRecord, UserSort, UserSortProperty, UserFilter } from '../../../../../types/user';
+import { UserRecord, UserSort, UserFilter } from '../../../../../types/user';
 import Spinner from '../../../../../components/Spinner';
 import Input from '../../../../../components/Input';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
 import { filterUserRecords, sortUserRecords } from '../../../../../utils/user';
-import Menu, { MenuContentProps } from '../../../../../components/Menu';
-import Select from '../../../../../components/Select';
+import Menu from '../../../../../components/Menu';
+import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/chat';
 
 import ListItem from './ListItem';
+import SortMenu, { SortMenuProps } from './SortMenu';
+import AdvancedFilters from './AdvancedFilters';
 
 interface UsersListProps {
   users?: UserRecord[];
@@ -25,133 +20,19 @@ interface UsersListProps {
   blockedIds: string[];
 }
 
-interface SortMenuProps extends MenuContentProps {
-  sorts?: UserSort[];
-  updateSort?: (sort: UserSort, updates: Partial<UserSort>) => void;
-  closeSortMenu?: () => void;
-}
-
-const MAX_FILTERS = 20;
-
-const defaultSorts: UserSort[] = [
-  {
-    property: 'country',
-    isDescending: false,
-  },
-  {
-    property: 'status',
-    isDescending: false,
-  },
-];
-
-const SortOptions = [
-  {
-    value: '',
-    label: 'No sort',
-  },
-  {
-    value: 'nickname',
-    label: 'Nickname',
-  },
-  {
-    value: 'age',
-    label: 'Age',
-  },
-  {
-    value: 'gender',
-    label: 'Gender',
-  },
-  {
-    value: 'country',
-    label: 'Country',
-  },
-  {
-    value: 'status',
-    label: 'Online status',
-  },
-];
-
-const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu }) => {
-  const onSortPropertyChange = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>, sort?: UserSort) => {
-      if (sort) {
-        updateSort?.(sort, { property: event.target.value as UserSortProperty });
-      }
-    },
-    [updateSort]
-  );
-
-  const onDirectionToggle = useCallback(
-    (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>, sort?: UserSort) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (sort) {
-        updateSort?.(sort, { isDescending: !sort.isDescending });
-      }
-    },
-    [updateSort]
-  );
-
-  return (
-    <>
-      <div className="flex items-end justify-between mb-2 px-4">
-        <div className="text-gray-600 font-bold">Sort users by</div>
-        {isSheet && (
-          <Button size="sm" variant="muted" className="flex-shrink-0" outline>
-            <Icon name="x-mark" size="sm" />
-          </Button>
-        )}
-      </div>
-      <div className="border-t border-gray-100">
-        {sorts?.map((sort, index) => (
-          <div className="flex px-4 py-2 border-b border-gray-100" key={index}>
-            <Select
-              className="w-full md:w-40"
-              inputSize="sm"
-              options={SortOptions}
-              value={sort.property}
-              onChange={(e) => onSortPropertyChange(e, sort)}
-            />
-            <Button
-              variant="secondary"
-              size="sm"
-              className="ml-2 flex-shrink-0"
-              title="Toggle sort direction"
-              onClick={(e) => onDirectionToggle(e, sort)}
-            >
-              <Icon
-                name={sort.isDescending ? 'arrow-down-z-a' : 'arrow-down-a-z'}
-                size="sm"
-                title="Toggle sort direction"
-              />
-            </Button>
-          </div>
-        ))}
-      </div>
-      {isSheet && (
-        <div className="mt-4 mb-2 mx-4">
-          <Button variant="secondary" onClick={closeSortMenu} fullWidth>
-            Done
-          </Button>
-        </div>
-      )}
-    </>
-  );
-};
-
 const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [isSortMenuOpen, setIsSortMenuOpen] = useState<boolean>(false);
   // const [showBlockedUsers /*, setShowBlockedUsers*/] = useState<boolean>(false);
   const [filters, setFilters] = useState<UserFilter[]>([]);
-  const [sorts, setSorts] = useState<UserSort[]>(defaultSorts);
+  const [sorts, setSorts] = useState<UserSort[]>(DEFAULT_USER_SORTS);
 
   const [debouncedSearchTerm] = useDebounce<string>(searchTerm, 250);
   const [debouncedFilters] = useDebounce<UserFilter[]>(filters, 250);
   const [debouncedSorts] = useDebounce<UserSort[]>(sorts, 250);
 
-  const hasMaxFilters = filters.length >= MAX_FILTERS;
+  const hasMaxFilters = filters.length >= MAX_USER_FILTERS;
 
   // TODO move blocked users filter into its own useMemo, as users filtered out by blocking
   // should not show as as "has filters state", and should not be included in the tab count
@@ -251,7 +132,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
             >
               <Icon name="filter" size="sm" className="inline" title="Advanced filters" />
             </Button>
-            <Menu
+            <Menu<SortMenuProps>
               isOpen={isSortMenuOpen}
               content={SortMenu}
               contentProps={sortMenuProps}
@@ -275,75 +156,14 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
             />
           </div>
         </div>
-        {/* TODO animate this show/hide with react-spring */}
-        {/* TODO maybe set a max height and scroll */}
-        {/* TODO move this into UsersList/AdvancedFilters component */}
-        {isFiltersOpen && (
-          <div className="pt-3 pb-2 text-sm bg-gray-200 bg-opacity-70 shadow-inner">
-            {filters.map((f, i) => (
-              // TODO animate adding/removing filters with react-spring
-              <div className="flex items-center px-3 mb-2" key={i}>
-                <div className="flex-shrink-0">
-                  <Select
-                    options={[{ value: 'country', label: 'Country' }]}
-                    inputSize="sm"
-                    className="w-24 bg-opacity-60 focus:bg-opacity-100"
-                  />
-                </div>
-                <div className="ml-2 flex-1">
-                  <Select
-                    options={[{ value: 'US', label: 'United States' }]}
-                    inputSize="sm"
-                    className="bg-opacity-60 focus:bg-opacity-100"
-                    fullWidth
-                  />
-                </div>
-                <div className="ml-1 flex-shrink-0">
-                  <Button
-                    variant="link"
-                    size="sm"
-                    title="Remove filter"
-                    onClick={() => removeFilter(f)}
-                  >
-                    <Icon
-                      name="trash-can"
-                      size="sm"
-                      className="inline-block"
-                      title="Remove filter"
-                    />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            {!filters.length ? (
-              <div className="flex flex-col items-center justify-center text-center py-2 text-gray-500">
-                <div className="text-sm">Add filters to find users to chat with!</div>
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="inline-block"
-                  onClick={addFilter}
-                  disabled={hasMaxFilters}
-                >
-                  Add a filter...
-                </Button>
-              </div>
-            ) : (
-              <div className="px-3">
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="inline-block -ml-2"
-                  onClick={addFilter}
-                  disabled={hasMaxFilters}
-                >
-                  Add another filter...
-                </Button>
-              </div>
-            )}
-            {/* TODO checkbox option to hide blocked users that is enabled by default */}
-          </div>
-        )}
+        <AdvancedFilters
+          isOpen={isFiltersOpen}
+          hasMaxFilters={hasMaxFilters}
+          filters={filters}
+          addFilter={addFilter}
+          removeFilter={removeFilter}
+          updateFilter={updateFilter}
+        />
       </div>
       {sortedUsers.length > 0 && sortedUsers.length !== users?.length && (
         <div className="px-3 mb-1 text-sm text-gray-600">
