@@ -38,6 +38,7 @@ interface UserMenuProps extends MenuContentProps {
   closeMenu?: () => void;
 }
 
+// TODO move into Sidebar/UserMenu
 const UserMenu: FC<UserMenuProps> = ({
   isSheet,
   user,

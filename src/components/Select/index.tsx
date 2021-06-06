@@ -3,8 +3,8 @@ import cn from 'classnames';
 
 type SelectSize = 'sm' | 'md' | 'lg';
 
-export interface SelectOption {
-  value: string;
+export interface SelectOption<T = string> {
+  value: T;
   label?: string;
   disabled?: boolean;
 }

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, MouseEvent as ReactMouseEvent } from 'react';
 
 import { MenuContentProps } from '../../../../../../components/Menu';
-import Select from '../../../../../../components/Select';
+import Select, { SelectOption } from '../../../../../../components/Select';
 import Button from '../../../../../../components/Button';
 import Icon from '../../../../../../components/Icon';
 import { UserSort, UserSortProperty } from '../../../../../../types/user';
@@ -12,7 +12,7 @@ export interface SortMenuProps extends MenuContentProps {
   closeSortMenu?: () => void;
 }
 
-const SortOptions = [
+const SortOptions: SelectOption<UserSortProperty>[] = [
   {
     value: '',
     label: 'No sort',

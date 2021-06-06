@@ -78,6 +78,7 @@ export type AgeFilterValue = Age | '' | undefined | null;
 export type GenderFilterValue = Gender | '' | undefined | null;
 
 export type UserSortProperty = 'status' | 'nickname' | 'country' | 'age' | 'gender' | '';
+export type UserFilterProperty = 'nickname' | 'country' | 'age' | 'gender';
 
 export interface UserSort {
   property?: UserSortProperty;
