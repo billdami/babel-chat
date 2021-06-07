@@ -9,6 +9,7 @@ import Icon from '../../../../../components/Icon';
 import { filterUserRecords, sortUserRecords } from '../../../../../utils/user';
 import Menu from '../../../../../components/Menu';
 import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/chat';
+import Badge from '../../../../../components/Badge';
 
 import ListItem from './ListItem';
 import SortMenu, { SortMenuProps } from './SortMenu';
@@ -126,11 +127,26 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
             <Button
               size="sm"
               variant="muted"
+              className="relative"
               title={isFiltersOpen ? 'Hide advanced filters' : 'Show advanced filters'}
               onClick={toggleFiltersPanel}
               isActive={isFiltersOpen}
             >
               <Icon name="filter" size="sm" className="inline" title="Advanced filters" />
+              {!!filters.length && (
+                <Badge
+                  className="absolute -top-1 -right-1"
+                  tooltip={
+                    filters.length === 1
+                      ? `There is 1 active filter`
+                      : `There are ${filters.length} active filters`
+                  }
+                  size="sm"
+                  variant="muted"
+                  pulse={false}
+                  deferRender={false}
+                />
+              )}
             </Button>
             <Menu<SortMenuProps>
               isOpen={isSortMenuOpen}

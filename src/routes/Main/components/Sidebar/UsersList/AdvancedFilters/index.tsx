@@ -32,7 +32,7 @@ const AdvancedFilters: FC<AdvancedFiltersProps> = ({
       ))}
       {!filters.length ? (
         <div className="flex flex-col items-center justify-center text-center py-2 text-gray-500">
-          <div className="text-sm">Add filters to find users to chat with!</div>
+          <div className="text-sm">Add filters to find users to chat with.</div>
           <Button
             variant="link"
             size="sm"

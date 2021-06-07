@@ -3,9 +3,11 @@ import React, { DetailedHTMLProps, FC, HTMLAttributes } from 'react';
 
 import useDeferRender from '../../hooks/useDeferRender';
 
+type BadgeVariants = 'alert' | 'muted';
 type BadgeSizes = 'sm' | 'md' | 'lg';
 
 interface BadgeProps extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
+  variant?: BadgeVariants;
   size?: BadgeSizes;
   tooltip?: string;
   pulse?: boolean;
@@ -20,8 +22,19 @@ const sizes = {
   lg: 'w-4 h-4',
 };
 
+const variants = {
+  alert: 'bg-red-500',
+  muted: 'bg-gray-400',
+};
+
+const variantPulse = {
+  alert: 'bg-red-400',
+  muted: 'bg-gray-300',
+};
+
 const Badge: FC<BadgeProps> = ({
   className = '',
+  variant = 'alert',
   size = 'md',
   tooltip = '',
   pulse = true,
@@ -42,15 +55,21 @@ const Badge: FC<BadgeProps> = ({
       {pulse && (
         <span
           className={classNames(
-            'animate-ping absolute inline-flex rounded-full bg-red-400 opacity-75',
+            'animate-ping absolute inline-flex rounded-full opacity-75',
+            variantPulse[variant],
             sizes[size]
           )}
         ></span>
       )}
       <span
-        className={classNames('relative inline-flex rounded-full border bg-red-500', sizes[size], {
-          'border border-red-500': bordered,
-        })}
+        className={classNames(
+          'relative inline-flex rounded-full border',
+          variants[variant],
+          sizes[size],
+          {
+            'border border-red-500': bordered,
+          }
+        )}
       ></span>
     </span>
   ) : null;

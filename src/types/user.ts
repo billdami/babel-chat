@@ -73,9 +73,9 @@ export type UserRecord = Val<User, 'id', 'ref'>;
 export type UserBlockRecord = Val<UserBlock, 'id', 'ref'>;
 export type UserSpamReportRecord = Val<UserSpamReport, 'id', 'ref'>;
 
-export type CountryFilterValue = Country | '' | undefined | null;
-export type AgeFilterValue = Age | '' | undefined | null;
-export type GenderFilterValue = Gender | '' | undefined | null;
+export type CountryFilterValue = Country | '' | undefined;
+export type AgeFilterValue = Age | '' | undefined;
+export type GenderFilterValue = Gender | '' | undefined;
 
 export type UserSortProperty = 'status' | 'nickname' | 'country' | 'age' | 'gender' | '';
 export type UserFilterProperty = 'nickname' | 'country' | 'age' | 'gender';
@@ -102,7 +102,7 @@ export interface UserAgeFilter {
 
 export interface UserGenderFilter {
   property: 'gender';
-  value: Gender;
+  value: GenderFilterValue;
 }
 
 export type UserFilter = UserNicknameFilter | UserCountryFilter | UserAgeFilter | UserGenderFilter;
