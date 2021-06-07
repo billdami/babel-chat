@@ -52,11 +52,15 @@
     },
     "chats": {
       "$chats_user_id": {
-        // authenticated users can read chat lists whose ID matches their own user ID
+        // authenticated users can read chat lists whose list ID matches their own user ID
         ".read": "root.child('APP_OFFLINE').val() !== true &&
           auth != null &&
           $chats_user_id === auth.uid",
         "$chats_other_user_id": {
+          // authenticated users can read chats whose list ID matches their own user ID
+          ".read": "root.child('APP_OFFLINE').val() !== true &&
+            auth != null &&
+            $chats_other_user_id === auth.uid",
           // authenticated users can create chats in ANY chat list
           // authenticated users can update chats where the parent id or chat id matches their own user ID
           // authenticated users can delete chats where the parent id matches their own user ID
