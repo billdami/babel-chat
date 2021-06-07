@@ -172,14 +172,86 @@ export const sortUserRecords = (
   return 0;
 };
 
-export const groupUserFilters = (filters: UserFilter[]) => {
-  //TODO group together filters of the same type, so that can be OR'ed together when filtering
+export const groupUserFilters = (filters: UserFilter[]): UserFilter[][] => {
+  const countryFilters = filters.filter((f) => f.property === 'country' && !!f.value);
+  const genderFilters = filters.filter((f) => f.property === 'gender' && !!f.value);
+  const nicknameFilters = filters.filter(
+    (f) => f.property === 'nickname' && f.value?.trim().length > 0
+  );
+  // TODO allow value of "x" for age inputs to indicate "unspecified"
+  const ageFilters = filters.filter(
+    (f) =>
+      f.property === 'age' &&
+      ((f.value?.[0]?.toString().trim().length && !isNaN(Number(f.value?.[0]))) ||
+        (f.value?.[1]?.toString().trim().length && !isNaN(Number(f.value?.[1]))))
+  );
+  return [nicknameFilters, countryFilters, genderFilters, ageFilters].filter(
+    (group) => group.length > 0
+  );
 };
 
-export const filterUserRecords = (user: UserRecord, term: string, filters: UserFilter[]) => {
+export const filterUserRecords = (
+  user: UserRecord,
+  term: string,
+  groupedFilters: UserFilter[][]
+): boolean => {
   // TODO [future] parse advanced query syntax (e.g.  “gender:female age:25-50 country:US”, "age:>25", "nickname:"foo"")
-  const cleanedTerm = term.trim().toLocaleUpperCase();
   const fullNickname = `${user.nickname.toLocaleUpperCase()}#${user.uuid}`;
-  // TODO whats the fastest way to find a string in another string?
-  return fullNickname.indexOf(cleanedTerm) !== -1;
+
+  if (term && fullNickname.indexOf(term) === -1) {
+    return false;
+  }
+
+  for (let group of groupedFilters) {
+    // if ANY of the filters pass in the group, continue on (filters of the same type are OR'ed)
+    let groupPassed = false;
+    for (let filter of group) {
+      switch (filter.property) {
+        case 'nickname':
+          if (fullNickname.indexOf(filter.value.toLocaleUpperCase()) !== -1) {
+            groupPassed = true;
+          }
+          break;
+        case 'country':
+          if (user.country === filter.value) {
+            groupPassed = true;
+          }
+          break;
+        case 'gender':
+          if (user.gender === filter.value) {
+            groupPassed = true;
+          }
+          break;
+        case 'age': {
+          // TODO allow value of "x" for age inputs to indicate "unspecified"
+          const v1 = filter.value?.[0];
+          const v2 = filter.value?.[1];
+          const minAge = v1?.toString().trim().length ? Number(v1) : null;
+          const maxAge = v2?.toString().trim().length ? Number(v2) : null;
+          if (
+            (minAge === null ||
+              isNaN(minAge) ||
+              (typeof user.age === 'number' && user.age >= minAge)) &&
+            (maxAge === null ||
+              isNaN(maxAge) ||
+              (typeof user.age === 'number' && user.age <= maxAge))
+          ) {
+            groupPassed = true;
+          }
+          break;
+        }
+      }
+
+      if (groupPassed) {
+        break;
+      }
+    }
+
+    // if a group does NOT pass, immediately fail (filter groups are AND'ed)
+    if (!groupPassed) {
+      return false;
+    }
+  }
+
+  return true;
 };

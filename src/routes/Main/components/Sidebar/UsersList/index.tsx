@@ -6,7 +6,7 @@ import Spinner from '../../../../../components/Spinner';
 import Input from '../../../../../components/Input';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
-import { filterUserRecords, sortUserRecords } from '../../../../../utils/user';
+import { filterUserRecords, groupUserFilters, sortUserRecords } from '../../../../../utils/user';
 import Menu from '../../../../../components/Menu';
 import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/chat';
 import Badge from '../../../../../components/Badge';
@@ -40,10 +40,12 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   // blockedIds, showBlockedUsers
 
   const filteredUsers = useMemo<UserRecord[]>(() => {
-    const term = debouncedSearchTerm.trim();
+    const term = debouncedSearchTerm.trim().toLocaleUpperCase();
     const _users = users ?? [];
-    const _filters = debouncedFilters; //TODO filter out "empty" filters
-    return term ? _users.filter((u) => filterUserRecords(u, term, _filters)) : _users;
+    const _filters = groupUserFilters(debouncedFilters);
+    return term || _filters.length > 0
+      ? _users.filter((u) => filterUserRecords(u, term, _filters))
+      : _users;
   }, [users, debouncedSearchTerm, debouncedFilters]);
 
   const sortedUsers = useMemo<UserRecord[]>(() => {

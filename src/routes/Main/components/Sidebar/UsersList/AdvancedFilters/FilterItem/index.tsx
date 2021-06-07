@@ -5,7 +5,7 @@ import Icon from '../../../../../../../components/Icon';
 import Input from '../../../../../../../components/Input';
 import Select, { SelectOption } from '../../../../../../../components/Select';
 import { COUNTRIES } from '../../../../../../../constants/countries';
-import { GENDERS, MAX_AGE, MIN_AGE, UNSPECIFIED } from '../../../../../../../constants/user';
+import { GENDERS, UNSPECIFIED } from '../../../../../../../constants/user';
 import {
   UserAgeFilter,
   UserCountryFilter,
@@ -86,6 +86,7 @@ const FilterValueNickname: FC<FilterValueNicknameProps> = ({ filter, update }) =
     <Input
       inputSize="sm"
       className="bg-opacity-60 focus:bg-opacity-100"
+      placeholder="Type a nickname"
       maxLength={255}
       value={filter.value}
       onChange={(e) => update(filter, { ...filter, value: e.target.value })}
@@ -113,26 +114,24 @@ const FilterValueAge: FC<FilterValueAgeProps> = ({ filter, update }) => {
   return (
     <div className="flex items-center">
       <Input
-        type="number"
+        inputMode="numeric"
         inputSize="sm"
         className="bg-opacity-60 focus:bg-opacity-100"
+        placeholder="Min"
         maxLength={3}
-        min={MIN_AGE}
-        max={MAX_AGE}
         value={filter.value[0]}
         onChange={(e) =>
           update(filter, { ...filter, value: [e.target.value as AgeFilterValue, filter.value[1]] })
         }
         fullWidth
       />
-      <span className="px-1 text-sm text-gray-500">to</span>
+      <span className="px-2 text-sm text-gray-500">to</span>
       <Input
-        type="number"
+        inputMode="numeric"
         inputSize="sm"
         className="bg-opacity-60 focus:bg-opacity-100"
+        placeholder="Max"
         maxLength={3}
-        min={MIN_AGE}
-        max={MAX_AGE}
         value={filter.value[1]}
         onChange={(e) =>
           update(filter, { ...filter, value: [filter.value[0], e.target.value as AgeFilterValue] })
@@ -187,6 +186,7 @@ const FilterItem: FC<FilterItemProps> = ({ isOpen = false, filter, update, remov
         <Select
           inputSize="sm"
           className="bg-opacity-60 focus:bg-opacity-100"
+          value={filter.property}
           options={filterTypeOptions}
           onChange={updateFilterType}
         />
@@ -195,7 +195,13 @@ const FilterItem: FC<FilterItemProps> = ({ isOpen = false, filter, update, remov
         <FilterValue filter={filter} update={update} />
       </div>
       <div className="ml-1 flex-shrink-0">
-        <Button variant="link" size="sm" title="Remove filter" onClick={() => remove(filter)}>
+        <Button
+          variant="link"
+          size="sm"
+          className="-mr-2"
+          title="Remove filter"
+          onClick={() => remove(filter)}
+        >
           <Icon name="trash-can" size="sm" className="inline-block" title="Remove filter" />
         </Button>
       </div>
