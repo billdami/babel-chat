@@ -178,8 +178,6 @@ const FilterItem: FC<FilterItemProps> = ({ isOpen = false, filter, update, remov
     [filter, update]
   );
 
-  // TODO animate this show/hide with react-spring
-  // TODO maybe set a max height and scroll
   return (
     <div className="flex items-center px-3 mb-2">
       <div className="flex-shrink-0">

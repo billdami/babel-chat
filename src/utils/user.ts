@@ -129,7 +129,8 @@ export const sortUserRecords = (
   a: UserRecord,
   b: UserRecord,
   sorts: UserSort[],
-  currentTime: number
+  currentTime: number,
+  firstCountry?: Country
 ) => {
   for (let sort of sorts) {
     let d = 0;
@@ -143,8 +144,18 @@ export const sortUserRecords = (
         d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
         break;
       case 'country':
-        aVal = a.country === Country.UNSPECIFIED ? 'ZZ' : a.country;
-        bVal = b.country === Country.UNSPECIFIED ? 'ZZ' : b.country;
+        aVal =
+          a.country === Country.UNSPECIFIED
+            ? 'ZZ'
+            : firstCountry && firstCountry !== Country.UNSPECIFIED && a.country === firstCountry
+            ? 'AA'
+            : a.country;
+        bVal =
+          b.country === Country.UNSPECIFIED
+            ? 'ZZ'
+            : firstCountry && firstCountry !== Country.UNSPECIFIED && b.country === firstCountry
+            ? 'AA'
+            : b.country;
         d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
         break;
       case 'gender':

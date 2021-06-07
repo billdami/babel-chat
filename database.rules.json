@@ -57,7 +57,7 @@
           auth != null &&
           $chats_user_id === auth.uid",
         "$chats_other_user_id": {
-          // authenticated users can read chats whose list ID matches their own user ID
+          // authenticated users can read chats whose ID matches their own user ID
           ".read": "root.child('APP_OFFLINE').val() !== true &&
             auth != null &&
             $chats_other_user_id === auth.uid",

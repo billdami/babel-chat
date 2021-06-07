@@ -1,15 +1,10 @@
-import { UserSort } from '../types/user';
+import { ChatSort } from '../types/chat';
 
 export const MAX_MESSAGE_LEN = 512;
 export const SCROLLED_UP_THRESHOLD = 16;
-export const MAX_USER_FILTERS = 20;
-export const DEFAULT_USER_SORTS: UserSort[] = [
+export const DEFAULT_CHAT_SORTS: ChatSort[] = [
   {
-    property: 'country',
-    isDescending: false,
-  },
-  {
-    property: 'status',
+    property: 'nickname',
     isDescending: false,
   },
 ];

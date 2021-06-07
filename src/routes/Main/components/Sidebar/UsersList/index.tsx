@@ -8,8 +8,9 @@ import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
 import { filterUserRecords, groupUserFilters, sortUserRecords } from '../../../../../utils/user';
 import Menu from '../../../../../components/Menu';
-import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/chat';
 import Badge from '../../../../../components/Badge';
+import useCurrentUser from '../../../../../hooks/useCurrentUser';
+import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/user';
 
 import ListItem from './ListItem';
 import SortMenu, { SortMenuProps } from './SortMenu';
@@ -22,6 +23,8 @@ interface UsersListProps {
 }
 
 const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
+  const { user } = useCurrentUser();
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [isSortMenuOpen, setIsSortMenuOpen] = useState<boolean>(false);
@@ -52,9 +55,9 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
     const currentTime = new Date().getTime();
     const _sorts = debouncedSorts.filter((s) => !!s.property);
     return _sorts.length
-      ? filteredUsers.sort((a, b) => sortUserRecords(a, b, _sorts, currentTime))
+      ? filteredUsers.sort((a, b) => sortUserRecords(a, b, _sorts, currentTime, user?.country))
       : filteredUsers;
-  }, [filteredUsers, debouncedSorts]);
+  }, [filteredUsers, debouncedSorts, user]);
 
   const updateSort = useCallback(
     (sort: UserSort, updates: Partial<UserSort>) => {
