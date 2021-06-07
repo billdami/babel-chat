@@ -1,14 +1,17 @@
 import React, { DetailedHTMLProps, FC } from 'react';
 import cn from 'classnames';
 
-export interface SelectOption {
-  value: string;
+type SelectSize = 'sm' | 'md' | 'lg';
+
+export interface SelectOption<T = string> {
+  value: T;
   label?: string;
   disabled?: boolean;
 }
 
 interface SelectProps
   extends DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
+  inputSize?: SelectSize;
   fullWidth?: boolean;
   options?: SelectOption[] | null;
 }
@@ -16,13 +19,10 @@ interface SelectProps
 const baseClasses = `
 appearance-none
 block
-w-full
-pl-3
-pr-7
-py-2
 rounded-sm
 border
 border-gray-300
+bg-white
 bg-caret
 bg-no-repeat
 bg-4x3
@@ -37,9 +37,21 @@ disabled:opacity-50
 disabled:bg-gray-200
 disabled:cursor-not-allowed`;
 
-const Select: FC<SelectProps> = ({ className, fullWidth = false, options, ...rest }) => (
+const sizeClasses = {
+  sm: 'py-1 pl-3 pr-7 text-sm',
+  md: 'py-2 pl-3 pr-7',
+  lg: 'py-3 pl-3 pr-7 text-lg',
+};
+
+const Select: FC<SelectProps> = ({
+  className,
+  inputSize = 'md',
+  fullWidth = false,
+  options,
+  ...rest
+}) => (
   <select
-    className={cn(baseClasses, className, {
+    className={cn(baseClasses, className, sizeClasses[inputSize], {
       'w-full': fullWidth,
     })}
     {...rest}

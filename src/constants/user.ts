@@ -1,10 +1,12 @@
-import { Gender, GenderOption, Status, StatusOption, User } from '../types/user';
+import { Gender, GenderOption, Status, StatusOption, User, UserSort } from '../types/user';
 import { Country } from '../types/country';
 
 export const MIN_AGE = 18;
 export const MAX_AGE = 120;
+export const UNSPECIFIED_AGE_KEYWORD = 'X';
 export const MIN_NICKNAME_LEN = 2;
 export const MAX_NICKNAME_LEN = 32;
+export const MAX_USER_FILTERS = 20;
 export const UNSPECIFIED = 'UNSPECIFIED';
 export const SYSTEM_ID = 'SYSTEM_USER';
 export const STATUS_THRESHOLD_IDLE = 1200000; // 20min
@@ -62,5 +64,16 @@ export const STATUSES: StatusOption[] = [
     label: 'Offline',
     bgColor: 'bg-red-400',
     borderColor: 'border-white',
+  },
+];
+
+export const DEFAULT_USER_SORTS: UserSort[] = [
+  {
+    property: 'country',
+    isDescending: false,
+  },
+  {
+    property: 'status',
+    isDescending: false,
   },
 ];

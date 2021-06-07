@@ -13,3 +13,16 @@ export const getStatus = (timeDiff?: number | null) => {
     return Status.AWAY;
   }
 };
+
+export const getStatusSorting = (currentTime: number, lastActiveDate?: Date | null) => {
+  const absDiff = lastActiveDate ? Math.abs(currentTime - lastActiveDate.getTime()) : null;
+  if (!absDiff) {
+    return 4; // offline
+  } else if (absDiff < STATUS_THRESHOLD_IDLE) {
+    return 1; // active
+  } else if (absDiff >= STATUS_THRESHOLD_IDLE && absDiff < STATUS_THRESHOLD_AWAY) {
+    return 2; // idle
+  } else {
+    return 3; // away
+  }
+};

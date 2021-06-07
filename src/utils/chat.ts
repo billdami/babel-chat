@@ -3,6 +3,8 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 
+import { ChatRecord, ChatSort } from '../types/chat';
+
 import { getFirebaseTimestamp } from './firebase';
 
 export const getMessageListId = (userOneId?: string, userTwoId?: string) =>
@@ -23,7 +25,7 @@ export const createChat = async (
     throw new Error('destination user does not exist');
   }
 
-  const chatRef = db.ref(`chats/${originUserId}/${destUserId}`).set({
+  const chatRef = db.ref(`chats/${originUserId}/${destUserId}`).update({
     startedByUser: isInitiator ? originUserId : destUserId,
     toUserDetails: destUser.val(),
     isPinned: false,
@@ -31,7 +33,6 @@ export const createChat = async (
     hasMessagesFromOtherUser: !isInitiator,
     dateLastSeen: isInitiator ? getFirebaseTimestamp() : null,
     dateStarted: getFirebaseTimestamp(),
-    dateLastMessage: null,
   });
 
   return chatRef;
@@ -65,4 +66,32 @@ export const createChatMessage = async (
   });
 
   return messageRef;
+};
+
+export const sortChatRecords = (a: ChatRecord, b: ChatRecord, sorts: ChatSort[]) => {
+  for (let sort of sorts) {
+    let d = 0;
+    let aVal;
+    let bVal;
+
+    switch (sort.property) {
+      case 'nickname':
+        aVal = `${a.toUserDetails.nickname}#${a.toUserDetails.uuid}`;
+        bVal = `${b.toUserDetails.nickname}#${b.toUserDetails.uuid}`;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'dateLastMessage':
+      case 'dateStarted':
+        aVal = a[sort.property]?.getTime() ?? 0;
+        bVal = b[sort.property]?.getTime() ?? 0;
+        d = sort.isDescending ? bVal - aVal : aVal - bVal;
+        break;
+    }
+
+    if (d !== 0) {
+      return d;
+    }
+  }
+
+  return 0;
 };

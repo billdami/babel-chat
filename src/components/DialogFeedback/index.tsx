@@ -24,7 +24,7 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
   // TODO focus on the textarea instead
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
 
   const isFormValid = useMemo<boolean>(() => message?.trim().length > 0, [message]);
 
@@ -69,7 +69,7 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
   useEffect(() => {
     if (isOpen) {
       // give the modal time to animate in
-      setTimeout(() => textareaRef.current?.focus(), 200);
+      setTimeout(() => emailInputRef.current?.focus(), 200);
     }
   }, [isOpen]);
 
@@ -107,6 +107,7 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                 </p>
                 <div className="mb-4">
                   <Input
+                    ref={emailInputRef}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
@@ -119,7 +120,6 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                   </div>
                 </div>
                 <Textarea
-                  ref={textareaRef}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   maxLength={1000}

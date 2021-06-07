@@ -175,12 +175,22 @@ const ListItem: FC<ListItemProps> = ({
               <Button
                 variant="muted"
                 size="sm"
+                className="relative"
                 onClick={onTriggerClick}
                 isActive={isMenuOpen}
                 aria-haspopup={true}
                 aria-expanded={isMenuOpen}
               >
                 <Icon name="ellipsis" size="sm" className="inline-block" />
+                {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
+                  <Badge
+                    className="absolute -top-1 -right-1"
+                    tooltip="There are unread message(s)"
+                    size="md"
+                    pulse={false}
+                    deferRender={false}
+                  />
+                )}
               </Button>
             }
           />

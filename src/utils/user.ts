@@ -3,11 +3,14 @@ import 'firebase/auth';
 
 import firebase from 'firebase/app';
 
-import { NewUserDetails, User, UserRecord } from '../types/user';
+import { Gender, NewUserDetails, User, UserFilter, UserRecord, UserSort } from '../types/user';
+import { Country } from '../types/country';
+import { UNSPECIFIED } from '../constants/user';
 
 import { generateRandomNickname, generateRandomUUID } from './random';
 import { getFirebaseTimestamp } from './firebase';
 import { env, envVar } from './env';
+import { getStatusSorting } from './time';
 
 export const createUser = async (
   id: string,
@@ -120,4 +123,146 @@ export const createFeedbackMessage = async (
   });
 
   return messageRef;
+};
+
+export const sortUserRecords = (
+  a: UserRecord,
+  b: UserRecord,
+  sorts: UserSort[],
+  currentTime: number,
+  firstCountry?: Country
+) => {
+  for (let sort of sorts) {
+    let d = 0;
+    let aVal;
+    let bVal;
+
+    switch (sort.property) {
+      case 'nickname':
+        aVal = `${a.nickname}#${a.uuid}`;
+        bVal = `${b.nickname}#${b.uuid}`;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'country':
+        aVal =
+          a.country === Country.UNSPECIFIED
+            ? 'ZZ'
+            : firstCountry && firstCountry !== Country.UNSPECIFIED && a.country === firstCountry
+            ? 'AA'
+            : a.country;
+        bVal =
+          b.country === Country.UNSPECIFIED
+            ? 'ZZ'
+            : firstCountry && firstCountry !== Country.UNSPECIFIED && b.country === firstCountry
+            ? 'AA'
+            : b.country;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'gender':
+        aVal = a.gender === Gender.UNSPECIFIED ? 'ZZ' : a.gender;
+        bVal = b.gender === Gender.UNSPECIFIED ? 'ZZ' : b.gender;
+        d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        break;
+      case 'age':
+        aVal = a.age === UNSPECIFIED ? 999 : a.age;
+        bVal = b.age === UNSPECIFIED ? 999 : b.age;
+        d = sort.isDescending ? bVal - aVal : aVal - bVal;
+        break;
+      case 'status':
+        aVal = getStatusSorting(currentTime, a.dateLastActive);
+        bVal = getStatusSorting(currentTime, b.dateLastActive);
+        d = sort.isDescending ? bVal - aVal : aVal - bVal;
+        break;
+    }
+
+    if (d !== 0) {
+      return d;
+    }
+  }
+
+  return 0;
+};
+
+export const groupUserFilters = (filters: UserFilter[]): UserFilter[][] => {
+  const countryFilters = filters.filter((f) => f.property === 'country' && !!f.value);
+  const genderFilters = filters.filter((f) => f.property === 'gender' && !!f.value);
+  const nicknameFilters = filters.filter(
+    (f) => f.property === 'nickname' && f.value?.trim().length > 0
+  );
+  // TODO allow value of "x" for age inputs to indicate "unspecified"
+  const ageFilters = filters.filter(
+    (f) =>
+      f.property === 'age' &&
+      ((f.value?.[0]?.toString().trim().length && !isNaN(Number(f.value?.[0]))) ||
+        (f.value?.[1]?.toString().trim().length && !isNaN(Number(f.value?.[1]))))
+  );
+  return [nicknameFilters, countryFilters, genderFilters, ageFilters].filter(
+    (group) => group.length > 0
+  );
+};
+
+export const filterUserRecords = (
+  user: UserRecord,
+  term: string,
+  groupedFilters: UserFilter[][]
+): boolean => {
+  // TODO [future] parse advanced query syntax (e.g.  “gender:female age:25-50 country:US”, "age:>25", "nickname:"foo"")
+  const fullNickname = `${user.nickname.toLocaleUpperCase()}#${user.uuid}`;
+
+  if (term && fullNickname.indexOf(term) === -1) {
+    return false;
+  }
+
+  for (let group of groupedFilters) {
+    // if ANY of the filters pass in the group, continue on (filters of the same type are OR'ed)
+    let groupPassed = false;
+    for (let filter of group) {
+      switch (filter.property) {
+        case 'nickname':
+          if (fullNickname.indexOf(filter.value.toLocaleUpperCase()) !== -1) {
+            groupPassed = true;
+          }
+          break;
+        case 'country':
+          if (user.country === filter.value) {
+            groupPassed = true;
+          }
+          break;
+        case 'gender':
+          if (user.gender === filter.value) {
+            groupPassed = true;
+          }
+          break;
+        case 'age': {
+          // TODO allow value of "x" for age inputs to indicate "unspecified"
+          const v1 = filter.value?.[0];
+          const v2 = filter.value?.[1];
+          const minAge = v1?.toString().trim().length ? Number(v1) : null;
+          const maxAge = v2?.toString().trim().length ? Number(v2) : null;
+          if (
+            (minAge === null ||
+              isNaN(minAge) ||
+              (typeof user.age === 'number' && user.age >= minAge)) &&
+            (maxAge === null ||
+              isNaN(maxAge) ||
+              (typeof user.age === 'number' && user.age <= maxAge))
+          ) {
+            groupPassed = true;
+          }
+          break;
+        }
+      }
+
+      if (groupPassed) {
+        break;
+      }
+    }
+
+    // if a group does NOT pass, immediately fail (filter groups are AND'ed)
+    if (!groupPassed) {
+      return false;
+    }
+  }
+
+  return true;
 };

@@ -24,3 +24,10 @@ export interface ChatMessage {
 
 export type ChatRecord = Val<Chat, 'id', 'ref'>;
 export type ChatMessageRecord = Val<ChatMessage, 'id', 'ref'>;
+
+export type ChatSortProperty = 'nickname' | 'dateLastMessage' | 'dateStarted' | '';
+
+export interface ChatSort {
+  property?: ChatSortProperty;
+  isDescending: boolean;
+}
