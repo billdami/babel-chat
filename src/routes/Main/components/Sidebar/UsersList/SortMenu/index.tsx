@@ -88,7 +88,7 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
               onClick={(e) => onDirectionToggle(e, sort)}
             >
               <Icon
-                name={sort.isDescending ? 'arrow-down-z-a' : 'arrow-down-a-z'}
+                name={sort.isDescending ? 'arrow-up-wide-short' : 'arrow-down-short-wide'}
                 size="sm"
                 title="Toggle sort direction"
               />

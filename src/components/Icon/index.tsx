@@ -2,8 +2,10 @@ import { createElement, FC, memo, SVGProps } from 'react';
 import cn from 'classnames';
 
 import ArrowDownAZ from '../Svgs/Icons/ArrowDownAZ';
+import ArrowDownShortWide from '../Svgs/Icons/ArrowDownShortWide';
 import ArrowDownZA from '../Svgs/Icons/ArrowDownZA';
 import ArrowUp from '../Svgs/Icons/ArrowUp';
+import ArrowUpWideShort from '../Svgs/Icons/ArrowUpWideShort';
 import Ban from '../Svgs/Icons/Ban';
 import Bars from '../Svgs/Icons/Bars';
 import Ellipsis from '../Svgs/Icons/Ellipsis';
@@ -27,8 +29,10 @@ type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type IconName =
   | 'arrow-down-a-z'
+  | 'arrow-down-short-wide'
   | 'arrow-down-z-a'
   | 'arrow-up'
+  | 'arrow-up-wide-short'
   | 'ban'
   | 'bars'
   | 'ellipsis'
@@ -58,10 +62,14 @@ const getSvg = (name: IconName) => {
   switch (name) {
     case 'arrow-down-a-z':
       return ArrowDownAZ;
+    case 'arrow-down-short-wide':
+      return ArrowDownShortWide;
     case 'arrow-down-z-a':
       return ArrowDownZA;
     case 'arrow-up':
       return ArrowUp;
+    case 'arrow-up-wide-short':
+      return ArrowUpWideShort;
     case 'ban':
       return Ban;
     case 'bars':
