@@ -1,4 +1,4 @@
-import React, { DetailedHTMLProps, FC } from 'react';
+import React, { DetailedHTMLProps, FC, useMemo } from 'react';
 import cn from 'classnames';
 
 type SelectSize = 'sm' | 'md' | 'lg';
@@ -6,13 +6,20 @@ type SelectSize = 'sm' | 'md' | 'lg';
 export interface SelectOption<T = string> {
   value: T;
   label?: string;
+  group?: string;
   disabled?: boolean;
+}
+
+export interface SelectOptionGroup<T = string> {
+  label: string;
+  options: SelectOption<T>[];
 }
 
 interface SelectProps
   extends DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
   inputSize?: SelectSize;
   fullWidth?: boolean;
+  groups?: string[];
   options?: SelectOption[] | null;
 }
 
@@ -47,21 +54,56 @@ const Select: FC<SelectProps> = ({
   className,
   inputSize = 'md',
   fullWidth = false,
+  groups,
   options,
   ...rest
-}) => (
-  <select
-    className={cn(baseClasses, className, sizeClasses[inputSize], {
-      'w-full': fullWidth,
-    })}
-    {...rest}
-  >
-    {options?.map((opt) => (
-      <option key={opt.value} value={opt.value} disabled={opt.disabled}>
-        {opt.label}
-      </option>
-    ))}
-  </select>
-);
+}) => {
+  const groupedOptions = useMemo<SelectOptionGroup[]>(
+    () =>
+      !!groups?.length
+        ? groups.map((g) => ({ label: g, options: options?.filter((o) => o.group === g) ?? [] }))
+        : [],
+    [options, groups]
+  );
+
+  const ungroupedOptions = useMemo<SelectOption[]>(
+    () => (!!groups?.length ? options?.filter((o) => !o.group) ?? [] : []),
+    [options, groups]
+  );
+
+  return (
+    <select
+      className={cn(baseClasses, className, sizeClasses[inputSize], {
+        'w-full': fullWidth,
+      })}
+      {...rest}
+    >
+      {!!groupedOptions.length ? (
+        <>
+          {ungroupedOptions.map((opt) => (
+            <option key={opt.value} value={opt.value} disabled={opt.disabled}>
+              {opt.label}
+            </option>
+          ))}
+          {groupedOptions.map((group) => (
+            <optgroup label={group.label} key={group.label}>
+              {group.options.map((opt) => (
+                <option key={opt.value} value={opt.value} disabled={opt.disabled}>
+                  {opt.label}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </>
+      ) : (
+        options?.map((opt) => (
+          <option key={opt.value} value={opt.value} disabled={opt.disabled}>
+            {opt.label}
+          </option>
+        ))
+      )}
+    </select>
+  );
+};
 
 export default Select;

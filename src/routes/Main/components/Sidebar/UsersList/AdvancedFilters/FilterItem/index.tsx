@@ -5,7 +5,8 @@ import Icon from '../../../../../../../components/Icon';
 import Input from '../../../../../../../components/Input';
 import Select, { SelectOption } from '../../../../../../../components/Select';
 import { COUNTRIES } from '../../../../../../../constants/countries';
-import { GENDERS, UNSPECIFIED } from '../../../../../../../constants/user';
+import { GENDERS } from '../../../../../../../constants/user';
+import { Country } from '../../../../../../../types/country';
 import {
   UserAgeFilter,
   UserCountryFilter,
@@ -54,14 +55,12 @@ const filterTypeOptions: SelectOption<UserFilterProperty>[] = [
 ];
 
 // useMemo() to create a "My Country" group at the top, if the user has a specified country
-// TODO make "Frequently used" and "All" dividers into optgroups?
-const countryOptions = [
+const countryGroups = ['Frequently used', 'All countries'];
+const countryOptions: SelectOption<Country | ''>[] = [
   { value: '', label: 'Select country' },
-  { value: UNSPECIFIED, label: 'Not specified' },
-  { value: 'FREQUENTLY_USED', label: '-- Frequently used --', disabled: true },
-  ...COUNTRIES.filter((c) => c.prioritized),
-  { value: 'ALL', label: '-- All countries --', disabled: true },
-  ...COUNTRIES.filter((c) => !c.prioritized),
+  { value: Country.UNSPECIFIED, label: 'Not specified' },
+  ...COUNTRIES.filter((c) => c.prioritized).map((c) => ({ ...c, group: 'Frequently used' })),
+  ...COUNTRIES.filter((c) => !c.prioritized).map((c) => ({ ...c, group: 'All countries' })),
 ];
 
 const genderOptions = [{ value: '', label: 'Select gender' }, ...GENDERS];
@@ -72,6 +71,7 @@ const FilterValueCountry: FC<FilterValueCountryProps> = ({ filter, update }) => 
       inputSize="sm"
       className="bg-opacity-60 focus:bg-opacity-100 truncate"
       value={filter.value}
+      groups={countryGroups}
       options={countryOptions}
       onChange={(e: ChangeEvent<HTMLSelectElement>) =>
         update(filter, { ...filter, value: e.target.value as CountryFilterValue })
