@@ -38,6 +38,7 @@ const ageOptions = [
   })),
 ];
 
+// TODO make "Frequently used" and "All" dividers into optgroups?
 const countryOptions = [
   { value: UNSPECIFIED, label: 'Prefer not to say' },
   { value: 'FREQUENTLY_USED', label: '-- Frequently used --', disabled: true },
