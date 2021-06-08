@@ -1,7 +1,7 @@
 import 'firebase/database';
 import 'firebase/auth';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import firebase from 'firebase/app';
 import { useListVals, useObjectVal } from 'react-firebase-hooks/database';
 

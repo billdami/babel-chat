@@ -164,6 +164,10 @@ const Chat: FC<ChatProps> = () => {
         confirmReporSpam={confirmReporSpam}
       />
       <MessageList
+        // the `key` prop here forces the MessageList to un-mount/re-mount and completely re-render
+        // whenever the dest user ID (i.e. the chat route) changes. this is a necessary workaround
+        // for issues with resetting the list limit/firebase query when switching between chats
+        key={userId}
         originUser={user}
         originChat={originChat}
         destUser={destUser}

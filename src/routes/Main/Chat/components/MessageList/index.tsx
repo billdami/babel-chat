@@ -53,7 +53,6 @@ const MessageList: FC<MessageListProps> = ({
   const prevIsPageVisible = usePrevious<boolean>(isPageVisible);
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
   const prevChatId = usePrevious<string | undefined>(originChat?.id);
-  const prevDestUserId = usePrevious<string | undefined>(destUserId);
 
   const isFirstMount = useRef<boolean>(true);
   const lastMessages = useRef<ChatMessageRecord[] | null | undefined>(messages);
@@ -97,24 +96,12 @@ const MessageList: FC<MessageListProps> = ({
     }
   }, [canLoadMore, limit]);
 
-  useEffect(() => {
-    console.log('initial component mount!');
-    return () => console.log('component unmount!');
-  }, []);
-
-  // automatic load more on scroll up
+  // TODO automatic load more on scroll up
   // useEffect(() => {
   //   if (!isLoading && !isLoadingMore && debouncedIsLoadMoreVisible) {
   //     loadMore();
   //   }
   // }, [isLoading, isLoadingMore, debouncedIsLoadMoreVisible, loadMore]);
-
-  useEffect(() => {
-    // when moving between chats, reset the messages limit
-    if (prevDestUserId !== destUserId) {
-      setLimit(MSG_PAGE_LIMIT);
-    }
-  }, [prevDestUserId, destUserId]);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -162,7 +149,6 @@ const MessageList: FC<MessageListProps> = ({
         if (!isLoadingMore) {
           el.scrollTo({
             top: el.scrollHeight - el.clientHeight,
-            // TODO when transitioning between chats, make the scroll to bottom immediate
             behavior: isFirstMount.current ? 'auto' : 'smooth',
           });
         } else {
