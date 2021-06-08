@@ -9,6 +9,7 @@ interface ButtonProps
   variant?: ButtonVariant;
   size?: ButtonSize;
   block?: boolean;
+  inline?: boolean;
   fullWidth?: boolean;
   outline?: boolean;
   isActive?: boolean;
@@ -66,16 +67,23 @@ const activeOutlineVariants = {
   link: 'text-green-600 border border-transparent underline',
 };
 
-const sizes = {
-  sm: 'px-2 py-1 text-sm',
+const textSizes = {
+  sm: 'text-sm',
+  md: '',
+  lg: 'text-lg',
+};
+
+const paddingSizes = {
+  sm: 'px-2 py-1',
   md: 'px-4 py-2',
-  lg: 'px-6 py-4 text-lg',
+  lg: 'px-6 py-4',
 };
 
 const Button: FC<ButtonProps> = ({
   children,
   className,
   block = true,
+  inline = false,
   fullWidth = false,
   outline = false,
   isActive = false,
@@ -94,10 +102,12 @@ const Button: FC<ButtonProps> = ({
         : outline
         ? outlineVariants[variant]
         : variants[variant],
-      sizes[size],
+      textSizes[size],
+      !inline ? paddingSizes[size] : null,
       className,
       {
-        block: block,
+        block: block && !inline,
+        'inline-block': inline,
         'w-full': fullWidth,
       }
     )}

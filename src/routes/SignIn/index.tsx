@@ -19,7 +19,7 @@ import FormControl from '../../components/FormControl';
 import Input from '../../components/Input';
 import Link from '../../components/Link';
 import Radio from '../../components/Radio';
-import Select from '../../components/Select';
+import Select, { SelectOption } from '../../components/Select';
 import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
 import useAuth from '../../hooks/useAuth';
@@ -38,13 +38,11 @@ const ageOptions = [
   })),
 ];
 
-// TODO make "Frequently used" and "All" dividers into optgroups?
-const countryOptions = [
-  { value: UNSPECIFIED, label: 'Prefer not to say' },
-  { value: 'FREQUENTLY_USED', label: '-- Frequently used --', disabled: true },
-  ...COUNTRIES.filter((c) => c.prioritized),
-  { value: 'ALL', label: '-- All countries --', disabled: true },
-  ...COUNTRIES.filter((c) => !c.prioritized),
+const countryGroups = ['Frequently used', 'All countries'];
+const countryOptions: SelectOption<Country>[] = [
+  { value: Country.UNSPECIFIED, label: 'Prefer not to say' },
+  ...COUNTRIES.filter((c) => c.prioritized).map((c) => ({ ...c, group: 'Frequently used' })),
+  ...COUNTRIES.filter((c) => !c.prioritized).map((c) => ({ ...c, group: 'All countries' })),
 ];
 
 const SignIn: FC<SignInListProps> = () => {
@@ -158,6 +156,7 @@ const SignIn: FC<SignInListProps> = () => {
             <Select
               id="signup-country"
               value={country}
+              groups={countryGroups}
               options={countryOptions}
               onChange={(e) => setCountry(e.target.value as Country)}
               fullWidth

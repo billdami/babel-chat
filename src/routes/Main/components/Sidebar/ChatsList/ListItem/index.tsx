@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
 
 import Badge from '../../../../../../components/Badge';
 import Button from '../../../../../../components/Button';
@@ -123,36 +124,36 @@ const ListItem: FC<ListItemProps> = ({
   );
 
   return (
-    <li>
+    <li className={cn({ 'flex items-center': isEditing })}>
+      {isEditing && (
+        <Checkbox
+          checked={selectedChatIds.includes(chat.id)}
+          onChange={() => toggleChatSelection(chat)}
+          className="ml-3 mr-1 flex-shrink-0"
+          standalone
+        />
+      )}
       <NavLink
-        className="relative
-          block w-full
-          px-3 py-1
+        className={cn(
+          `relative
+          block flex-1  min-w-0
+          pr-3 py-1
           text-left
           hover:bg-opacity-50 hover:bg-gray-200
           focus:outline-none
-          focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+          focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300`,
+          { 'pl-3': !isEditing, 'pl-1 rounded-l': isEditing }
+        )}
         activeClassName="bg-gray-200 hover:bg-opacity-100"
         to={`/main/chat/${chat.id}`}
         onClick={closeDrawer}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between  min-w-0">
           <div className="flex items-center min-w-0">
-            {isEditing && (
-              <Checkbox
-                checked={selectedChatIds.includes(chat.id)}
-                onChange={() => toggleChatSelection(chat)}
-                onClick={(event) => event.stopPropagation()}
-                className="mr-2"
-                standalone
-              />
-            )}
-            <div className="flex items-center min-w-0">
-              <UserAvatar user={chat.toUserDetails} size={20} className="flex-shrink-0 mr-2" />
-              <UserNickname user={chat.toUserDetails} className="text-gray-800" />
-            </div>
+            <UserAvatar user={chat.toUserDetails} size={20} className="flex-shrink-0 mr-2" />
+            <UserNickname user={chat.toUserDetails} className="text-gray-800" />
           </div>
           {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
             <Badge

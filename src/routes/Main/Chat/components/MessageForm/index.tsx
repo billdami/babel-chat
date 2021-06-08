@@ -14,7 +14,7 @@ import { ChatRouteParams } from '../..';
 import Button from '../../../../../components/Button';
 import Icon from '../../../../../components/Icon';
 import Input from '../../../../../components/Input';
-import { MAX_MESSAGE_LEN } from '../../../../../constants/chat';
+import { MSG_MAX_LEN } from '../../../../../constants/chat';
 import useMedia from '../../../../../hooks/useMedia';
 
 interface MessageFormProps {
@@ -31,7 +31,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
   const newMessageInput = useRef<HTMLInputElement>(null);
 
   const isFormEnabled = useMemo(
-    () => canSend && newMessage?.trim().length > 0 && newMessage?.trim().length <= MAX_MESSAGE_LEN,
+    () => canSend && newMessage?.trim().length > 0 && newMessage?.trim().length <= MSG_MAX_LEN,
     [canSend, newMessage]
   );
 
@@ -78,7 +78,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
         value={newMessage}
         onChange={onNewMessageChange}
         ref={newMessageInput}
-        maxLength={MAX_MESSAGE_LEN}
+        maxLength={MSG_MAX_LEN}
         disabled={!canSend}
       />
       <Button type="submit" className="md:w-24" disabled={!isFormEnabled}>

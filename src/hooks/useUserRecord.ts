@@ -1,6 +1,7 @@
 import 'firebase/database';
 import 'firebase/auth';
 
+import { useRef } from 'react';
 import firebase from 'firebase/app';
 import { useListVals, useObjectVal } from 'react-firebase-hooks/database';
 
@@ -38,25 +39,25 @@ export const userSpamReportOptions = {
 };
 
 export const useUser = (id: string | undefined) => {
-  const db = firebase.database();
-  const ref = id ? db.ref(`users/${id}`) : null;
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const ref = id ? db.current.ref(`users/${id}`) : null;
   return useObjectVal<User, 'id', 'ref'>(ref, userOptions);
 };
 
 export const useUsers = () => {
-  const db = firebase.database();
-  const ref = db.ref('users');
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const ref = db.current.ref('users');
   return useListVals<User, 'id', 'ref'>(ref, userOptions);
 };
 
 export const useUserBlocks = (userId: string | undefined) => {
-  const db = firebase.database();
-  const ref = userId ? db.ref(`user_blocks/${userId}`) : null;
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const ref = userId ? db.current.ref(`user_blocks/${userId}`) : null;
   return useListVals<UserBlock, 'id', 'ref'>(ref, userBlockOptions);
 };
 
 export const useUserSpamReports = (userId: string | undefined) => {
-  const db = firebase.database();
-  const ref = userId ? db.ref(`user_spam_reports/${userId}`) : null;
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const ref = userId ? db.current.ref(`user_spam_reports/${userId}`) : null;
   return useListVals<UserSpamReport, 'id', 'ref'>(ref, userSpamReportOptions);
 };
