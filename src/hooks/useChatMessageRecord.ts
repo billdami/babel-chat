@@ -1,6 +1,7 @@
 import 'firebase/database';
 import 'firebase/auth';
 
+import { useEffect, useRef } from 'react';
 import firebase from 'firebase/app';
 import { useListVals, useObjectVal } from 'react-firebase-hooks/database';
 
@@ -18,14 +19,18 @@ export const chatMessageOptions = {
 };
 
 export const useChatMessage = (listId: string | undefined, id: string | undefined) => {
-  const db = firebase.database();
-  const ref = listId && id ? db.ref(`chat_messages/${listId}/${id}`) : null;
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const ref = listId && id ? db.current.ref(`chat_messages/${listId}/${id}`) : null;
   return useObjectVal<ChatMessage, 'id', 'ref'>(ref, chatMessageOptions);
 };
 
-export const useChatMessages = (userOneId: string | undefined, userTwoId: string | undefined) => {
-  const db = firebase.database();
+export const useChatMessages = (
+  userOneId: string | undefined,
+  userTwoId: string | undefined,
+  limit: number
+) => {
+  const db = useRef<firebase.database.Database>(firebase.database());
   const id = getMessageListId(userOneId, userTwoId);
-  const ref = id ? db.ref(`chat_messages/${id}`) : null;
-  return useListVals<ChatMessage, 'id', 'ref'>(ref, chatMessageOptions);
+  const query = id ? db.current.ref(`chat_messages/${id}`).limitToLast(limit) : null;
+  return useListVals<ChatMessage, 'id', 'ref'>(query, chatMessageOptions);
 };

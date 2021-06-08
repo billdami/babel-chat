@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Returns true if the given element is visible in the viewport
@@ -19,7 +19,7 @@ import { useCallback, useEffect, useState } from 'react';
  */
 const useIsVisible = (target: HTMLElement | null) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  let observer: IntersectionObserver | undefined;
+  const observerRef = useRef<IntersectionObserver | undefined>();
 
   const listener = useCallback((entries: IntersectionObserverEntry[]) => {
     if (entries[0]) {
@@ -27,22 +27,20 @@ const useIsVisible = (target: HTMLElement | null) => {
     }
   }, []);
 
-  try {
-    observer = new IntersectionObserver(listener, {});
+  useEffect(() => {
+    try {
+      observerRef.current?.disconnect();
+      observerRef.current = new IntersectionObserver(listener, {});
 
-    if (target) {
-      observer.observe(target);
+      if (target) {
+        observerRef.current.observe(target);
+      }
+    } catch (err) {
+      // silently fail if IntersectionObserver isn't available
     }
-  } catch (err) {
-    // silently fail if IntersectionObserver isn't available
-  }
 
-  useEffect(
-    () => () => observer?.disconnect(),
-    // only run on initial render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+    return () => observerRef.current?.disconnect();
+  }, [target, listener]);
 
   return isVisible;
 };
