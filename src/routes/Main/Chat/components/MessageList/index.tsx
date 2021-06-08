@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { FC, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import cn from 'classnames';
 
 import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
@@ -10,6 +10,9 @@ import usePrevious from '../../../../../hooks/usePrevious';
 import usePageVisibility from '../../../../../hooks/usePageVisibility';
 import Spinner from '../../../../../components/Spinner';
 import Icon from '../../../../../components/Icon';
+import Button from '../../../../../components/Button';
+import useCurrentUser from '../../../../../hooks/useCurrentUser';
+import { unblockUser } from '../../../../../utils/user';
 
 interface AuthorsMap {
   [id: string]: (User & { isSelf?: boolean }) | undefined | null;
@@ -32,7 +35,7 @@ const MessageList: FC<MessageListProps> = ({
   isBlocked = false,
   isSpamReported = false,
 }) => {
-  // TODO create a usePagination() hook to allow for infinite paging of messages
+  const { updateUser } = useCurrentUser();
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUserId);
   const isPageVisible = usePageVisibility();
@@ -63,6 +66,13 @@ const MessageList: FC<MessageListProps> = ({
 
     return map;
   }, [originUser, originChat, destUser, destUserId]);
+
+  const unblock = useCallback(() => {
+    if (originUser?.id && destUserId) {
+      unblockUser(originUser?.id, destUserId);
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
+    }
+  }, [updateUser, originUser, destUserId]);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -125,10 +135,16 @@ const MessageList: FC<MessageListProps> = ({
           // TODO create <Alert>
           <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-700 bg-yellow-100 bg-opacity-60 border-l-4 border-yellow-500 rounded-sm rounded-tl-none rounded-bl-none">
             <Icon name="ban" className="mr-2 inline-block" size="sm" />
-            {isSpamReported
-              ? 'This user has been reported as spam and is permanently blocked.'
-              : 'This user has been blocked.'}
-            {/* TODO "Unblock" link button */}
+            {isSpamReported ? (
+              'This user has been reported as spam and is permanently blocked.'
+            ) : (
+              <>
+                This user has been blocked.{' '}
+                <Button variant="link" size="sm" onClick={unblock} inline>
+                  Unblock
+                </Button>
+              </>
+            )}
           </div>
         )}
         {/* TODO show "welcome" CTA when there are no messages yet, e.g. "Nothing here yet... Introduce yourself and say hi!" */}

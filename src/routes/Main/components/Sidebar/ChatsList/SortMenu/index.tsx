@@ -24,7 +24,7 @@ const SortOptions: SelectOption<ChatSortProperty>[] = [
   },
   {
     value: 'dateLastMessage',
-    label: 'Last active',
+    label: 'Date last messaged',
   },
   {
     value: 'dateStarted',
