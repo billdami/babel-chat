@@ -45,6 +45,9 @@ const MessageList: FC<MessageListProps> = ({
   const isFirstMount = useRef<boolean>(true);
   const containerElement = useRef<HTMLDivElement>(null);
 
+  const isSelf = !!originUser && !!destUser && originUser.id === destUser.id;
+  const emptyChat = !isSelf && !isBlocked && !isLoading && !messages?.length;
+
   const authors = useMemo<AuthorsMap>(() => {
     const map: AuthorsMap = { [SYSTEM_ID]: SYSTEM_USER_DETAILS };
     if (originUser?.id) {
@@ -117,7 +120,7 @@ const MessageList: FC<MessageListProps> = ({
     // TODO figure out timing issues when transitioning between chats (so theres no flicker of messages, etc.)
     <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
       <div className="py-1">
-        {originUser && destUser && originUser.id === destUser.id && (
+        {isSelf && (
           // TODO create <Alert>
           <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-700 bg-yellow-100 bg-opacity-60 border-l-4 border-yellow-500 rounded-sm rounded-tl-none rounded-bl-none">
             Sorry, you can't talk to yourself on babel chat. 😛
@@ -139,7 +142,11 @@ const MessageList: FC<MessageListProps> = ({
             )}
           </div>
         )}
-        {/* TODO show "welcome" CTA when there are no messages yet, e.g. "Nothing here yet... Introduce yourself and say hi!" */}
+        {emptyChat && (
+          <div className="px-2 md:px-3 py-3 text-sm text-gray-400">
+            Nothing here yet...say hi and introduce yourself!
+          </div>
+        )}
         {/* TODO show "warning!" message when there are no messages yet, and the user is convicted of being a spammer */}
         {!isBlocked &&
           messages?.map((message) => (
