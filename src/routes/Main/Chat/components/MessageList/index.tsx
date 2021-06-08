@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import cn from 'classnames';
 
 import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
@@ -11,8 +11,6 @@ import usePageVisibility from '../../../../../hooks/usePageVisibility';
 import Spinner from '../../../../../components/Spinner';
 import Icon from '../../../../../components/Icon';
 import Button from '../../../../../components/Button';
-import useCurrentUser from '../../../../../hooks/useCurrentUser';
-import { unblockUser } from '../../../../../utils/user';
 
 interface AuthorsMap {
   [id: string]: (User & { isSelf?: boolean }) | undefined | null;
@@ -25,6 +23,7 @@ interface MessageListProps {
   destUserId?: string;
   isBlocked?: boolean;
   isSpamReported?: boolean;
+  confirmToggleBlock: () => void;
 }
 
 const MessageList: FC<MessageListProps> = ({
@@ -34,8 +33,8 @@ const MessageList: FC<MessageListProps> = ({
   destUserId,
   isBlocked = false,
   isSpamReported = false,
+  confirmToggleBlock,
 }) => {
-  const { updateUser } = useCurrentUser();
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUserId);
   const isPageVisible = usePageVisibility();
@@ -66,13 +65,6 @@ const MessageList: FC<MessageListProps> = ({
 
     return map;
   }, [originUser, originChat, destUser, destUserId]);
-
-  const unblock = useCallback(() => {
-    if (originUser?.id && destUserId) {
-      unblockUser(originUser?.id, destUserId);
-      updateUser({ dateLastActive: getFirebaseTimestamp() });
-    }
-  }, [updateUser, originUser, destUserId]);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -140,7 +132,7 @@ const MessageList: FC<MessageListProps> = ({
             ) : (
               <>
                 This user has been blocked.{' '}
-                <Button variant="link" size="sm" onClick={unblock} inline>
+                <Button variant="link" size="sm" onClick={confirmToggleBlock} inline>
                   Unblock
                 </Button>
               </>

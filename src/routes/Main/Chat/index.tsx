@@ -170,6 +170,7 @@ const Chat: FC<ChatProps> = () => {
         destUserId={userId}
         isBlocked={isBlocked}
         isSpamReported={isSpamReported}
+        confirmToggleBlock={confirmToggleBlock}
       />
       <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
       <DialogConfirm
