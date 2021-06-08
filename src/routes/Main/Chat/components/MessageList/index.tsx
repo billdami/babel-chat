@@ -227,7 +227,7 @@ const MessageList: FC<MessageListProps> = ({
         )}
 
         {!isBlocked &&
-          messages?.map((message, index) => (
+          messages?.map((message) => (
             <div key={message.id} data-msg-id={message.id} className="px-2 md:px-3">
               <span
                 className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
