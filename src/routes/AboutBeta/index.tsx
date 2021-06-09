@@ -2,8 +2,10 @@ import React, { FC } from 'react';
 
 import Link from '../../components/Link';
 import Logo from '../../components/Svgs/Logos/Logo';
+import BetaBadge from '../../components/BetaBadge';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import { copyrightLine } from '../../constants/app';
+import Anchor from '../../components/Anchor';
 
 interface AboutBetaListProps {}
 
@@ -11,16 +13,47 @@ const AboutBeta: FC<AboutBetaListProps> = () => {
   useScrollToTop();
 
   return (
-    <div className="mx-auto mt-20 p-4">
-      <div className="w-full sm:w-116">
+    <div className="mx-auto my-auto p-4">
+      <div className="w-full sm:w-2/3 lg:w-1/2 mx-auto">
         <div className="flex justify-center">
-          <Link to="/" className="inline-block mb-4 md:mb-6 mt-2 md:mt-0">
-            <Logo className="h-20 md:h-24 max-w-full" />
-          </Link>
+          <div className="relative mt-4 mb-4 md:mb-6">
+            <Link to="/" className="inline-block">
+              <Logo className="h-20 md:h-24 max-w-full" />
+            </Link>
+            <BetaBadge className="-top-2 -right-4 md:-right-8" />
+          </div>
         </div>
         <div className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
           <h2 className="font-bold text-xl text-gray-600 mb-4">What is babel chat?</h2>
-          <p className="mb-4">TODO</p>
+          <p className="mb-4">
+            babel chat is a new, web-based chat app, that you can use to meet people from around the
+            world. It is{' '}
+            <strong className="font-bold">
+              100% free, anonymous, and requires no registration.
+            </strong>{' '}
+          </p>
+          <p className="mb-4">
+            babel chat is designed to be fast, easy-to-use, and work on any device, including mobile
+            phones, iPads and other tablets, and desktop PCs. It is capable of supporting thousands
+            of simultaneous users, so it will always be stable and available.
+          </p>
+          <p className="mb-4">
+            With intutive and fast search and filter features, you can easily find people you want
+            to chat with. babel chat features private, one-on-one chats only, where you won't get
+            lost in massive and noisy group chatrooms.
+          </p>
+          <h3 className="font-bold text-lg text-gray-600 mb-4">Beta Disclaimer</h3>
+          <p className="mb-4">
+            The current version of babel chat is "beta" software, which means it is new, and is
+            still being updated and improved all the time. Because of this, you may encounter the
+            occasional issue or missing feature. However, we encourage you to report any problems
+            you find, or send us suggestions for changes and new features. You can do so within the
+            app via the 'Give us feedback' option, or by contacting us on Twitter at{' '}
+            <Anchor target="_blank" href="https://twitter.com/babelChatOnline">
+              @babelChatOnline
+            </Anchor>
+            .
+          </p>
           <p className="mb-4">
             <Link to="/">&larr; Go to the homepage</Link>
           </p>
