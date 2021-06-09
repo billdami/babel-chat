@@ -1,5 +1,6 @@
 import React, {
   FC,
+  UIEvent as ReactUIEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -8,6 +9,7 @@ import React, {
   useState,
 } from 'react';
 import cn from 'classnames';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
 import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
@@ -19,7 +21,11 @@ import usePageVisibility from '../../../../../hooks/usePageVisibility';
 import Spinner from '../../../../../components/Spinner';
 import Icon from '../../../../../components/Icon';
 import Button from '../../../../../components/Button';
-import { MSG_LOAD_MORE_BTN_HEIGHT, MSG_PAGE_LIMIT } from '../../../../../constants/chat';
+import {
+  MSG_LOAD_MORE_BTN_HEIGHT,
+  MSG_PAGE_LIMIT,
+  MSG_SCROLLED_UP_THRESHOLD,
+} from '../../../../../constants/chat';
 
 interface AuthorsMap {
   [id: string]: (User & { isSelf?: boolean }) | undefined | null;
@@ -46,6 +52,7 @@ const MessageList: FC<MessageListProps> = ({
 }) => {
   const [limit, setLimit] = useState<number>(MSG_PAGE_LIMIT);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [isScrolledUp, setIsScrolledUp] = useState<boolean>(false);
 
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUserId, limit);
@@ -89,6 +96,17 @@ const MessageList: FC<MessageListProps> = ({
     return map;
   }, [originUser, originChat, destUser, destUserId]);
 
+  const onContainerScroll = useDebouncedCallback((event: ReactUIEvent<HTMLDivElement, UIEvent>) => {
+    const el = containerElement.current;
+    if (el) {
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      setIsScrolledUp(el.scrollTop + MSG_SCROLLED_UP_THRESHOLD < maxScroll);
+      // TODO (possibly) if scrolled to the very top (scrollTop <= MSG_LOAD_MORE_BTN_HEIGHT)
+      // and more messages can be loaded, trigger loading the previous page
+      // this would replace ths useIsVisible() logic for handling this
+    }
+  }, 250);
+
   const loadMore = useCallback(() => {
     if (canLoadMore) {
       setLimit(limit + MSG_PAGE_LIMIT);
@@ -127,17 +145,10 @@ const MessageList: FC<MessageListProps> = ({
   useLayoutEffect(() => {
     const el = containerElement.current;
     if (el) {
-      // TODO [BUG] this is being calculated AFTER the new message is appended,
-      // so the container is always scrolled up. need to calculate it before
-      // the new messages render...
-      // POSSIBLE SOLUTION: get the height of the added message elements to add to the threshold
-      // const isScrolledUp = el.scrollTop + MSG_SCROLLED_UP_THRESHOLD < el.scrollHeight - el.clientHeight;
-      const isScrolledUp = false;
-
       // scroll to the bottom when:
       //  - loading the initial list
       //  - new messages are added
-      //  - TODO: list is scrolled up
+      //  - the container is NOT scrolled up
       if (
         messages !== prevMessages &&
         messages?.length &&
@@ -173,10 +184,14 @@ const MessageList: FC<MessageListProps> = ({
         lastMessages.current = messages;
       }
     }
-  }, [prevMessages, messages, isLoadingMore]);
+  }, [prevMessages, messages, isLoadingMore, isScrolledUp]);
 
   return (
-    <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
+    <div
+      className="flex-1 flex flex-col overflow-y-auto"
+      ref={containerElement}
+      onScroll={onContainerScroll}
+    >
       <div className="py-1">
         {isSelf && (
           // TODO create <Alert>
