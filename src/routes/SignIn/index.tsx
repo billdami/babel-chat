@@ -22,6 +22,7 @@ import Radio from '../../components/Radio';
 import Select, { SelectOption } from '../../components/Select';
 import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
+import BetaBadge from '../../components/BetaBadge';
 import useAuth from '../../hooks/useAuth';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import { copyrightLine } from '../../constants/app';
@@ -132,7 +133,12 @@ const SignIn: FC<SignInListProps> = () => {
   return (
     <div className="mx-auto my-auto px-4 pt-4 pb-20 md:pb-4">
       <div className="w-full sm:w-116">
-        <Logo className="h-20 md:h-24 max-w-full mx-auto mb-4 md:mb-6 mt-2 md:mt-0" />
+        <div className="flex justify-center mx-auto mb-4 md:mb-6 mt-2 md:mt-0">
+          <div className="relative">
+            <Logo className="h-20 md:h-24 max-w-full" />
+            <BetaBadge className="-top-2 -right-4 md:-right-8" />
+          </div>
+        </div>
         <form onSubmit={onSubmit} className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
           <p className="mb-4 md:mb-6">
             <span className="text-gray-500 font-bold">babel chat</span> is free and completely

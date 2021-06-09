@@ -14,6 +14,7 @@ import Menu, { MenuContentProps } from '../../../../components/Menu';
 import MenuItem from '../../../../components/Menu/MenuItem';
 import DialogFeedback from '../../../../components/DialogFeedback';
 import DialogConfirm from '../../../../components/DialogConfirm';
+import BetaBadge from '../../../../components/BetaBadge';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
 import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
@@ -136,9 +137,16 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   return (
     <div className={cn('flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 text-white">
-        <Link to="/main" onClick={closeDrawer} className="py-1 px-2 bg-white border border-white">
-          <LogoIcon className="h-8" />
-        </Link>
+        <div className="relative flex-shrink-0">
+          <Link
+            to="/main"
+            onClick={closeDrawer}
+            className="block py-1 px-2 bg-white border border-white"
+          >
+            <LogoIcon className="h-8" />
+          </Link>
+          <BetaBadge className="-top-1 -right-6" target="_blank" small />
+        </div>
         <Menu<UserMenuProps>
           isOpen={isUserMenuOpen}
           menuClassName="py-2 text-sm"
