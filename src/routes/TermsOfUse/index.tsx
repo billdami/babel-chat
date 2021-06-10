@@ -8,9 +8,9 @@ import Logo from '../../components/Svgs/Logos/Logo';
 import { copyrightLine } from '../../constants/app';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
-interface TermsOfServiceListProps {}
+interface TermsOfServiceProps {}
 
-const TermsOfService: FC<TermsOfServiceListProps> = () => {
+const TermsOfService: FC<TermsOfServiceProps> = () => {
   useScrollToTop();
 
   return (

@@ -8,9 +8,9 @@ import useScrollToTop from '../../hooks/useScrollToTop';
 import { copyrightLine } from '../../constants/app';
 import Anchor from '../../components/Anchor';
 
-interface AboutBetaListProps {}
+interface AboutProps {}
 
-const AboutBeta: FC<AboutBetaListProps> = () => {
+const About: FC<AboutProps> = () => {
   useScrollToTop();
 
   return (
@@ -70,4 +70,4 @@ const AboutBeta: FC<AboutBetaListProps> = () => {
   );
 };
 
-export default AboutBeta;
+export default About;

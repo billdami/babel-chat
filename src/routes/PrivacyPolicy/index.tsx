@@ -8,9 +8,9 @@ import Logo from '../../components/Svgs/Logos/Logo';
 import { copyrightLine } from '../../constants/app';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
-interface PrivacyPolicyListProps {}
+interface PrivacyPolicyProps {}
 
-const PrivacyPolicy: FC<PrivacyPolicyListProps> = () => {
+const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
   useScrollToTop();
 
   return (

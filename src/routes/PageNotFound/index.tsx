@@ -7,9 +7,9 @@ import BetaBadge from '../../components/BetaBadge';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import { copyrightLine } from '../../constants/app';
 
-interface PageNotFoundListProps {}
+interface PageNotFoundProps {}
 
-const PageNotFound: FC<PageNotFoundListProps> = () => {
+const PageNotFound: FC<PageNotFoundProps> = () => {
   useScrollToTop();
 
   // TODO make cooler 😎

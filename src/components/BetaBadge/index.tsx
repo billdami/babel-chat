@@ -13,7 +13,7 @@ interface BetaBadgeProps {
 const BetaBadge: FC<BetaBadgeProps> = ({ className = '', small = false, ...rest }) => {
   return !!envVar('IS_BETA') ? (
     <Link
-      to="/about-beta"
+      to="/about"
       className={cn(
         'absolute rounded bg-green-400 text-white text-xs font-bold ring-green-300 focus:outline-none focus:ring-4 focus:ring-opacity-50',
         className,

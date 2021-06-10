@@ -29,7 +29,7 @@ import { copyrightLine } from '../../constants/app';
 import { envVar } from '../../utils/env';
 import { ReCaptchaError, ReCaptchaLoadError, SignInError } from '../../errors/auth';
 
-interface SignInListProps {}
+interface SignInProps {}
 
 const ageOptions = [
   { value: UNSPECIFIED, label: 'Prefer not to say' },
@@ -46,7 +46,7 @@ const countryOptions: SelectOption<Country>[] = [
   ...COUNTRIES.filter((c) => !c.prioritized).map((c) => ({ ...c, group: 'All countries' })),
 ];
 
-const SignIn: FC<SignInListProps> = () => {
+const SignIn: FC<SignInProps> = () => {
   useScrollToTop();
   const { isSigningIn, signIn } = useAuth();
 
