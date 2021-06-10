@@ -54,6 +54,8 @@ const AboutBeta: FC<AboutBetaListProps> = () => {
             </Anchor>
             .
           </p>
+          <h3 className="font-bold text-lg text-gray-600 mb-4">Thanks!</h3>
+          <p className="mb-4">Thank you for using babel chat, and we hope you enjoy chatting!</p>
           <p className="mb-4">
             <Link to="/">&larr; Go to the homepage</Link>
           </p>
