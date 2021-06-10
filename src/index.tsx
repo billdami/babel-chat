@@ -3,6 +3,7 @@ import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './components/App';
 import { ProvideAuth } from './hooks/useAuth';
@@ -15,7 +16,9 @@ ReactDOM.render(
     <ProvideAuth>
       <ProvideMedia>
         <ProvideDrawer>
-          <App />
+          <Router>
+            <App />
+          </Router>
         </ProvideDrawer>
       </ProvideMedia>
     </ProvideAuth>
