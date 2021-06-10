@@ -4,6 +4,7 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import App from './components/App';
 import { ProvideAuth } from './hooks/useAuth';
@@ -13,15 +14,17 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ProvideAuth>
-      <ProvideMedia>
-        <ProvideDrawer>
-          <Router>
-            <App />
-          </Router>
-        </ProvideDrawer>
-      </ProvideMedia>
-    </ProvideAuth>
+    <HelmetProvider>
+      <ProvideAuth>
+        <ProvideMedia>
+          <ProvideDrawer>
+            <Router>
+              <App />
+            </Router>
+          </ProvideDrawer>
+        </ProvideMedia>
+      </ProvideAuth>
+    </HelmetProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

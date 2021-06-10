@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 import Anchor from '../../components/Anchor';
 import BetaBadge from '../../components/BetaBadge';
@@ -14,6 +15,9 @@ const TermsOfService: FC<TermsOfServiceListProps> = () => {
 
   return (
     <div className="w-full sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 mx-auto p-4">
+      <Helmet>
+        <title>Terms of Use | babel chat</title>
+      </Helmet>
       <div className="mt-4 md:mt-10">
         <div className="flex justify-center">
           <div className="relative mt-4 mb-4 md:mb-6">

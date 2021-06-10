@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 import useAuth from '../../hooks/useAuth';
 import useIsAppOffline from '../../hooks/useIsAppOffline';
@@ -13,16 +14,22 @@ import ProtectedRoute from '../ProtectedRoute';
 import UnprotectedRoute from '../UnprotectedRoute';
 import Splash from '../Splash';
 import AppOffline from '../AppOffline';
+import usePageTracking from '../../hooks/usePageTracking';
 
 interface AppProps {}
 
 const App: FC<AppProps> = () => {
+  usePageTracking();
+
   const { isSessionLoading, isSigningOut } = useAuth();
   const { isAppOffline, isAppOfflineLoading } = useIsAppOffline();
   const isSplashVisible = isAppOfflineLoading || isSessionLoading || isSigningOut;
 
   return (
     <div className="App h-full min-h-full max-h-full flex">
+      <Helmet>
+        <title>babel chat - Meet and chat with people from around the world.</title>
+      </Helmet>
       {isSplashVisible ? (
         <Splash />
       ) : isAppOffline ? (

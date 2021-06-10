@@ -1,5 +1,6 @@
 import 'firebase/database';
 import 'firebase/auth';
+import 'firebase/analytics';
 
 import { useRef } from 'react';
 import firebase from 'firebase/app';

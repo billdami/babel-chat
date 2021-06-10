@@ -1,5 +1,6 @@
 import 'firebase/database';
 import 'firebase/auth';
+import 'firebase/analytics';
 
 import firebase from 'firebase/app';
 import React, {
@@ -56,6 +57,7 @@ const useProvideAuth = () => {
     setIsSigningIn(true);
 
     try {
+      const analytics = firebase.analytics();
       const captchaResult = await fetch(`${envVar('FB_FUNCTIONS_BASE_URL')}/validateCaptcha`, {
         method: 'POST',
         body: new URLSearchParams({ token: captchaToken }),
@@ -73,6 +75,12 @@ const useProvideAuth = () => {
         logUser(userCred.user.uid);
         setIsSigningIn(false);
         setUser(userCred.user);
+
+        // log GA events
+        analytics.logEvent('login', { method: 'Firebase Anonymous' });
+        analytics.setUserId(userCred.user.uid);
+        analytics.setUserProperties({ ...details });
+
         return userCred.user;
       } else {
         throw new SignInError();
@@ -85,6 +93,7 @@ const useProvideAuth = () => {
 
   const signOut = useCallback(async (shouldDelete: boolean = true) => {
     const uid = firebase.auth().currentUser?.uid;
+    const analytics = firebase.analytics();
 
     try {
       setIsSigngingOut(true);
@@ -98,6 +107,8 @@ const useProvideAuth = () => {
       }
 
       await firebase.auth().signOut();
+      // log GA event
+      analytics.logEvent('logout');
       setUser(null);
       setHasSignedOut(true);
     } catch (err) {
