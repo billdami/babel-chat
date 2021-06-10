@@ -143,7 +143,8 @@ const SignIn: FC<SignInProps> = () => {
           <p className="mb-4 md:mb-6">
             <span className="text-gray-500 font-bold">babel chat</span> is free and completely
             anonymous. If you’d like, you can provide some basic info below, but it is{' '}
-            <strong className="font-bold">100% optional.</strong>
+            <strong className="font-bold">100% optional.</strong>&nbsp;&nbsp;
+            <Link to="/about">Learn more</Link>
           </p>
 
           <FormControl label="Nickname" htmlFor="signup-nickname">

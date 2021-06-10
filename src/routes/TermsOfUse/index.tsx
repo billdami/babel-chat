@@ -316,7 +316,7 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
             of charge, we will not be liable for any loss or damage of any nature.
           </p>
         </div>
-        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="pb-4 text-sm text-gray-400 text-center">{copyrightLine}</div>
       </div>
     </div>
   );

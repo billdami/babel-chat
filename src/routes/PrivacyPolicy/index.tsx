@@ -249,7 +249,7 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
             will do our best efforts to promptly remove such information from our records.
           </p>
         </div>
-        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="pb-4 text-sm text-gray-400 text-center">{copyrightLine}</div>
       </div>
     </div>
   );
