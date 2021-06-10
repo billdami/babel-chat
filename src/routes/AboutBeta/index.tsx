@@ -13,8 +13,8 @@ const AboutBeta: FC<AboutBetaListProps> = () => {
   useScrollToTop();
 
   return (
-    <div className="mx-auto my-auto p-4">
-      <div className="w-full sm:w-2/3 lg:w-1/2 mx-auto">
+    <div className="w-full sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 mx-auto p-4">
+      <div className="mt-4 md:mt-10">
         <div className="flex justify-center">
           <div className="relative mt-4 mb-4 md:mb-6">
             <Link to="/" className="inline-block">

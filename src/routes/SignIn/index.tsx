@@ -132,8 +132,8 @@ const SignIn: FC<SignInListProps> = () => {
 
   return (
     <div className="mx-auto my-auto px-4 pt-4 pb-20 md:pb-4">
-      <div className="w-full sm:w-116">
-        <div className="flex justify-center mx-auto mb-4 md:mb-6 mt-2 md:mt-0">
+      <div className="w-full sm:w-116 mt-8 md:mt-0">
+        <div className="flex justify-center mx-auto mb-4 md:mb-6 mt-4 md:mt-0">
           <div className="relative">
             <Logo className="h-20 md:h-24 max-w-full" />
             <BetaBadge className="-top-2 -right-4 md:-right-8" />
