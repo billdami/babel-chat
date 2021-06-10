@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 import DialogConfirm from '../../../components/DialogConfirm';
 import UserNickname from '../../../components/UserNickname';
@@ -148,6 +149,11 @@ const Chat: FC<ChatProps> = () => {
 
   return (
     <div className="Chat flex flex-col flex-1 min-w-0">
+      <Helmet>
+        <title>
+          {userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''}chat | babel chat
+        </title>
+      </Helmet>
       <MessageHeader
         userDetails={userDetails}
         destUser={destUser}

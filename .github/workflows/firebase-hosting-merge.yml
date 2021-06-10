@@ -10,6 +10,7 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     env:
+      REACT_APP_IS_BETA: ${{ secrets.REACT_APP_IS_BETA }}
       REACT_APP_FB_PROJECT_ID: ${{ secrets.REACT_APP_FB_PROJECT_ID }}
       REACT_APP_FB_APP_ID: ${{ secrets.REACT_APP_FB_APP_ID }}
       REACT_APP_FB_API_KEY: ${{ secrets.REACT_APP_FB_API_KEY }}

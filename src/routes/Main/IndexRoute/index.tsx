@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
@@ -29,6 +30,9 @@ const Index: FC<IndexProps> = () => {
 
   return (
     <div className="Index flex flex-col flex-1">
+      <Helmet>
+        <title>Dashboard | babel chat</title>
+      </Helmet>
       <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
         <Button
           onClick={toggleDrawer}

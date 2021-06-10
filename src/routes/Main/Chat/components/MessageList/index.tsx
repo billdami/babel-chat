@@ -1,5 +1,6 @@
 import React, {
   FC,
+  UIEvent as ReactUIEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -8,6 +9,7 @@ import React, {
   useState,
 } from 'react';
 import cn from 'classnames';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
 import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
@@ -19,7 +21,11 @@ import usePageVisibility from '../../../../../hooks/usePageVisibility';
 import Spinner from '../../../../../components/Spinner';
 import Icon from '../../../../../components/Icon';
 import Button from '../../../../../components/Button';
-import { MSG_LOAD_MORE_BTN_HEIGHT, MSG_PAGE_LIMIT } from '../../../../../constants/chat';
+import {
+  MSG_LOAD_MORE_BTN_HEIGHT,
+  MSG_PAGE_LIMIT,
+  MSG_SCROLLED_UP_THRESHOLD,
+} from '../../../../../constants/chat';
 
 interface AuthorsMap {
   [id: string]: (User & { isSelf?: boolean }) | undefined | null;
@@ -46,6 +52,7 @@ const MessageList: FC<MessageListProps> = ({
 }) => {
   const [limit, setLimit] = useState<number>(MSG_PAGE_LIMIT);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [isScrolledUp, setIsScrolledUp] = useState<boolean>(false);
 
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUserId, limit);
@@ -57,11 +64,6 @@ const MessageList: FC<MessageListProps> = ({
   const isFirstMount = useRef<boolean>(true);
   const lastMessages = useRef<ChatMessageRecord[] | null | undefined>(messages);
   const containerElement = useRef<HTMLDivElement>(null);
-
-  // TODO automatic load more on scroll up
-  // const loadMoreElement = useRef<HTMLDivElement>(null);
-  // const isLoadMoreVisible = useIsVisible(loadMoreElement.current);
-  // const [debouncedIsLoadMoreVisible] = useDebounce(isLoadMoreVisible, 250);
 
   const isSelf = !!originUser && !!destUser && originUser.id === destUser.id;
   const emptyChat = !isSelf && !isBlocked && !isLoading && !messages?.length;
@@ -90,18 +92,27 @@ const MessageList: FC<MessageListProps> = ({
   }, [originUser, originChat, destUser, destUserId]);
 
   const loadMore = useCallback(() => {
-    if (canLoadMore) {
+    if (canLoadMore && !isLoading) {
+      // TODO store a temp copy of the current messages before loading more
+      // which will be rendering while loading the next page, to avoid
+      // the blank white page flicker that happens when the `messages` is empty
+      // once the query/limit is updated
       setLimit(limit + MSG_PAGE_LIMIT);
       setIsLoadingMore(true);
     }
-  }, [canLoadMore, limit]);
+  }, [canLoadMore, isLoading, limit]);
 
-  // TODO automatic load more on scroll up
-  // useEffect(() => {
-  //   if (!isLoading && !isLoadingMore && debouncedIsLoadMoreVisible) {
-  //     loadMore();
-  //   }
-  // }, [isLoading, isLoadingMore, debouncedIsLoadMoreVisible, loadMore]);
+  const onContainerScroll = useDebouncedCallback((event: ReactUIEvent<HTMLDivElement, UIEvent>) => {
+    const el = containerElement.current;
+    if (el) {
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      setIsScrolledUp(el.scrollTop + MSG_SCROLLED_UP_THRESHOLD < maxScroll);
+      // when scrolled all the way to the top, auto load older messages, if there are any
+      if (el.scrollTop === 0 && canLoadMore && !isLoading && !isLoadingMore) {
+        loadMore();
+      }
+    }
+  }, 300);
 
   useEffect(() => {
     // if new messages were added, update the user's dateLastSeen to mark them as "read"
@@ -127,31 +138,21 @@ const MessageList: FC<MessageListProps> = ({
   useLayoutEffect(() => {
     const el = containerElement.current;
     if (el) {
-      // TODO [BUG] this is being calculated AFTER the new message is appended,
-      // so the container is always scrolled up. need to calculate it before
-      // the new messages render...
-      // POSSIBLE SOLUTION: get the height of the added message elements to add to the threshold
-      // const isScrolledUp = el.scrollTop + MSG_SCROLLED_UP_THRESHOLD < el.scrollHeight - el.clientHeight;
-      const isScrolledUp = false;
-
-      // scroll to the bottom when:
-      //  - loading the initial list
-      //  - new messages are added
-      //  - TODO: list is scrolled up
-      if (
-        messages !== prevMessages &&
-        messages?.length &&
-        (!isScrolledUp || isFirstMount.current)
-      ) {
-        const msgsDiff = messages.length - (lastMessages.current?.length ?? 0);
-
-        // dont scroll down when loading older messages
-        if (!isLoadingMore) {
+      // scroll when loading the initial list or new messages are added
+      if (messages !== prevMessages && messages?.length) {
+        if (!isLoadingMore && (!isScrolledUp || isFirstMount.current)) {
+          // scroll to the bottom on initial mount and when not loading older messages
+          // and not when the container is scrolled up
           el.scrollTo({
             top: el.scrollHeight - el.clientHeight,
-            behavior: isFirstMount.current ? 'auto' : 'smooth',
+            // TODO try to allow 'smooth' behavior when isFirstMount is false again
+            // there is a race condition bug of some kind that makes the scroll to
+            // bottom happen too late when smooth scrolling when recieving new messages
+            behavior: 'auto',
           });
-        } else {
+        } else if (isLoadingMore) {
+          // maintain the current scroll position when older messages are loaded
+          const msgsDiff = messages.length - (lastMessages.current?.length ?? 0);
           // get the first message before the new messages that were prepended
           const headMsg = msgsDiff > 0 && messages[msgsDiff];
 
@@ -161,8 +162,7 @@ const MessageList: FC<MessageListProps> = ({
               `[data-msg-id="${headMsg.id}"]`
             );
             if (msgEl) {
-              containerElement.current.scrollTop =
-                msgEl.offsetTop - containerElement.current.offsetTop - MSG_LOAD_MORE_BTN_HEIGHT;
+              el.scrollTop = msgEl.offsetTop - el.offsetTop - MSG_LOAD_MORE_BTN_HEIGHT;
             }
           }
           // when older messages are done loading, reset the flag
@@ -173,10 +173,14 @@ const MessageList: FC<MessageListProps> = ({
         lastMessages.current = messages;
       }
     }
-  }, [prevMessages, messages, isLoadingMore]);
+  }, [prevMessages, messages, isLoadingMore, isScrolledUp]);
 
   return (
-    <div className="flex-1 flex flex-col overflow-y-auto" ref={containerElement}>
+    <div
+      className="flex-1 flex flex-col overflow-y-auto"
+      ref={containerElement}
+      onScroll={onContainerScroll}
+    >
       <div className="py-1">
         {isSelf && (
           // TODO create <Alert>
@@ -210,7 +214,6 @@ const MessageList: FC<MessageListProps> = ({
           </div>
         )}
 
-        {/* TODO when "load more" button is visible, debounce a automatic loading of more messages */}
         {canLoadMore && (
           <div className="px-2 md:px-3 py-3">
             <Button
