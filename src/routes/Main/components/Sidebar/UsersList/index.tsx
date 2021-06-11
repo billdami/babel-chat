@@ -116,6 +116,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
               className="bg-opacity-60 focus:bg-opacity-100 pr-8"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              data-users-search-input
               fullWidth
             />
             {!!searchTerm.length && (
@@ -136,6 +137,8 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
               title={isFiltersOpen ? 'Hide advanced filters' : 'Show advanced filters'}
               onClick={toggleFiltersPanel}
               isActive={isFiltersOpen}
+              aria-expanded={isFiltersOpen}
+              data-users-filters-toggle
             >
               <Icon name="filter" size="sm" className="inline" title="Advanced filters" />
               {!!filters.length && (

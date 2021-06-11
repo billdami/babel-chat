@@ -52,12 +52,29 @@ const Index: FC<IndexProps> = () => {
 
   const openUsersSearch = useCallback(() => {
     openAllUsers();
-    // TODO focus on users list search input
+    // TODO this isn't great.. see if we can find a better way
+    setTimeout(
+      () => document.querySelector<HTMLInputElement>('[data-users-search-input="true"]')?.focus(),
+      1
+    );
   }, [openAllUsers]);
 
   const openUsersFilters = useCallback(() => {
     openAllUsers();
-    // TODO open filters pane and focus "add filter" button
+    // TODO this isn't great.. see if we can find a better way
+    setTimeout(() => {
+      const toggle = document.querySelector<HTMLButtonElement>(
+        '[data-users-filters-toggle="true"][aria-expanded="false"]'
+      );
+
+      // if the filters toggle is NOT expanded, expand it
+      if (toggle) {
+        toggle.click();
+      }
+
+      // then focus on the Add a filter... button
+      document.querySelector<HTMLButtonElement>('[data-users-filters-add="true"]')?.focus();
+    }, 1);
   }, [openAllUsers]);
 
   const openGiveFeedback = useCallback(() => {
@@ -158,11 +175,11 @@ const Index: FC<IndexProps> = () => {
               </div>
               <div className="mb-6 2xl:mb-2 p-4 rounded-lg bg-gray-50">
                 <h3 className="text-xl text-gray-600 mb-2">New here?</h3>
-                <p className="mb-4 text-gray-800">
+                <p className="mb-4 text-gray-800 max-w-3xl">
                   Welcome to the babel chat community! We hope you enjoy your stay. Here's a few
                   tips and tricks to make sure you have the best possible chat experience:
                 </p>
-                <ul className="list-disc pl-8 mb-4 text-gray-800">
+                <ul className="list-disc pl-8 mb-4 text-gray-800 max-w-3xl">
                   <li className="mb-1">
                     <strong className="font-bold">It is completely anonymous.</strong> babel chat
                     does not require you to provide any personal information, and has no
