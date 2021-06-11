@@ -9,6 +9,7 @@ import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import Icon from '../../../components/Icon';
 import Link from '../../../components/Link';
+import RelativeTime from '../../../components/RelativeTime';
 import Spinner from '../../../components/Spinner';
 import LogoIcon from '../../../components/Svgs/Logos/Icon';
 import UserAvatar from '../../../components/UserAvatar';
@@ -246,13 +247,17 @@ const Index: FC<IndexProps> = () => {
                         <div className="relative flex-shrink-0 mr-2">
                           <UserAvatar user={user} className="border border-gray-100" />
                         </div>
-                        <div className="truncate">
-                          <UserNickname
-                            user={user}
-                            isCurrentUser={user.id === authUser?.uid}
-                            className="text-gray-800"
-                          />
-                          {/* TODO show relative date signed in right-aligned, e.g. "5min ago" */}
+                        <div className="truncate flex-1">
+                          <div className="flex justify-between items-start">
+                            <UserNickname
+                              user={user}
+                              isCurrentUser={user.id === authUser?.uid}
+                              className="text-gray-800"
+                            />
+                            <div className="ml-2 text-xs text-gray-400 whitespace-nowrap">
+                              <RelativeTime date={user.dateSignedIn} />
+                            </div>
+                          </div>
                           <UserDetails user={user} className="text-gray-400 text-sm" />
                         </div>
                       </RouterLink>
@@ -279,7 +284,7 @@ const Index: FC<IndexProps> = () => {
                       <RouterLink
                         key={chat.id}
                         className="relative
-                          block flex-1  min-w-0
+                          block flex-1 min-w-0
                           px-2 py-1
                           text-left
                           rounded
@@ -295,17 +300,24 @@ const Index: FC<IndexProps> = () => {
                               size={20}
                               className="flex-shrink-0 mr-2 border border-gray-100"
                             />
-                            <UserNickname user={chat.toUserDetails} className="text-gray-800" />
-                          </div>
-                          {/* TODO show relative date signed in right-aligned, e.g. "5min ago" */}
-                          {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
-                            <Badge
-                              className="flex-shrink-0 ml-1"
-                              tooltip="There are unread message(s)"
-                              size="md"
-                              pulse={false}
+                            <UserNickname
+                              user={chat.toUserDetails}
+                              className="flex-1 text-gray-800"
                             />
-                          )}
+                          </div>
+                          <div className="flex items-center">
+                            <div className="ml-2 text-xs text-gray-400 whitespace-nowrap">
+                              <RelativeTime date={chat.dateLastMessage} />
+                            </div>
+                            {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
+                              <Badge
+                                className="flex-shrink-0 ml-1"
+                                tooltip="There are unread message(s)"
+                                size="md"
+                                pulse={false}
+                              />
+                            )}
+                          </div>
                         </div>
                       </RouterLink>
                     ))}
