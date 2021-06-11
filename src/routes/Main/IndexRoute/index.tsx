@@ -27,10 +27,6 @@ const Index: FC<IndexProps> = () => {
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
   const [isSignOutConfirmOpen, setIsSignOutConfirmOpen] = useState<boolean>(false);
 
-  const openGiveFeedback = useCallback(() => {
-    setIsFeedbackDialogOpen(true);
-  }, []);
-
   const openConfirmSignOut = useCallback(() => {
     setIsSignOutConfirmOpen(true);
   }, []);
@@ -44,11 +40,29 @@ const Index: FC<IndexProps> = () => {
     signOut();
   }, [closeConfirmSignOut, signOut]);
 
-  const showAllUsers = useCallback(() => {
+  const openAllUsers = useCallback(() => {
     openDrawer();
     updateTab('tab-users');
-    // TODO focus on users list search input
   }, [openDrawer, updateTab]);
+
+  const openAllChats = useCallback(() => {
+    openDrawer();
+    updateTab('tab-chats');
+  }, [openDrawer, updateTab]);
+
+  const openUsersSearch = useCallback(() => {
+    openAllUsers();
+    // TODO focus on users list search input
+  }, [openAllUsers]);
+
+  const openUsersFilters = useCallback(() => {
+    openAllUsers();
+    // TODO open filters pane and focus "add filter" button
+  }, [openAllUsers]);
+
+  const openGiveFeedback = useCallback(() => {
+    setIsFeedbackDialogOpen(true);
+  }, []);
 
   return (
     <div className="Index flex flex-col flex-1">
@@ -78,18 +92,18 @@ const Index: FC<IndexProps> = () => {
       </div>
       <div className="flex-1 flex overflow-y-auto">
         <div className="flex-1 flex flex-col">
-          <div className="flex-1">
-            <div>
-              <div className="mx-4 mt-4 mb-6 py-4 pr-8 bg-gradient-to-l from-green-200 rounded-r-lg">
+          <div className="flex-1 2xl:flex">
+            <div className="2xl:w-2/3 mx-4 mt-4">
+              <div className="mb-6 py-4 pr-8 bg-gradient-to-l from-green-200 rounded-r-lg">
                 <div className="text-right text-sm">
                   Signed in as {!!user && <UserNickname user={user} className="inline" />} (
                   <Button variant="link" size="sm" onClick={openConfirmSignOut} inline>
-                    Sign out
+                    sign out
                   </Button>
                   )
                 </div>
                 <div className="relative flex justify-end py-4">
-                  {/* TODO subtle looping floating animation w/CSS animations */}
+                  {/* TODO subtle looping floating/bobbing animation w/CSS animations */}
                   <LogoIcon className="h-40 opacity-50" />
                   <div className="absolute inset-0 py-8">
                     <h1 className="text-4xl font-light mb-2">
@@ -102,42 +116,95 @@ const Index: FC<IndexProps> = () => {
                     <h2 className="text-lg text-gray-500 mb-6">
                       Meet and chat with people from around the world.
                     </h2>
-                    <Button variant="primary" size="md" onClick={showAllUsers}>
-                      <Icon name="magnifying-glass" size="sm" className="inline-block" /> Search
-                      users
-                    </Button>
+                    {/* TODO put social/share/donate widgets here */}
                   </div>
                 </div>
               </div>
-              {/* 2nd row */}
-              <div className="flex px-2">
+              <div className="flex mb-2">
                 <div className="w-1/3">
-                  <div className="px-2 mb-4">
-                    <h3 className="text-xl text-gray-600">New here?</h3>
+                  <div className="mb-4 mr-4">
+                    {/* TODO create <TileButton> */}
+                    <button
+                      className="w-full px-4 py-8 flex flex-col items-center bg-white text-gray-500 font-bold border border-gray-100 shadow hover:shadow-md rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
+                      onClick={openUsersSearch}
+                    >
+                      <Icon name="magnifying-glass" size="lg" className="mb-4" />
+                      Search for users
+                    </button>
                   </div>
                 </div>
                 <div className="w-1/3">
-                  <div className="px-2 mb-4">
-                    <h3 className="text-xl text-gray-600">Heading 2</h3>
+                  <div className="mb-4 mr-4">
+                    <button
+                      className="w-full px-4 py-8 flex flex-col items-center bg-white text-gray-500 font-bold border border-gray-100 shadow hover:shadow-md rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
+                      onClick={openUsersFilters}
+                    >
+                      <Icon name="filter" size="lg" className="mb-4" />
+                      Add advanced filters
+                    </button>
                   </div>
                 </div>
                 <div className="w-1/3">
-                  <div className="px-2 mb-4">
-                    <h3 className="text-xl text-gray-600">Heading 3</h3>
+                  <div className="mb-4">
+                    <button
+                      className="w-full px-4 py-8 flex flex-col items-center bg-white text-gray-500 font-bold border border-gray-100 shadow hover:shadow-md rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
+                      onClick={openGiveFeedback}
+                    >
+                      <Icon name="message-pen" size="lg" className="mb-4" />
+                      Give us feedback
+                    </button>
                   </div>
                 </div>
               </div>
-              {/* 3rd row */}
-              <div className="flex p-4 mx-4 bg-gray-50 rounded">
-                <div className="w-1/2">
-                  <div className="px-2">
-                    <h3 className="">Newest users</h3>
-                  </div>
+              <div className="mb-6 2xl:mb-2 p-4 rounded-lg bg-gray-50">
+                <h3 className="text-xl text-gray-600 mb-2">New here?</h3>
+                <p className="mb-4 text-gray-800">
+                  Welcome to the babel chat community! We hope you enjoy your stay. Here's a few
+                  tips and tricks to make sure you have the best possible chat experience:
+                </p>
+                <ul className="list-disc pl-8 mb-4 text-gray-800">
+                  <li className="mb-1">
+                    <strong className="font-bold">It is completely anonymous.</strong> babel chat
+                    does not require you to provide any personal information, and has no
+                    registration process. Some users choose to provide some very basic information
+                    such as age and gender, but this is and will always be{' '}
+                    <strong className="font-bold">100% optional</strong>.
+                  </li>
+                  <li className="mb-1">
+                    <strong className="font-bold">Find people easily.</strong> Use the{' '}
+                    <Icon name="filter" size="sm" className="inline-block text-gray-400" />{' '}
+                    "Advanced filters" search feature to only show users from certain countries, age
+                    ranges and more. (You can even add multiple filters of the same type to broaden
+                    your search!)
+                  </li>
+                  <li className="mb-1">
+                    <strong className="font-bold">Chat everywhere.</strong> babel chat is designed
+                    to work on any device, including mobile phones, iPads and other tablets, and
+                    desktop PCs. So you can take babel chat everywhere you go!
+                  </li>
+                  <li className="mb-1">
+                    <strong className="font-bold">Be safe!</strong> Never give out detailed personal
+                    information to complete strangers. Don’t open links unless you are absolutely
+                    sure it is a trusted and legitimate website.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="my-4 mr-4 ml-4 flex 2xl:block 2xl:flex-1">
+              <div className="mb-8 w-1/2 2xl:w-auto mr-2 2xl:mr-0">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl text-gray-600">Newest users</h3>
+                  <Button variant="link" size="sm" onClick={openAllUsers}>
+                    View all
+                  </Button>
                 </div>
-                <div className="w-1/2">
-                  <div className="px-2">
-                    <h3 className="">Latest chats</h3>
-                  </div>
+              </div>
+              <div className="mb-8 w-1/2 2xl:w-auto ml-2 2xl:ml-0">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl text-gray-600">Latest chats</h3>
+                  <Button variant="link" size="sm" onClick={openAllChats}>
+                    View all
+                  </Button>
                 </div>
               </div>
             </div>
