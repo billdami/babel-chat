@@ -272,7 +272,9 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
           />
         ))}
         {!sortedChats.length && !isLoading && (
-          <div className="px-3 py-8 text-gray-400 text-center text-sm">No chats found 😿</div>
+          <div className="px-3 py-8 text-gray-400 text-center text-sm">
+            You don't have any open chats 😿
+          </div>
         )}
         {isLoading && <Spinner className="mx-3 my-2" />}
       </ul>

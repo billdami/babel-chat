@@ -50,3 +50,11 @@ export const useChats = (userId: string | undefined) => {
   const ref = userId ? db.current.ref(`chats/${userId}`) : null;
   return useListVals<Chat, 'id', 'ref'>(ref, chatOptions);
 };
+
+export const useLatestChats = (userId: string | undefined, limit: number = 5) => {
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const query = userId
+    ? db.current.ref(`chats/${userId}`).orderByChild('dateLastMessage').limitToLast(limit)
+    : null;
+  return useListVals<Chat, 'id', 'ref'>(query, chatOptions);
+};

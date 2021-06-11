@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link as RouterLink } from 'react-router-dom';
 
 import Badge from '../../../components/Badge';
 import BetaBadge from '../../../components/BetaBadge';
@@ -8,21 +9,28 @@ import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import Icon from '../../../components/Icon';
 import Link from '../../../components/Link';
+import Spinner from '../../../components/Spinner';
 import LogoIcon from '../../../components/Svgs/Logos/Icon';
+import UserAvatar from '../../../components/UserAvatar';
+import UserDetails from '../../../components/UserDetails';
 import UserNickname from '../../../components/UserNickname';
 import { copyrightLine } from '../../../constants/app';
 import useAuth from '../../../hooks/useAuth';
+import { useLatestChats } from '../../../hooks/useChatRecord';
 import useCurrentUser from '../../../hooks/useCurrentUser';
 import useDrawer from '../../../hooks/useDrawer';
 import useNotifications from '../../../hooks/useNotifications';
+import { useNewestUsers } from '../../../hooks/useUserRecord';
 
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
-  const { signOut } = useAuth();
+  const { signOut, user: authUser } = useAuth();
   const { user } = useCurrentUser();
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
   const { numUnread } = useNotifications();
+  const [newestUsers, isLoadingUsers] = useNewestUsers();
+  const [latestChats, isLoadingChats] = useLatestChats(authUser?.uid);
 
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
   const [isSignOutConfirmOpen, setIsSignOutConfirmOpen] = useState<boolean>(false);
@@ -212,21 +220,101 @@ const Index: FC<IndexProps> = () => {
               </div>
             </div>
             <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
-              <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto lg:mr-2 2xl:mr-0">
-                <div className="flex justify-between lg:justify-start 2xl:justify-between items-center mb-4">
+              <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto max-w-md lg:mr-2 2xl:mr-0">
+                <div className="flex justify-between sm:justify-start 2xl:justify-between items-center mb-4">
                   <h3 className="text-xl text-gray-600 mr-2">Newest users</h3>
+                  {/* TODO if on desktop, and users tab is already open, show a tooltip on click or something */}
                   <Button variant="link" size="sm" onClick={openAllUsers}>
                     View all
                   </Button>
                 </div>
+                {/* TODO do reverse() in a useMemo */}
+                {!!newestUsers?.length && (
+                  <div className="-ml-2">
+                    {newestUsers?.reverse().map((user) => (
+                      <RouterLink
+                        key={user.id}
+                        className="flex items-center
+                          w-full
+                          px-2 py-1
+                          text-left
+                          rounded
+                          hover:bg-opacity-50 hover:bg-gray-200
+                          focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+                        to={`/main/chat/${user.id}`}
+                      >
+                        <div className="relative flex-shrink-0 mr-2">
+                          <UserAvatar user={user} className="border border-gray-100" />
+                        </div>
+                        <div className="truncate">
+                          <UserNickname
+                            user={user}
+                            isCurrentUser={user.id === authUser?.uid}
+                            className="text-gray-800"
+                          />
+                          {/* TODO show relative date signed in right-aligned, e.g. "5min ago" */}
+                          <UserDetails user={user} className="text-gray-400 text-sm" />
+                        </div>
+                      </RouterLink>
+                    ))}
+                  </div>
+                )}
+                {!isLoadingUsers && !newestUsers?.length && (
+                  <div className="mb-4 text-sm text-gray-400">No users found</div>
+                )}
+                {isLoadingUsers && <Spinner />}
               </div>
-              <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto lg:ml-2 2xl:ml-0">
-                <div className="flex justify-between lg:justify-start 2xl:justify-between items-center mb-4">
-                  <h3 className="text-xl text-gray-600 mr-2">Latest chats</h3>
+              <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto max-w-md lg:ml-2 2xl:ml-0">
+                <div className="flex justify-between sm:justify-start 2xl:justify-between items-center mb-4">
+                  <h3 className="text-xl text-gray-600 mr-2">My latest chats</h3>
+                  {/* TODO if on desktop, and chats tab is already open, show a tooltip on click or something */}
                   <Button variant="link" size="sm" onClick={openAllChats}>
                     View all
                   </Button>
                 </div>
+                {!!latestChats?.length && (
+                  <div className="-ml-2">
+                    {/* TODO do reverse() in a useMemo */}
+                    {latestChats?.reverse().map((chat) => (
+                      <RouterLink
+                        key={chat.id}
+                        className="relative
+                          block flex-1  min-w-0
+                          px-2 py-1
+                          text-left
+                          rounded
+                          hover:bg-opacity-50 hover:bg-gray-200
+                          focus:outline-none
+                          focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+                        to={`/main/chat/${chat.id}`}
+                      >
+                        <div className="flex items-center justify-between min-w-0">
+                          <div className="flex items-center min-w-0">
+                            <UserAvatar
+                              user={chat.toUserDetails}
+                              size={20}
+                              className="flex-shrink-0 mr-2 border border-gray-100"
+                            />
+                            <UserNickname user={chat.toUserDetails} className="text-gray-800" />
+                          </div>
+                          {/* TODO show relative date signed in right-aligned, e.g. "5min ago" */}
+                          {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
+                            <Badge
+                              className="flex-shrink-0 ml-1"
+                              tooltip="There are unread message(s)"
+                              size="md"
+                              pulse={false}
+                            />
+                          )}
+                        </div>
+                      </RouterLink>
+                    ))}
+                  </div>
+                )}
+                {!isLoadingChats && !latestChats?.length && (
+                  <div className="mb-4 text-sm text-gray-400">You don't have any open chats 😿</div>
+                )}
+                {isLoadingChats && <Spinner />}
               </div>
             </div>
           </div>
