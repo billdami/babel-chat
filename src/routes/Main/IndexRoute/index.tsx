@@ -121,26 +121,30 @@ const Index: FC<IndexProps> = () => {
                 </div>
                 <div className="relative flex justify-end py-4">
                   {/* TODO subtle looping floating/bobbing animation w/CSS animations */}
-                  <LogoIcon className="h-40 opacity-50" />
+                  <LogoIcon className="h-40 opacity-30 md:opacity-50" />
                   <div className="absolute inset-0 py-8">
-                    <h1 className="text-4xl font-light mb-2">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-light mb-2">
                       <span className="relative">
                         Welcome to <span className="font-normal text-gray-600">babel</span>{' '}
                         <span className="font-normal text-green-500">chat</span>
-                        <BetaBadge className="-top-1 -right-8" target="_blank" small />
+                        <BetaBadge
+                          className="-top-2 -right-10 md:-top-1 md:-right-8"
+                          target="_blank"
+                          small
+                        />
                       </span>
                     </h1>
-                    <h2 className="text-lg text-gray-500 mb-6">
+                    <h2 className="text-base md:text-lg text-gray-500 mb-6">
                       Meet and chat with people from around the world.
                     </h2>
                     {/* TODO put social/share/donate widgets here */}
                   </div>
                 </div>
               </div>
-              <div className="flex mb-2">
-                <div className="w-1/3">
-                  <div className="mb-4 mr-4">
-                    {/* TODO create <TileButton> */}
+              <div className="lg:flex mb-2">
+                <div className="lg:w-1/3">
+                  <div className="mb-4 lg:mr-4">
+                    {/* TODO create <Button variant="tile"> */}
                     <button
                       className="w-full px-4 py-8 flex flex-col items-center bg-white text-gray-500 font-bold border border-gray-100 shadow hover:shadow-md rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
                       onClick={openUsersSearch}
@@ -150,8 +154,8 @@ const Index: FC<IndexProps> = () => {
                     </button>
                   </div>
                 </div>
-                <div className="w-1/3">
-                  <div className="mb-4 mr-4">
+                <div className="lg:w-1/3">
+                  <div className="mb-4 lg:mr-4">
                     <button
                       className="w-full px-4 py-8 flex flex-col items-center bg-white text-gray-500 font-bold border border-gray-100 shadow hover:shadow-md rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
                       onClick={openUsersFilters}
@@ -161,7 +165,7 @@ const Index: FC<IndexProps> = () => {
                     </button>
                   </div>
                 </div>
-                <div className="w-1/3">
+                <div className="lg:w-1/3">
                   <div className="mb-4">
                     <button
                       className="w-full px-4 py-8 flex flex-col items-center bg-white text-gray-500 font-bold border border-gray-100 shadow hover:shadow-md rounded-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
@@ -207,18 +211,18 @@ const Index: FC<IndexProps> = () => {
                 </ul>
               </div>
             </div>
-            <div className="my-4 mr-4 ml-4 flex 2xl:block 2xl:flex-1">
-              <div className="mb-8 w-1/2 2xl:w-auto mr-2 2xl:mr-0">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl text-gray-600">Newest users</h3>
+            <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
+              <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto lg:mr-2 2xl:mr-0">
+                <div className="flex justify-between lg:justify-start 2xl:justify-between items-center mb-4">
+                  <h3 className="text-xl text-gray-600 mr-2">Newest users</h3>
                   <Button variant="link" size="sm" onClick={openAllUsers}>
                     View all
                   </Button>
                 </div>
               </div>
-              <div className="mb-8 w-1/2 2xl:w-auto ml-2 2xl:ml-0">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl text-gray-600">Latest chats</h3>
+              <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto lg:ml-2 2xl:ml-0">
+                <div className="flex justify-between lg:justify-start 2xl:justify-between items-center mb-4">
+                  <h3 className="text-xl text-gray-600 mr-2">Latest chats</h3>
                   <Button variant="link" size="sm" onClick={openAllChats}>
                     View all
                   </Button>
