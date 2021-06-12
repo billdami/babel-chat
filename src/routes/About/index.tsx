@@ -5,7 +5,7 @@ import Link from '../../components/Link';
 import Logo from '../../components/Svgs/Logos/Logo';
 import BetaBadge from '../../components/BetaBadge';
 import useScrollToTop from '../../hooks/useScrollToTop';
-import { copyrightLine } from '../../constants/app';
+import { COPYRIGHT_LINE } from '../../constants/app';
 import Anchor from '../../components/Anchor';
 
 interface AboutProps {}
@@ -64,7 +64,7 @@ const About: FC<AboutProps> = () => {
             <Link to="/">&larr; Go to the homepage</Link>
           </p>
         </div>
-        <div className="pb-4 text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
       </div>
     </div>
   );
