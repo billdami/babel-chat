@@ -5,12 +5,12 @@ import Anchor from '../../components/Anchor';
 import BetaBadge from '../../components/BetaBadge';
 import Link from '../../components/Link';
 import Logo from '../../components/Svgs/Logos/Logo';
-import { copyrightLine } from '../../constants/app';
+import { COPYRIGHT_LINE } from '../../constants/app';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
-interface PrivacyPolicyListProps {}
+interface PrivacyPolicyProps {}
 
-const PrivacyPolicy: FC<PrivacyPolicyListProps> = () => {
+const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
   useScrollToTop();
 
   return (
@@ -249,7 +249,7 @@ const PrivacyPolicy: FC<PrivacyPolicyListProps> = () => {
             will do our best efforts to promptly remove such information from our records.
           </p>
         </div>
-        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
       </div>
     </div>
   );

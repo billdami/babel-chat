@@ -150,7 +150,7 @@ const ListItem: FC<ListItemProps> = ({
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <div className="flex items-center justify-between  min-w-0">
+        <div className="flex items-center justify-between min-w-0">
           <div className="flex items-center min-w-0">
             <UserAvatar user={chat.toUserDetails} size={20} className="flex-shrink-0 mr-2" />
             <UserNickname user={chat.toUserDetails} className="text-gray-800" />

@@ -1,32 +1,59 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import Badge from '../../../components/Badge';
 import Button from '../../../components/Button';
+import DialogConfirm from '../../../components/DialogConfirm';
+import DialogFeedback from '../../../components/DialogFeedback';
 import Icon from '../../../components/Icon';
-import Link from '../../../components/Link';
-import UserNickname from '../../../components/UserNickname';
-import { copyrightLine } from '../../../constants/app';
-import useCurrentUser from '../../../hooks/useCurrentUser';
+import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
 import useNotifications from '../../../hooks/useNotifications';
+
+import Footer from './components/Footer';
+import Hero from './components/Hero';
+import LatestChats from './components/LatestChats';
+import NewestUsers from './components/NewestUsers';
+import QuickActions from './components/QuickActions';
+import TipsAndTricks from './components/TipsAndTricks';
 
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
-  const { user } = useCurrentUser();
+  const { signOut } = useAuth();
+
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
   const { numUnread } = useNotifications();
 
-  const showAllUsers = useCallback(() => {
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
+  const [isSignOutConfirmOpen, setIsSignOutConfirmOpen] = useState<boolean>(false);
+
+  const openConfirmSignOut = useCallback(() => {
+    setIsSignOutConfirmOpen(true);
+  }, []);
+
+  const closeConfirmSignOut = useCallback(() => {
+    setIsSignOutConfirmOpen(false);
+  }, []);
+
+  const confirmSignOut = useCallback(() => {
+    closeConfirmSignOut();
+    signOut();
+  }, [closeConfirmSignOut, signOut]);
+
+  const openAllUsers = useCallback(() => {
     openDrawer();
     updateTab('tab-users');
   }, [openDrawer, updateTab]);
 
-  const showAllChats = useCallback(() => {
+  const openAllChats = useCallback(() => {
     openDrawer();
     updateTab('tab-chats');
   }, [openDrawer, updateTab]);
+
+  const openGiveFeedback = useCallback(() => {
+    setIsFeedbackDialogOpen(true);
+  }, []);
 
   return (
     <div className="Index flex flex-col flex-1">
@@ -56,46 +83,33 @@ const Index: FC<IndexProps> = () => {
       </div>
       <div className="flex-1 flex overflow-y-auto">
         <div className="flex-1 flex flex-col">
-          <div className="flex-1">
-            <div className="p-4">
-              {/*
-                TODO real content:
-                  - heading
-                  - logged in as details
-                  - general info / caution blurb ('give us feeback' link)
-                  - last 5 newest users (view all link)
-                  - last 5 most recently active chats (view all link)
-              */}
-              <h2 className="text-lg font-bold">Welcome to babel chat!</h2>
-              <div className="mb-4">
-                Logged in as {!!user && <UserNickname user={user} className="inline" />}
-              </div>
-              <div className="mb-4">
-                <Button variant="secondary" className="md:hidden" onClick={showAllUsers} outline>
-                  View all users
-                </Button>
-              </div>
-              <div className="mb-4">
-                <Button variant="secondary" className="md:hidden" onClick={showAllChats} outline>
-                  View all chats
-                </Button>
-              </div>
+          <div className="flex-1 2xl:flex">
+            <div className="2xl:w-2/3 mx-4 mt-4">
+              <Hero openConfirmSignOut={openConfirmSignOut} />
+              <QuickActions openAllUsers={openAllUsers} openGiveFeedback={openGiveFeedback} />
+              <TipsAndTricks />
+            </div>
+            <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
+              <NewestUsers openAllUsers={openAllUsers} />
+              <LatestChats openAllChats={openAllChats} />
             </div>
           </div>
-          <div className="flex-shrink-0 px-4 py-4 text-sm text-gray-400">
-            {copyrightLine} <span className="hidden md:inline">&bull;</span>{' '}
-            <span className="block md:inline">
-              <Link to="/privacy-policy" target="_blank">
-                privacy policy
-              </Link>{' '}
-              &bull;{' '}
-              <Link to="/terms-of-use" target="_blank">
-                terms of use
-              </Link>
-            </span>
-          </div>
+          <Footer />
         </div>
       </div>
+      <DialogFeedback
+        isOpen={isFeedbackDialogOpen}
+        onCancel={() => setIsFeedbackDialogOpen(false)}
+      />
+      <DialogConfirm
+        isOpen={isSignOutConfirmOpen}
+        onCancel={closeConfirmSignOut}
+        onConfirm={confirmSignOut}
+        confirmText="Sign out"
+        title="Sign out"
+        icon="right-from-bracket"
+        message="Are you sure you want to sign out?"
+      />
     </div>
   );
 };

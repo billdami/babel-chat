@@ -16,9 +16,9 @@ import Chat from './Chat';
 import Index from './IndexRoute';
 import Sidebar from './components/Sidebar';
 
-interface MainListProps {}
+interface MainProps {}
 
-const Main: FC<MainListProps> = () => {
+const Main: FC<MainProps> = () => {
   useBodyClass('overflow-hidden');
   // The `path` lets us build <Route> paths that are relative to the parent route,
   // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>

@@ -25,11 +25,11 @@ import Spinner from '../../components/Spinner';
 import BetaBadge from '../../components/BetaBadge';
 import useAuth from '../../hooks/useAuth';
 import useScrollToTop from '../../hooks/useScrollToTop';
-import { copyrightLine } from '../../constants/app';
+import { COPYRIGHT_LINE } from '../../constants/app';
 import { envVar } from '../../utils/env';
 import { ReCaptchaError, ReCaptchaLoadError, SignInError } from '../../errors/auth';
 
-interface SignInListProps {}
+interface SignInProps {}
 
 const ageOptions = [
   { value: UNSPECIFIED, label: 'Prefer not to say' },
@@ -46,7 +46,7 @@ const countryOptions: SelectOption<Country>[] = [
   ...COUNTRIES.filter((c) => !c.prioritized).map((c) => ({ ...c, group: 'All countries' })),
 ];
 
-const SignIn: FC<SignInListProps> = () => {
+const SignIn: FC<SignInProps> = () => {
   useScrollToTop();
   const { isSigningIn, signIn } = useAuth();
 
@@ -143,7 +143,8 @@ const SignIn: FC<SignInListProps> = () => {
           <p className="mb-4 md:mb-6">
             <span className="text-gray-500 font-bold">babel chat</span> is free and completely
             anonymous. If you’d like, you can provide some basic info below, but it is{' '}
-            <strong className="font-bold">100% optional.</strong>
+            <strong className="font-bold">100% optional.</strong>&nbsp;&nbsp;
+            <Link to="/about">Learn more</Link>
           </p>
 
           <FormControl label="Nickname" htmlFor="signup-nickname">
@@ -240,7 +241,7 @@ const SignIn: FC<SignInListProps> = () => {
           {!!submitError && <ErrorText className="mt-2 font-bold" text={submitError} />}
         </form>
         <div className="text-sm text-gray-400 text-center">
-          {copyrightLine}
+          {COPYRIGHT_LINE}
           <br />{' '}
           <Link to="/privacy-policy" target="_blank">
             privacy policy

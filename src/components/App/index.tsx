@@ -9,7 +9,7 @@ import PageNotFound from '../../routes/PageNotFound';
 import SignIn from '../../routes/SignIn';
 import TermsOfUse from '../../routes/TermsOfUse';
 import PrivacyPolicy from '../../routes/PrivacyPolicy';
-import AboutBeta from '../../routes/AboutBeta';
+import About from '../../routes/About';
 import ProtectedRoute from '../ProtectedRoute';
 import UnprotectedRoute from '../UnprotectedRoute';
 import Splash from '../Splash';
@@ -51,8 +51,8 @@ const App: FC<AppProps> = () => {
           <Route path="/privacy-policy">
             <PrivacyPolicy />
           </Route>
-          <Route path="/about-beta">
-            <AboutBeta />
+          <Route path="/about">
+            <About />
           </Route>
           <Route path="*">
             <PageNotFound />

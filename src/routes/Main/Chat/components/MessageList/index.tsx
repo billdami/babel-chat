@@ -143,13 +143,11 @@ const MessageList: FC<MessageListProps> = ({
         if (!isLoadingMore && (!isScrolledUp || isFirstMount.current)) {
           // scroll to the bottom on initial mount and when not loading older messages
           // and not when the container is scrolled up
-          el.scrollTo({
-            top: el.scrollHeight - el.clientHeight,
-            // TODO try to allow 'smooth' behavior when isFirstMount is false again
-            // there is a race condition bug of some kind that makes the scroll to
-            // bottom happen too late when smooth scrolling when recieving new messages
-            behavior: 'auto',
-          });
+
+          // TODO try to allow scrollTo({ behavior: 'smooth') behavior when isFirstMount is false again
+          // there is a race condition bug of some kind that makes the scroll to
+          // bottom happen too late when smooth scrolling when recieving new messages
+          el.scrollTop = el.scrollHeight - el.clientHeight;
         } else if (isLoadingMore) {
           // maintain the current scroll position when older messages are loaded
           const msgsDiff = messages.length - (lastMessages.current?.length ?? 0);
@@ -229,20 +227,23 @@ const MessageList: FC<MessageListProps> = ({
           </div>
         )}
 
-        {!isBlocked &&
-          messages?.map((message) => (
-            <div key={message.id} data-msg-id={message.id} className="px-2 md:px-3">
-              <span
-                className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
-              >
-                {authors[message.author]?.isSelf
-                  ? 'Me'
-                  : authors[message.author]?.nickname || 'Unknown'}
-                :
-              </span>{' '}
-              <span>{message.content}</span>
-            </div>
-          ))}
+        {!isBlocked && (
+          <div className="max-w-4xl">
+            {messages?.map((message) => (
+              <div key={message.id} data-msg-id={message.id} className="px-2 md:px-3">
+                <span
+                  className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
+                >
+                  {authors[message.author]?.isSelf
+                    ? 'Me'
+                    : authors[message.author]?.nickname || 'Unknown'}
+                  :
+                </span>{' '}
+                <span>{message.content}</span>
+              </div>
+            ))}
+          </div>
+        )}
         {isLoading && <Spinner className="mx-2 md:mx-3 my-1" />}
       </div>
     </div>

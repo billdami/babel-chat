@@ -39,6 +39,7 @@ const AdvancedFilters: FC<AdvancedFiltersProps> = ({
             className="inline-block"
             onClick={addFilter}
             disabled={hasMaxFilters}
+            data-users-filters-add
           >
             Add a filter...
           </Button>

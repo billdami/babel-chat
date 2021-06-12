@@ -5,12 +5,12 @@ import Anchor from '../../components/Anchor';
 import BetaBadge from '../../components/BetaBadge';
 import Link from '../../components/Link';
 import Logo from '../../components/Svgs/Logos/Logo';
-import { copyrightLine } from '../../constants/app';
+import { COPYRIGHT_LINE } from '../../constants/app';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
-interface TermsOfServiceListProps {}
+interface TermsOfServiceProps {}
 
-const TermsOfService: FC<TermsOfServiceListProps> = () => {
+const TermsOfService: FC<TermsOfServiceProps> = () => {
   useScrollToTop();
 
   return (
@@ -316,7 +316,7 @@ const TermsOfService: FC<TermsOfServiceListProps> = () => {
             of charge, we will not be liable for any loss or damage of any nature.
           </p>
         </div>
-        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
       </div>
     </div>
   );

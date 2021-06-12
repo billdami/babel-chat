@@ -51,6 +51,12 @@ export const useUsers = () => {
   return useListVals<User, 'id', 'ref'>(ref, userOptions);
 };
 
+export const useNewestUsers = (limit: number = 5) => {
+  const db = useRef<firebase.database.Database>(firebase.database());
+  const query = db.current.ref('users').orderByChild('dateSignedIn').limitToLast(limit);
+  return useListVals<User, 'id', 'ref'>(query, userOptions);
+};
+
 export const useUserBlocks = (userId: string | undefined) => {
   const db = useRef<firebase.database.Database>(firebase.database());
   const ref = userId ? db.current.ref(`user_blocks/${userId}`) : null;

@@ -5,12 +5,12 @@ import Link from '../../components/Link';
 import Logo from '../../components/Svgs/Logos/Logo';
 import BetaBadge from '../../components/BetaBadge';
 import useScrollToTop from '../../hooks/useScrollToTop';
-import { copyrightLine } from '../../constants/app';
+import { COPYRIGHT_LINE } from '../../constants/app';
 import Anchor from '../../components/Anchor';
 
-interface AboutBetaListProps {}
+interface AboutProps {}
 
-const AboutBeta: FC<AboutBetaListProps> = () => {
+const About: FC<AboutProps> = () => {
   useScrollToTop();
 
   return (
@@ -64,10 +64,10 @@ const AboutBeta: FC<AboutBetaListProps> = () => {
             <Link to="/">&larr; Go to the homepage</Link>
           </p>
         </div>
-        <div className="text-sm text-gray-400 text-center">{copyrightLine}</div>
+        <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
       </div>
     </div>
   );
 };
 
-export default AboutBeta;
+export default About;
