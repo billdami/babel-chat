@@ -58,7 +58,13 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
       <div className="flex items-end justify-between mb-2 px-4">
         <div className="text-gray-600 font-bold">Sort chats by</div>
         {isSheet && (
-          <Button size="sm" variant="muted" className="flex-shrink-0" outline>
+          <Button
+            size="sm"
+            variant="muted"
+            className="flex-shrink-0"
+            onClick={closeSortMenu}
+            outline
+          >
             <Icon name="x-mark" size="sm" />
           </Button>
         )}
