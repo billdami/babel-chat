@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Badge from '../../../../../components/Badge';
@@ -9,6 +9,7 @@ import UserAvatar from '../../../../../components/UserAvatar';
 import UserNickname from '../../../../../components/UserNickname';
 import useAuth from '../../../../../hooks/useAuth';
 import { useLatestChats } from '../../../../../hooks/useChatRecord';
+import { ChatRecord } from '../../../../../types/chat';
 
 interface LatestChatsProps {
   openAllChats: () => void;
@@ -17,6 +18,8 @@ interface LatestChatsProps {
 const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
   const { user: authUser } = useAuth();
   const [latestChats, isLoadingChats] = useLatestChats(authUser?.uid);
+
+  const sortedChats = useMemo<ChatRecord[]>(() => latestChats?.reverse() ?? [], [latestChats]);
 
   return (
     <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto 2xl:max-w-md lg:ml-2 2xl:ml-0">
@@ -27,10 +30,9 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
           View all
         </Button>
       </div>
-      {!!latestChats?.length && (
+      {!!sortedChats.length && (
         <div className="-ml-2">
-          {/* TODO do reverse() in a useMemo */}
-          {latestChats?.reverse().map((chat) => (
+          {sortedChats.map((chat) => (
             <RouterLink
               key={chat.id}
               to={`/main/chat/${chat.id}`}
@@ -70,7 +72,7 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
           ))}
         </div>
       )}
-      {!isLoadingChats && !latestChats?.length && (
+      {!isLoadingChats && !sortedChats.length && (
         <div className="mb-4 text-sm text-gray-400">You don't have any open chats 😿</div>
       )}
       {isLoadingChats && <Spinner />}

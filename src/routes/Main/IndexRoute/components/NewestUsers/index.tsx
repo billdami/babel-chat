@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Button from '../../../../../components/Button';
@@ -9,6 +9,7 @@ import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import useAuth from '../../../../../hooks/useAuth';
 import { useNewestUsers } from '../../../../../hooks/useUserRecord';
+import { UserRecord } from '../../../../../types/user';
 
 interface NewestUsersProps {
   openAllUsers: () => void;
@@ -17,6 +18,8 @@ interface NewestUsersProps {
 const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
   const { user: authUser } = useAuth();
   const [newestUsers, isLoadingUsers] = useNewestUsers();
+
+  const sortedUsers = useMemo<UserRecord[]>(() => newestUsers?.reverse() ?? [], [newestUsers]);
 
   return (
     <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto 2xl:max-w-md lg:mr-2 2xl:mr-0">
@@ -27,10 +30,9 @@ const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
           View all
         </Button>
       </div>
-      {/* TODO do reverse() in a useMemo */}
-      {!!newestUsers?.length && (
+      {!!sortedUsers.length && (
         <div className="-ml-2">
-          {newestUsers?.reverse().map((user) => (
+          {sortedUsers.map((user) => (
             <RouterLink
               key={user.id}
               to={`/main/chat/${user.id}`}
@@ -62,7 +64,7 @@ const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
           ))}
         </div>
       )}
-      {!isLoadingUsers && !newestUsers?.length && (
+      {!isLoadingUsers && !sortedUsers.length && (
         <div className="mb-4 text-sm text-gray-400">No users found</div>
       )}
       {isLoadingUsers && <Spinner />}
