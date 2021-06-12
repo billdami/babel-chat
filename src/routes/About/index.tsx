@@ -42,7 +42,7 @@ const About: FC<AboutProps> = () => {
             of simultaneous users, so it will always be stable and available.
           </p>
           <p className="mb-4">
-            With intutive and fast search and filter features, you can easily find people you want
+            With intuitive and fast search and filter features, you can easily find people you want
             to chat with. babel chat features private, one-on-one chats only, where you won't get
             lost in massive and noisy group chatrooms.
           </p>

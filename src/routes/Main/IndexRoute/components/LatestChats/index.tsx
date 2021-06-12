@@ -73,7 +73,7 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
         </div>
       )}
       {!isLoadingChats && !sortedChats.length && (
-        <div className="mb-4 text-sm text-gray-400">You don't have any open chats 😿</div>
+        <div className="mb-4 text-sm text-gray-400">You don't have any active chats 😿</div>
       )}
       {isLoadingChats && <Spinner />}
     </div>
