@@ -129,7 +129,7 @@ const ListItem: FC<ListItemProps> = ({
         <Checkbox
           checked={selectedChatIds.includes(chat.id)}
           onChange={() => toggleChatSelection(chat)}
-          className="ml-3 mr-1 flex-shrink-0"
+          className="ml-3 mr-2 flex-shrink-0"
           standalone
         />
       )}
