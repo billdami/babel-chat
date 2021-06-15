@@ -2,7 +2,10 @@ import React, { FC } from 'react';
 
 import BetaBadge from '../../../../../components/BetaBadge';
 import Button from '../../../../../components/Button';
+import DonateButton from '../../../../../components/DonateButton';
+import FacebookShareButton from '../../../../../components/FacebookShareButton';
 import LogoIcon from '../../../../../components/Svgs/Logos/Icon';
+import TweetButton from '../../../../../components/TweetButton';
 import UserNickname from '../../../../../components/UserNickname';
 import useCurrentUser from '../../../../../hooks/useCurrentUser';
 
@@ -33,10 +36,20 @@ const Hero: FC<HeroProps> = ({ openConfirmSignOut }) => {
               <BetaBadge className="-top-2 -right-10 md:-top-1 md:-right-8" target="_blank" small />
             </span>
           </h1>
-          <h2 className="text-base md:text-lg text-gray-500 mb-6">
+          <h2 className="text-base md:text-lg text-gray-500 mb-8">
             Meet and chat with people from around the world.
           </h2>
-          {/* TODO put social/share/donate widgets here */}
+          <div className="flex items-center flex-wrap mb-2">
+            <div className="mr-2 mb-2 flex-shrink-0">
+              <DonateButton />
+            </div>
+            <div className="mr-2 mb-2 flex-shrink-0">
+              <FacebookShareButton />
+            </div>
+            <div className="mr-2 mb-2 flex-shrink-0">
+              <TweetButton />
+            </div>
+          </div>
         </div>
       </div>
     </div>
