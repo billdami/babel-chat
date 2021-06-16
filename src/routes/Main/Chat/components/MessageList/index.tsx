@@ -11,16 +11,16 @@ import React, {
 import cn from 'classnames';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
-import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
-import { User, UserRecord } from '../../../../../types/user';
-import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import Alert from '../../../../../components/Alert';
+import Button from '../../../../../components/Button';
+import Spinner from '../../../../../components/Spinner';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
 import usePageVisibility from '../../../../../hooks/usePageVisibility';
-import Spinner from '../../../../../components/Spinner';
-import Icon from '../../../../../components/Icon';
-import Button from '../../../../../components/Button';
+import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
+import { User, UserRecord } from '../../../../../types/user';
+import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
 import {
   MSG_LOAD_MORE_BTN_HEIGHT,
   MSG_PAGE_LIMIT,
@@ -181,18 +181,15 @@ const MessageList: FC<MessageListProps> = ({
     >
       <div className="py-1">
         {isSelf && (
-          // TODO create <Alert>
-          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-700 bg-yellow-100 bg-opacity-60 border-l-4 border-yellow-500 rounded-sm rounded-tl-none rounded-bl-none">
+          <Alert variant="warning" className="my-2 mx-2 md:mx-4">
             Sorry, you can't talk to yourself on babel chat. 😛
-          </div>
+          </Alert>
         )}
 
         {isBlocked && (
-          // TODO create <Alert>
-          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-700 bg-yellow-100 bg-opacity-60 border-l-4 border-yellow-500 rounded-sm rounded-tl-none rounded-bl-none">
-            <Icon name="ban" className="mr-2 inline-block" size="sm" />
+          <Alert variant="warning" icon="ban" className="my-2 mx-2 md:mx-4">
             {isSpamReported ? (
-              'This user has been reported as spam and is permanently blocked.'
+              <>This user has been reported as spam and is permanently blocked.</>
             ) : (
               <>
                 This user has been blocked.{' '}
@@ -201,7 +198,7 @@ const MessageList: FC<MessageListProps> = ({
                 </Button>
               </>
             )}
-          </div>
+          </Alert>
         )}
 
         {/* TODO [future] show "warning!" alert when there are no messages yet, and the user is convicted of being a spammer */}

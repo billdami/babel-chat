@@ -1,14 +1,14 @@
 import React, { FC, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import useCurrentUser from '../../hooks/useCurrentUser';
-import { createFeedbackMessage } from '../../utils/user';
-
+import Alert from '../Alert';
 import Button from '../Button';
 import Dialog, { DialogProps } from '../Dialog';
 import Icon from '../Icon';
 import Input from '../Input';
 import Spinner from '../Spinner';
 import Textarea from '../Textarea';
+import useCurrentUser from '../../hooks/useCurrentUser';
+import { createFeedbackMessage } from '../../utils/user';
 
 interface DialogFeedbackProps extends DialogProps {
   onSubmit?: () => void;
@@ -23,7 +23,6 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
-  // TODO focus on the textarea instead
   const emailInputRef = useRef<HTMLInputElement | null>(null);
 
   const isFormValid = useMemo<boolean>(() => message?.trim().length > 0, [message]);
@@ -85,20 +84,10 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
           </div>
           <div className="my-2">
             {hasSubmitted ? (
-              <>
-                {/* TODO create <Alert> */}
-                <div className="flex items-start my-6 px-6 py-4 text-sm text-green-700 bg-green-100 bg-opacity-60 border-l-4 border-green-500 rounded-sm rounded-tl-none rounded-bl-none">
-                  <Icon
-                    name="message-check"
-                    className="mt-1 mr-2 inline-block flex-shrink-0"
-                    size="sm"
-                  />
-                  <div>
-                    <span className="font-bold">Thanks!</span> Your message has been received. We
-                    appreciate your feedback!
-                  </div>
-                </div>
-              </>
+              <Alert variant="success" icon="message-check" className="my-6">
+                <span className="font-bold">Thanks!</span> Your message has been received. We
+                appreciate your feedback!
+              </Alert>
             ) : (
               <>
                 <p className="mb-4 text-sm text-gray-600">
