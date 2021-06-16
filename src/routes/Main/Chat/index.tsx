@@ -148,99 +148,101 @@ const Chat: FC<ChatProps> = () => {
   );
 
   return (
-    <div className="Chat flex flex-col flex-1 min-w-0">
+    <>
       <Helmet>
         <title>
           {userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''}chat | babel chat
         </title>
       </Helmet>
-      <MessageHeader
-        userDetails={userDetails}
-        destUser={destUser}
-        originChat={originChat}
-        isLoading={isLoadingDestUser || isLoadingOriginChat}
-        isOffline={isOffline}
-        isBlocked={isBlocked}
-        canRemove={canRemove}
-        canBlock={canBlock}
-        canReportSpam={canReportSpam}
-        closeChat={closeChat}
-        removeChat={removeChat}
-        confirmToggleBlock={confirmToggleBlock}
-        confirmReporSpam={confirmReporSpam}
-      />
-      <MessageList
-        // the `key` prop here forces the MessageList to un-mount/re-mount and completely re-render
-        // whenever the dest user ID (i.e. the chat route) changes. this is a necessary workaround
-        // for issues with resetting the list limit/firebase query when switching between chats
-        key={userId}
-        originUser={user}
-        originChat={originChat}
-        destUser={destUser}
-        destUserId={userId}
-        isBlocked={isBlocked}
-        isSpamReported={isSpamReported}
-        confirmToggleBlock={confirmToggleBlock}
-      />
-      <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
-      <DialogConfirm
-        isOpen={isConfirmBlockOpen}
-        onCancel={() => setIsConfirmBlockOpen(false)}
-        onConfirm={toggleBlock}
-        icon="ban"
-        title={isBlocked ? 'Unblock user' : 'Block user'}
-        confirmText={isBlocked ? 'Unblock' : 'Block'}
-        message={
-          isBlocked ? (
+      <div className="Chat flex flex-col flex-1 min-w-0">
+        <MessageHeader
+          userDetails={userDetails}
+          destUser={destUser}
+          originChat={originChat}
+          isLoading={isLoadingDestUser || isLoadingOriginChat}
+          isOffline={isOffline}
+          isBlocked={isBlocked}
+          canRemove={canRemove}
+          canBlock={canBlock}
+          canReportSpam={canReportSpam}
+          closeChat={closeChat}
+          removeChat={removeChat}
+          confirmToggleBlock={confirmToggleBlock}
+          confirmReporSpam={confirmReporSpam}
+        />
+        <MessageList
+          // the `key` prop here forces the MessageList to un-mount/re-mount and completely re-render
+          // whenever the dest user ID (i.e. the chat route) changes. this is a necessary workaround
+          // for issues with resetting the list limit/firebase query when switching between chats
+          key={userId}
+          originUser={user}
+          originChat={originChat}
+          destUser={destUser}
+          destUserId={userId}
+          isBlocked={isBlocked}
+          isSpamReported={isSpamReported}
+          confirmToggleBlock={confirmToggleBlock}
+        />
+        <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
+        <DialogConfirm
+          isOpen={isConfirmBlockOpen}
+          onCancel={() => setIsConfirmBlockOpen(false)}
+          onConfirm={toggleBlock}
+          icon="ban"
+          title={isBlocked ? 'Unblock user' : 'Block user'}
+          confirmText={isBlocked ? 'Unblock' : 'Block'}
+          message={
+            isBlocked ? (
+              <>
+                <div className="mb-4">
+                  Are you sure you want to unblock{' '}
+                  <UserNickname user={userDetails} className="inline" />?
+                </div>
+                <div className="mb-4">
+                  You will receive messages and notifications from this user again.
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="mb-4">
+                  Are you sure you want to block{' '}
+                  <UserNickname user={userDetails} className="inline" />?
+                </div>
+                <div className="mb-4">
+                  You will no longer receive messages from (or be able to send messages to) them,
+                  until you unblock them.
+                </div>
+              </>
+            )
+          }
+        />
+        <DialogConfirm
+          isOpen={isConfirmReportSpamOpen}
+          onCancel={() => setIsConfirmReportSpamOpen(false)}
+          onConfirm={reportSpam}
+          icon="octagon-exclamation"
+          iconClassName="bg-red-100 text-red-400"
+          title="Report spam"
+          confirmText="Report"
+          message={
             <>
               <div className="mb-4">
-                Are you sure you want to unblock{' '}
-                <UserNickname user={userDetails} className="inline" />?
+                <span className="text-red-500 font-bold uppercase">Warning!</span> This action is
+                irreversible and <span className="font-bold">cannot be undone</span>.
               </div>
               <div className="mb-4">
-                You will receive messages and notifications from this user again.
+                Are you sure you want to report{' '}
+                <UserNickname user={userDetails} className="inline" /> for spamming?
+              </div>
+              <div className="mb-4">
+                This will also <span className="font-bold">permanently</span> block this user, and
+                you will no longer receive messages from (or be able to send messages to) them.
               </div>
             </>
-          ) : (
-            <>
-              <div className="mb-4">
-                Are you sure you want to block{' '}
-                <UserNickname user={userDetails} className="inline" />?
-              </div>
-              <div className="mb-4">
-                You will no longer receive messages from (or be able to send messages to) them,
-                until you unblock them.
-              </div>
-            </>
-          )
-        }
-      />
-      <DialogConfirm
-        isOpen={isConfirmReportSpamOpen}
-        onCancel={() => setIsConfirmReportSpamOpen(false)}
-        onConfirm={reportSpam}
-        icon="octagon-exclamation"
-        iconClassName="bg-red-100 text-red-400"
-        title="Report spam"
-        confirmText="Report"
-        message={
-          <>
-            <div className="mb-4">
-              <span className="text-red-500 font-bold uppercase">Warning!</span> This action is
-              irreversible and <span className="font-bold">cannot be undone</span>.
-            </div>
-            <div className="mb-4">
-              Are you sure you want to report <UserNickname user={userDetails} className="inline" />{' '}
-              for spamming?
-            </div>
-            <div className="mb-4">
-              This will also <span className="font-bold">permanently</span> block this user, and you
-              will no longer receive messages from (or be able to send messages to) them.
-            </div>
-          </>
-        }
-      />
-    </div>
+          }
+        />
+      </div>
+    </>
   );
 };
 

@@ -56,61 +56,65 @@ const Index: FC<IndexProps> = () => {
   }, []);
 
   return (
-    <div className="Index flex flex-col flex-1">
+    <>
       <Helmet>
         <title>Dashboard | babel chat</title>
       </Helmet>
-      <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
-        <Button
-          onClick={toggleDrawer}
-          variant="inverse"
-          className="relative mr-2 md:hidden"
-          outline
-        >
-          <Icon name="bars" size="sm" className="inline-block" />
-          {!!numUnread && (
-            <Badge
-              className="absolute -right-1 -top-1"
-              tooltip={
-                numUnread
-                  ? `You have ${numUnread} ${numUnread === 1 ? 'chat' : 'chats'} with new messages!`
-                  : ''
-              }
-            />
-          )}
-        </Button>
-        {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
-      </div>
-      <div className="flex-1 flex overflow-y-auto">
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 2xl:flex">
-            <div className="2xl:w-2/3 mx-4 mt-4">
-              <Hero openConfirmSignOut={openConfirmSignOut} />
-              <QuickActions openAllUsers={openAllUsers} openGiveFeedback={openGiveFeedback} />
-              <TipsAndTricks />
-            </div>
-            <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
-              <NewestUsers openAllUsers={openAllUsers} />
-              <LatestChats openAllChats={openAllChats} />
-            </div>
-          </div>
-          <Footer />
+      <div className="Index flex flex-col flex-1">
+        <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
+          <Button
+            onClick={toggleDrawer}
+            variant="inverse"
+            className="relative mr-2 md:hidden"
+            outline
+          >
+            <Icon name="bars" size="sm" className="inline-block" />
+            {!!numUnread && (
+              <Badge
+                className="absolute -right-1 -top-1"
+                tooltip={
+                  numUnread
+                    ? `You have ${numUnread} ${
+                        numUnread === 1 ? 'chat' : 'chats'
+                      } with new messages!`
+                    : ''
+                }
+              />
+            )}
+          </Button>
+          {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
         </div>
+        <div className="flex-1 flex overflow-y-auto">
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 2xl:flex">
+              <div className="2xl:w-2/3 mx-4 mt-4">
+                <Hero openConfirmSignOut={openConfirmSignOut} />
+                <QuickActions openAllUsers={openAllUsers} openGiveFeedback={openGiveFeedback} />
+                <TipsAndTricks />
+              </div>
+              <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
+                <NewestUsers openAllUsers={openAllUsers} />
+                <LatestChats openAllChats={openAllChats} />
+              </div>
+            </div>
+            <Footer />
+          </div>
+        </div>
+        <DialogFeedback
+          isOpen={isFeedbackDialogOpen}
+          onCancel={() => setIsFeedbackDialogOpen(false)}
+        />
+        <DialogConfirm
+          isOpen={isSignOutConfirmOpen}
+          onCancel={closeConfirmSignOut}
+          onConfirm={confirmSignOut}
+          confirmText="Sign out"
+          title="Sign out"
+          icon="right-from-bracket"
+          message="Are you sure you want to sign out?"
+        />
       </div>
-      <DialogFeedback
-        isOpen={isFeedbackDialogOpen}
-        onCancel={() => setIsFeedbackDialogOpen(false)}
-      />
-      <DialogConfirm
-        isOpen={isSignOutConfirmOpen}
-        onCancel={closeConfirmSignOut}
-        onConfirm={confirmSignOut}
-        confirmText="Sign out"
-        title="Sign out"
-        icon="right-from-bracket"
-        message="Are you sure you want to sign out?"
-      />
-    </div>
+    </>
   );
 };
 

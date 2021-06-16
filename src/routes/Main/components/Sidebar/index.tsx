@@ -7,11 +7,7 @@ import TabPanel from '../../../../components/Tab/TabPanel';
 import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import Link from '../../../../components/Link';
 import Icon from '../../../../components/Icon';
-import UserAvatar from '../../../../components/UserAvatar';
-import UserNickname from '../../../../components/UserNickname';
-import UserDetails from '../../../../components/UserDetails';
-import Menu, { MenuContentProps } from '../../../../components/Menu';
-import MenuItem from '../../../../components/Menu/MenuItem';
+import Menu from '../../../../components/Menu';
 import DialogFeedback from '../../../../components/DialogFeedback';
 import DialogConfirm from '../../../../components/DialogConfirm';
 import BetaBadge from '../../../../components/BetaBadge';
@@ -21,72 +17,16 @@ import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
 import useDrawer from '../../../../hooks/useDrawer';
 import useNotifications from '../../../../hooks/useNotifications';
 import useCurrentUser from '../../../../hooks/useCurrentUser';
-import { User } from '../../../../types/user';
 import { ChatRecord } from '../../../../types/chat';
 
 import ChatsList from './ChatsList';
-import UsersList from './UsersList';
 import SidebarTab from './Tab';
+import UsersList from './UsersList';
+import UserMenu, { UserMenuProps } from './UserMenu';
 
 interface SidebarProps {
   className?: string;
 }
-
-interface UserMenuProps extends MenuContentProps {
-  user?: User | null;
-  openConfirmSignOut?: () => void;
-  openGiveFeedback?: () => void;
-  closeMenu?: () => void;
-}
-
-// TODO move into Sidebar/UserMenu
-const UserMenu: FC<UserMenuProps> = ({
-  isSheet,
-  user,
-  openConfirmSignOut,
-  openGiveFeedback,
-  closeMenu,
-}) => (
-  <>
-    <div
-      className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
-        'px-4': !isSheet,
-      })}
-    >
-      <div className="flex items-center min-w-0">
-        <UserAvatar user={user} className="flex-shrink-0 mr-2 border border-gray-200" />
-        <div className="min-w-0">
-          <UserNickname user={user} className="text-gray-800" />
-          <UserDetails user={user} className="text-gray-400" shortCountry />
-        </div>
-      </div>
-      {isSheet && (
-        <Button size="sm" variant="muted" className="flex-shrink-0" onClick={closeMenu} outline>
-          <Icon name="x-mark" size="sm" />
-        </Button>
-      )}
-    </div>
-    <MenuItem onClick={openGiveFeedback} isSheet={isSheet}>
-      <Icon
-        name="message-pen"
-        size="sm"
-        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
-      />
-      Give us feedback
-    </MenuItem>
-    <MenuItem onClick={openConfirmSignOut} isSheet={isSheet}>
-      <Icon
-        name="right-from-bracket"
-        size="sm"
-        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
-      />
-      Sign out
-    </MenuItem>
-    {/* TODO [future] avatar editor */}
-    {/* TODO [future] mute sounds toggle */}
-    {/* TODO [future] dark mode switch */}
-  </>
-);
 
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user: authUser, signOut } = useAuth();
