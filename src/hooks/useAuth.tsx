@@ -154,7 +154,7 @@ const useProvideAuth = () => {
   useEffect(() => {
     if (hasSignedOut) {
       // reload the entire sign in page to reset recaptcha, etc
-      setTimeout(() => window.location.reload(), 1);
+      setTimeout(() => (window.location.href = '/sign-in?signedOut=true'), 1);
     }
   }, [hasSignedOut]);
 

@@ -26,40 +26,42 @@ const App: FC<AppProps> = () => {
   const isSplashVisible = isAppOfflineLoading || isSessionLoading || isSigningOut;
 
   return (
-    <div className="App h-full min-h-full max-h-full flex">
+    <>
       <Helmet>
         <title>babel chat - Meet and chat with people from around the world.</title>
       </Helmet>
-      {isSplashVisible ? (
-        <Splash />
-      ) : isAppOffline ? (
-        <AppOffline />
-      ) : (
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/main" />
-          </Route>
-          <ProtectedRoute path="/main">
-            <Main />
-          </ProtectedRoute>
-          <UnprotectedRoute path="/sign-in">
-            <SignIn />
-          </UnprotectedRoute>
-          <Route path="/terms-of-use">
-            <TermsOfUse />
-          </Route>
-          <Route path="/privacy-policy">
-            <PrivacyPolicy />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="*">
-            <PageNotFound />
-          </Route>
-        </Switch>
-      )}
-    </div>
+      <div className="App h-full min-h-full max-h-full flex">
+        {isSplashVisible ? (
+          <Splash />
+        ) : isAppOffline ? (
+          <AppOffline />
+        ) : (
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="/main" />
+            </Route>
+            <ProtectedRoute path="/main">
+              <Main />
+            </ProtectedRoute>
+            <UnprotectedRoute path="/sign-in">
+              <SignIn />
+            </UnprotectedRoute>
+            <Route path="/terms-of-use">
+              <TermsOfUse />
+            </Route>
+            <Route path="/privacy-policy">
+              <PrivacyPolicy />
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="*">
+              <PageNotFound />
+            </Route>
+          </Switch>
+        )}
+      </div>
+    </>
   );
 };
 

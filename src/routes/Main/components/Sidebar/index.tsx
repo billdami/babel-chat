@@ -1,94 +1,39 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useRef, useState } from 'react';
 import cn from 'classnames';
 
+import BetaBadge from '../../../../components/BetaBadge';
 import Button from '../../../../components/Button';
+import DialogConfirm from '../../../../components/DialogConfirm';
+import DialogFeedback from '../../../../components/DialogFeedback';
+import Icon from '../../../../components/Icon';
+import Link from '../../../../components/Link';
+import Menu from '../../../../components/Menu';
+import ScrollShadow from '../../../../components/ScrollShadow';
+import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import LogoIcon from '../../../../components/Svgs/Logos/Icon';
-import Link from '../../../../components/Link';
-import Icon from '../../../../components/Icon';
-import UserAvatar from '../../../../components/UserAvatar';
-import UserNickname from '../../../../components/UserNickname';
-import UserDetails from '../../../../components/UserDetails';
-import Menu, { MenuContentProps } from '../../../../components/Menu';
-import MenuItem from '../../../../components/Menu/MenuItem';
-import DialogFeedback from '../../../../components/DialogFeedback';
-import DialogConfirm from '../../../../components/DialogConfirm';
-import BetaBadge from '../../../../components/BetaBadge';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
-import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
-import useDrawer from '../../../../hooks/useDrawer';
-import useNotifications from '../../../../hooks/useNotifications';
 import useCurrentUser from '../../../../hooks/useCurrentUser';
-import { User } from '../../../../types/user';
+import useDrawer from '../../../../hooks/useDrawer';
+import useIsScrolled from '../../../../hooks/useIsScrolled';
+import useNotifications from '../../../../hooks/useNotifications';
+import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
 import { ChatRecord } from '../../../../types/chat';
 
 import ChatsList from './ChatsList';
-import UsersList from './UsersList';
 import SidebarTab from './Tab';
+import UsersList from './UsersList';
+import UserMenu, { UserMenuProps } from './UserMenu';
 
 interface SidebarProps {
   className?: string;
 }
 
-interface UserMenuProps extends MenuContentProps {
-  user?: User | null;
-  openConfirmSignOut?: () => void;
-  openGiveFeedback?: () => void;
-  closeMenu?: () => void;
-}
-
-// TODO move into Sidebar/UserMenu
-const UserMenu: FC<UserMenuProps> = ({
-  isSheet,
-  user,
-  openConfirmSignOut,
-  openGiveFeedback,
-  closeMenu,
-}) => (
-  <>
-    <div
-      className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
-        'px-4': !isSheet,
-      })}
-    >
-      <div className="flex items-center min-w-0">
-        <UserAvatar user={user} className="flex-shrink-0 mr-2 border border-gray-200" />
-        <div className="min-w-0">
-          <UserNickname user={user} className="text-gray-800" />
-          <UserDetails user={user} className="text-gray-400" shortCountry />
-        </div>
-      </div>
-      {isSheet && (
-        <Button size="sm" variant="muted" className="flex-shrink-0" onClick={closeMenu} outline>
-          <Icon name="x-mark" size="sm" />
-        </Button>
-      )}
-    </div>
-    <MenuItem onClick={openGiveFeedback} isSheet={isSheet}>
-      <Icon
-        name="message-pen"
-        size="sm"
-        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
-      />
-      Give us feedback
-    </MenuItem>
-    <MenuItem onClick={openConfirmSignOut} isSheet={isSheet}>
-      <Icon
-        name="right-from-bracket"
-        size="sm"
-        className={cn('inline-block text-gray-400', { 'mr-2': !isSheet, 'mr-3': isSheet })}
-      />
-      Sign out
-    </MenuItem>
-    {/* TODO [future] avatar editor */}
-    {/* TODO [future] mute sounds toggle */}
-    {/* TODO [future] dark mode switch */}
-  </>
-);
-
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
+  const usersEl = useRef<HTMLDivElement>(null);
+  const chatsEl = useRef<HTMLDivElement>(null);
+
   const { user: authUser, signOut } = useAuth();
   const { user } = useCurrentUser();
   const { activeTab, closeDrawer } = useDrawer();
@@ -96,6 +41,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(authUser?.uid);
+  const { isScrolled: isUsersScrolled, onScroll: onUsersScroll } = useIsScrolled(usersEl);
+  const { isScrolled: isChatsScrolled, onScroll: onChatsScroll } = useIsScrolled(chatsEl);
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
@@ -170,19 +117,25 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
       </div>
       <TabPanel
         id="tab-users"
-        className="flex-1 overflow-y-auto"
+        className="flex-1 flex relative overflow-hidden"
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
+        <ScrollShadow isVisible={isUsersScrolled} />
+        <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
+          <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
+        </div>
       </TabPanel>
       <TabPanel
         id="tab-chats"
-        className="flex-1 overflow-y-auto"
+        className="flex-1 flex relative overflow-hidden"
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
+        <ScrollShadow isVisible={isChatsScrolled} />
+        <div className="flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
+          <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
+        </div>
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />

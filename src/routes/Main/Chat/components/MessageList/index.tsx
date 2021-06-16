@@ -11,16 +11,17 @@ import React, {
 import cn from 'classnames';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
-import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
-import { User, UserRecord } from '../../../../../types/user';
-import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import Alert from '../../../../../components/Alert';
+import Button from '../../../../../components/Button';
+import ScrollShadow from '../../../../../components/ScrollShadow';
+import Spinner from '../../../../../components/Spinner';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
 import usePrevious from '../../../../../hooks/usePrevious';
 import usePageVisibility from '../../../../../hooks/usePageVisibility';
-import Spinner from '../../../../../components/Spinner';
-import Icon from '../../../../../components/Icon';
-import Button from '../../../../../components/Button';
+import { getFirebaseTimestamp } from '../../../../../utils/firebase';
+import { ChatMessageRecord, ChatRecord } from '../../../../../types/chat';
+import { User, UserRecord } from '../../../../../types/user';
+import { SYSTEM_ID, SYSTEM_USER_DETAILS } from '../../../../../constants/user';
 import {
   MSG_LOAD_MORE_BTN_HEIGHT,
   MSG_PAGE_LIMIT,
@@ -50,9 +51,15 @@ const MessageList: FC<MessageListProps> = ({
   isSpamReported = false,
   confirmToggleBlock,
 }) => {
+  const isFirstMount = useRef<boolean>(true);
+  const containerElement = useRef<HTMLDivElement>(null);
+
   const [limit, setLimit] = useState<number>(MSG_PAGE_LIMIT);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [isScrolledUp, setIsScrolledUp] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(
+    (containerElement.current?.scrollTop ?? 0) > 0
+  );
 
   // TODO handle messagesError
   const [messages, isLoading] = useChatMessages(originUser?.id, destUserId, limit);
@@ -61,9 +68,7 @@ const MessageList: FC<MessageListProps> = ({
   const prevMessages = usePrevious<ChatMessageRecord[] | undefined>(messages);
   const prevChatId = usePrevious<string | undefined>(originChat?.id);
 
-  const isFirstMount = useRef<boolean>(true);
   const lastMessages = useRef<ChatMessageRecord[] | null | undefined>(messages);
-  const containerElement = useRef<HTMLDivElement>(null);
 
   const isSelf = !!originUser && !!destUser && originUser.id === destUser.id;
   const emptyChat = !isSelf && !isBlocked && !isLoading && !messages?.length;
@@ -106,6 +111,7 @@ const MessageList: FC<MessageListProps> = ({
     const el = containerElement.current;
     if (el) {
       const maxScroll = el.scrollHeight - el.clientHeight;
+      setIsScrolled(el.scrollTop > 0);
       setIsScrolledUp(el.scrollTop + MSG_SCROLLED_UP_THRESHOLD < maxScroll);
       // when scrolled all the way to the top, auto load older messages, if there are any
       if (el.scrollTop === 0 && canLoadMore && !isLoading && !isLoadingMore) {
@@ -174,77 +180,79 @@ const MessageList: FC<MessageListProps> = ({
   }, [prevMessages, messages, isLoadingMore, isScrolledUp]);
 
   return (
-    <div
-      className="flex-1 flex flex-col overflow-y-auto"
-      ref={containerElement}
-      onScroll={onContainerScroll}
-    >
-      <div className="py-1">
-        {isSelf && (
-          // TODO create <Alert>
-          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-700 bg-yellow-100 bg-opacity-60 border-l-4 border-yellow-500 rounded-sm rounded-tl-none rounded-bl-none">
-            Sorry, you can't talk to yourself on babel chat. 😛
-          </div>
-        )}
+    <div className="flex-1 flex relative overflow-hidden">
+      <ScrollShadow isVisible={isScrolled} />
+      <div
+        className="flex-1 flex flex-col overflow-y-auto"
+        ref={containerElement}
+        onScroll={onContainerScroll}
+      >
+        <div className="py-1">
+          {isSelf && (
+            <Alert variant="warning" className="my-2 mx-2 md:mx-4">
+              Sorry, you can't talk to yourself on babel chat. 😛
+            </Alert>
+          )}
 
-        {isBlocked && (
-          // TODO create <Alert>
-          <div className="mx-2 my-2 md:mx-4 px-6 py-4 text-sm text-yellow-700 bg-yellow-100 bg-opacity-60 border-l-4 border-yellow-500 rounded-sm rounded-tl-none rounded-bl-none">
-            <Icon name="ban" className="mr-2 inline-block" size="sm" />
-            {isSpamReported ? (
-              'This user has been reported as spam and is permanently blocked.'
-            ) : (
-              <>
-                This user has been blocked.{' '}
-                <Button variant="link" size="sm" onClick={confirmToggleBlock} inline>
-                  Unblock
-                </Button>
-              </>
-            )}
-          </div>
-        )}
+          {isBlocked && (
+            <Alert variant="warning" icon="ban" className="my-2 mx-2 md:mx-4">
+              {isSpamReported ? (
+                <>This user has been reported as spam and is permanently blocked.</>
+              ) : (
+                <>
+                  This user has been blocked.{' '}
+                  <Button variant="link" size="sm" onClick={confirmToggleBlock} inline>
+                    Unblock
+                  </Button>
+                </>
+              )}
+            </Alert>
+          )}
 
-        {/* TODO [future] show "warning!" alert when there are no messages yet, and the user is convicted of being a spammer */}
+          {/* TODO [future] show "warning!" alert when there are no messages yet, and the user is convicted of being a spammer */}
 
-        {emptyChat && (
-          <div className="px-2 md:px-3 py-3 text-sm text-gray-400">
-            Nothing here yet...say hi and introduce yourself!
-          </div>
-        )}
+          {emptyChat && (
+            <div className="px-2 md:px-3 py-3 text-sm text-gray-400">
+              Nothing here yet...say hi and introduce yourself!
+            </div>
+          )}
 
-        {canLoadMore && (
-          <div className="px-2 md:px-3 py-3">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={loadMore}
-              disabled={isLoading}
-              fullWidth
-              outline
-            >
-              {isLoading ? 'Loading...' : 'Load older messages'}
-            </Button>
-          </div>
-        )}
+          {canLoadMore && (
+            <div className="px-2 md:px-3 py-3">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={loadMore}
+                disabled={isLoading}
+                fullWidth
+                outline
+              >
+                {isLoading ? 'Loading...' : 'Load older messages'}
+              </Button>
+            </div>
+          )}
 
-        {!isBlocked && (
-          <div className="max-w-4xl">
-            {messages?.map((message) => (
-              <div key={message.id} data-msg-id={message.id} className="px-2 md:px-3">
-                <span
-                  className={cn('font-bold', { 'text-green-500': authors[message.author]?.isSelf })}
-                >
-                  {authors[message.author]?.isSelf
-                    ? 'Me'
-                    : authors[message.author]?.nickname || 'Unknown'}
-                  :
-                </span>{' '}
-                <span>{message.content}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {isLoading && <Spinner className="mx-2 md:mx-3 my-1" />}
+          {!isBlocked && (
+            <div className="max-w-4xl">
+              {messages?.map((message) => (
+                <div key={message.id} data-msg-id={message.id} className="px-2 md:px-3">
+                  <span
+                    className={cn('font-bold', {
+                      'text-green-500': authors[message.author]?.isSelf,
+                    })}
+                  >
+                    {authors[message.author]?.isSelf
+                      ? 'Me'
+                      : authors[message.author]?.nickname || 'Unknown'}
+                    :
+                  </span>{' '}
+                  <span>{message.content}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {isLoading && <Spinner className="mx-2 md:mx-3 my-1" />}
+        </div>
       </div>
     </div>
   );

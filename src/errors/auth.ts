@@ -13,7 +13,9 @@ export class SignOutError extends Error {
 }
 
 export class ReCaptchaError extends Error {
-  constructor(message: string = 'reCAPTCHA verification failed. Please try again.') {
+  constructor(
+    message: string = 'reCAPTCHA verification failed. Please reload the page and try again.'
+  ) {
     super(message);
     this.name = 'ReCaptchaError';
   }

@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { DetailedHTMLProps, FC, HTMLAttributes } from 'react';
 import cn from 'classnames';
 
-interface TabPanelProps {
+interface TabPanelProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   id: string;
   activeTabId: string;
   className?: string;
