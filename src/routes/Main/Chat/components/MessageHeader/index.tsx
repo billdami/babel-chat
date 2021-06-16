@@ -4,6 +4,7 @@ import Button from '../../../../../components/Button';
 import DrawerToggleButton from '../../../../../components/DrawerToggleButton';
 import Icon from '../../../../../components/Icon';
 import Menu from '../../../../../components/Menu';
+import NavBar from '../../../../../components/NavBar';
 import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
@@ -102,8 +103,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
   );
 
   return (
-    // TODO create <NavBar>
-    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 bg-green-500 text-white">
+    <NavBar>
       <div className="flex items-center min-w-0">
         <DrawerToggleButton />
         {!isLoading &&
@@ -153,7 +153,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
           content={ActionsMenu}
           contentProps={actionsMenuProps}
           trigger={
-            // create a <MenuTrigger> component
+            // TODO create <MenuTrigger> component
             <Button
               variant="inverse"
               className="ml-2 flex-shrink-0"
@@ -169,7 +169,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
           }
         />
       </div>
-    </div>
+    </NavBar>
   );
 };
 

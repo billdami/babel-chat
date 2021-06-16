@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import DrawerToggleButton from '../../../components/DrawerToggleButton';
+import NavBar from '../../../components/NavBar';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
@@ -61,11 +62,10 @@ const Index: FC<IndexProps> = () => {
         <title>Dashboard | babel chat</title>
       </Helmet>
       <div className="Index flex flex-col flex-1">
-        {/* TODO create <NavBar> */}
-        <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
+        <NavBar>
           <DrawerToggleButton />
           {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
-        </div>
+        </NavBar>
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
           <div className="flex-1 flex overflow-y-auto" ref={scrollContainer} onScroll={onScroll}>
