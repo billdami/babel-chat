@@ -11,17 +11,23 @@ import { ProvideAuth } from './hooks/useAuth';
 import { ProvideDrawer } from './hooks/useDrawer';
 import { ProvideMedia } from './hooks/useMedia';
 import reportWebVitals from './reportWebVitals';
+import { initializeTheme, ProvideTheme } from './hooks/useTheme';
+
+// apply the preferred theme immediately on boot to avoid FOUC
+initializeTheme();
 
 ReactDOM.render(
   <React.StrictMode>
     <HelmetProvider>
       <ProvideAuth>
         <ProvideMedia>
-          <ProvideDrawer>
-            <Router>
-              <App />
-            </Router>
-          </ProvideDrawer>
+          <ProvideTheme>
+            <ProvideDrawer>
+              <Router>
+                <App />
+              </Router>
+            </ProvideDrawer>
+          </ProvideTheme>
         </ProvideMedia>
       </ProvideAuth>
     </HelmetProvider>
