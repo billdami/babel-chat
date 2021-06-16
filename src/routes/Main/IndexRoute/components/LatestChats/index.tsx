@@ -25,8 +25,7 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
     <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto 2xl:max-w-md lg:ml-2 2xl:ml-0">
       <div className="flex justify-between sm:justify-start 2xl:justify-between items-center mb-4">
         <h3 className="text-xl text-gray-600 mr-2">My latest chats</h3>
-        {/* TODO if on desktop, and chats tab is already open, show a tooltip on click or something */}
-        <Button variant="link" size="sm" onClick={openAllChats}>
+        <Button variant="link" size="sm" className="md:hidden" onClick={openAllChats}>
           View all
         </Button>
       </div>

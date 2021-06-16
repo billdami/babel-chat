@@ -1,15 +1,16 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { UserRecord, UserSort, UserFilter } from '../../../../../types/user';
-import Spinner from '../../../../../components/Spinner';
-import Input from '../../../../../components/Input';
-import Button from '../../../../../components/Button';
-import Icon from '../../../../../components/Icon';
-import { filterUserRecords, groupUserFilters, sortUserRecords } from '../../../../../utils/user';
-import Menu from '../../../../../components/Menu';
 import Badge from '../../../../../components/Badge';
+import Button from '../../../../../components/Button';
+import FormattedNumber from '../../../../../components/FormattedNumber';
+import Icon from '../../../../../components/Icon';
+import Input from '../../../../../components/Input';
+import Menu from '../../../../../components/Menu';
+import Spinner from '../../../../../components/Spinner';
 import useCurrentUser from '../../../../../hooks/useCurrentUser';
+import { UserRecord, UserSort, UserFilter } from '../../../../../types/user';
+import { filterUserRecords, groupUserFilters, sortUserRecords } from '../../../../../utils/user';
 import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/user';
 
 import ListItem from './ListItem';
@@ -191,8 +192,14 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
       </div>
       {sortedUsers.length > 0 && sortedUsers.length !== users?.length && (
         <div className="px-3 mb-1 text-sm text-gray-600">
-          <span className="font-bold">{sortedUsers.length}</span> of{' '}
-          <span className="font-bold">{users?.length}</span> users shown.
+          <span className="font-bold">
+            <FormattedNumber value={sortedUsers.length} />
+          </span>{' '}
+          of{' '}
+          <span className="font-bold">
+            <FormattedNumber value={users?.length} />
+          </span>{' '}
+          users shown.
           <Button variant="link" size="sm" className="inline-block" onClick={clearFilters}>
             Clear filters
           </Button>

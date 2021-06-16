@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import Badge from '../../../../../components/Badge';
+import FormattedNumber from '../../../../../components/FormattedNumber';
 import Tab from '../../../../../components/Tab/TabList/Tab';
 import useDrawer, { DrawerTab } from '../../../../../hooks/useDrawer';
 
@@ -44,7 +45,7 @@ const SidebarTab: FC<SidebarTabProps> = ({
       )}
       {label}
       <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-xs font-bold">
-        {count ?? 0}
+        <FormattedNumber value={count} />
       </span>
     </Tab>
   );

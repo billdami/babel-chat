@@ -1,10 +1,10 @@
-import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 
 import Button from '../../../../../components/Button';
-import Checkbox from '../../../../../components/Checkbox';
 import DialogConfirm from '../../../../../components/DialogConfirm';
+import FormattedNumber from '../../../../../components/FormattedNumber';
 import Icon from '../../../../../components/Icon';
 import Menu from '../../../../../components/Menu';
 import Spinner from '../../../../../components/Spinner';
@@ -16,6 +16,7 @@ import { getFirebaseTimestamp } from '../../../../../utils/firebase';
 import { blockUser } from '../../../../../utils/user';
 import { ChatRouteParams } from '../../../Chat';
 
+import EditToolbar from './EditToolbar';
 import ListItem from './ListItem';
 import SortMenu, { SortMenuProps } from './SortMenu';
 
@@ -71,13 +72,6 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   const deselectAllChats = useCallback(() => {
     setSelectedChatIds([]);
   }, []);
-
-  const onToggleAllChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      return event.target.checked ? selectAllChats() : deselectAllChats();
-    },
-    [selectAllChats, deselectAllChats]
-  );
 
   const toggleChatSelection = useCallback(
     (chat: ChatRecord) => {
@@ -172,60 +166,16 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
       {(!!sortedChats.length || isEditing) && (
         <div className="px-3 py-2 mb-1 bg-gray-200 bg-opacity-70">
           {isEditing ? (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Checkbox
-                  onChange={onToggleAllChange}
-                  checked={!!sortedChats.length && selectedChatIds.length === sortedChats.length}
-                  isIndeterminate={
-                    !!selectedChatIds.length && selectedChatIds.length !== sortedChats.length
-                  }
-                  inputClassName="bg-white"
-                  standalone
-                />
-                {!!selectedChatIds.length && (
-                  <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-sm font-bold">
-                    {selectedChatIds.length}
-                  </span>
-                )}
-              </div>
-              <div className="flex">
-                <div className="flex mr-1">
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    onClick={() => markChatsRead(selectedChatIds)}
-                    disabled={!selectedChatIds.length}
-                    title="Mark as read"
-                  >
-                    <Icon name="message-check" size="sm" />
-                  </Button>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    className="ml-1"
-                    onClick={() => confirmBlockUsers(selectedChatIds)}
-                    disabled={!selectedChatIds.length}
-                    title="Block"
-                  >
-                    <Icon name="ban" size="sm" />
-                  </Button>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    className="ml-1"
-                    onClick={() => removeChats(selectedChatIds)}
-                    disabled={!selectedChatIds.length}
-                    title="Remove"
-                  >
-                    <Icon name="trash-can" size="sm" />
-                  </Button>
-                </div>
-                <Button variant="link" size="sm" className="-mr-2" onClick={stopEditing}>
-                  Done
-                </Button>
-              </div>
-            </div>
+            <EditToolbar
+              sortedChats={sortedChats}
+              selectedChatIds={selectedChatIds}
+              stopEditing={stopEditing}
+              markChatsRead={markChatsRead}
+              confirmBlockUsers={confirmBlockUsers}
+              removeChats={removeChats}
+              selectAllChats={selectAllChats}
+              deselectAllChats={deselectAllChats}
+            />
           ) : (
             <div className="flex justify-between">
               <Menu<SortMenuProps>
@@ -288,9 +238,14 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         message={
           <>
             <div className="mb-4">
-              {confirmedChatIds.length === 1
-                ? 'Are you sure you want to block this user?'
-                : `Are you sure you want to block thes ${confirmedChatIds.length} users?`}
+              {confirmedChatIds.length === 1 ? (
+                'Are you sure you want to block this user?'
+              ) : (
+                <>
+                  Are you sure you want to block these{' '}
+                  <FormattedNumber value={confirmedChatIds.length} /> users?
+                </>
+              )}
             </div>
             <div className="mb-4">
               You will no longer receive messages from (or be able to send messages to) them, until
