@@ -8,7 +8,11 @@ const TweetButton: FC<TweetButtonProps> = () => {
   const container = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    twttr?.widgets?.load(container.current!);
+    try {
+      twttr?.widgets?.load(container.current!);
+    } catch (err) {
+      // fail silently
+    }
   }, []);
 
   return (

@@ -6,7 +6,11 @@ const FacebookShareButton: FC<FacebookShareButtonProps> = () => {
   const container = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    FB?.XFBML?.parse(container.current!);
+    try {
+      FB?.XFBML?.parse(container.current!);
+    } catch (err) {
+      // fail silently
+    }
   }, []);
 
   return (
