@@ -1,22 +1,24 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useRef, useState } from 'react';
 import cn from 'classnames';
 
+import BetaBadge from '../../../../components/BetaBadge';
 import Button from '../../../../components/Button';
+import DialogConfirm from '../../../../components/DialogConfirm';
+import DialogFeedback from '../../../../components/DialogFeedback';
+import Icon from '../../../../components/Icon';
+import Link from '../../../../components/Link';
+import Menu from '../../../../components/Menu';
+import ScrollShadow from '../../../../components/ScrollShadow';
+import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
-import LogoIcon from '../../../../components/Svgs/Logos/Icon';
-import Link from '../../../../components/Link';
-import Icon from '../../../../components/Icon';
-import Menu from '../../../../components/Menu';
-import DialogFeedback from '../../../../components/DialogFeedback';
-import DialogConfirm from '../../../../components/DialogConfirm';
-import BetaBadge from '../../../../components/BetaBadge';
 import useAuth from '../../../../hooks/useAuth';
 import { useChats } from '../../../../hooks/useChatRecord';
-import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
-import useDrawer from '../../../../hooks/useDrawer';
-import useNotifications from '../../../../hooks/useNotifications';
 import useCurrentUser from '../../../../hooks/useCurrentUser';
+import useDrawer from '../../../../hooks/useDrawer';
+import useIsScrolled from '../../../../hooks/useIsScrolled';
+import useNotifications from '../../../../hooks/useNotifications';
+import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
 import { ChatRecord } from '../../../../types/chat';
 
 import ChatsList from './ChatsList';
@@ -29,6 +31,9 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
+  const usersEl = useRef<HTMLDivElement>(null);
+  const chatsEl = useRef<HTMLDivElement>(null);
+
   const { user: authUser, signOut } = useAuth();
   const { user } = useCurrentUser();
   const { activeTab, closeDrawer } = useDrawer();
@@ -36,6 +41,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(authUser?.uid);
+  const { isScrolled: isUsersScrolled, onScroll: onUsersScroll } = useIsScrolled(usersEl);
+  const { isScrolled: isChatsScrolled, onScroll: onChatsScroll } = useIsScrolled(chatsEl);
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
@@ -110,19 +117,25 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
       </div>
       <TabPanel
         id="tab-users"
-        className="flex-1 overflow-y-auto"
+        className="flex-1 flex relative overflow-hidden"
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
+        <ScrollShadow isVisible={isUsersScrolled} />
+        <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
+          <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
+        </div>
       </TabPanel>
       <TabPanel
         id="tab-chats"
-        className="flex-1 overflow-y-auto"
+        className="flex-1 flex relative overflow-hidden"
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
+        <ScrollShadow isVisible={isChatsScrolled} />
+        <div className="flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
+          <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
+        </div>
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import Badge from '../../../components/Badge';
@@ -6,8 +6,10 @@ import Button from '../../../components/Button';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import Icon from '../../../components/Icon';
+import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
+import useIsScrolled from '../../../hooks/useIsScrolled';
 import useNotifications from '../../../hooks/useNotifications';
 
 import Footer from './components/Footer';
@@ -20,10 +22,12 @@ import TipsAndTricks from './components/TipsAndTricks';
 interface IndexProps {}
 
 const Index: FC<IndexProps> = () => {
-  const { signOut } = useAuth();
+  const scrollContainer = useRef<HTMLDivElement>(null);
 
+  const { signOut } = useAuth();
   const { openDrawer, toggleDrawer, updateTab } = useDrawer();
   const { numUnread } = useNotifications();
+  const { isScrolled, onScroll } = useIsScrolled(scrollContainer);
 
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
   const [isSignOutConfirmOpen, setIsSignOutConfirmOpen] = useState<boolean>(false);
@@ -61,7 +65,9 @@ const Index: FC<IndexProps> = () => {
         <title>Dashboard | babel chat</title>
       </Helmet>
       <div className="Index flex flex-col flex-1">
+        {/* TODO create <NavBar> */}
         <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
+          {/* TODO create <DrawerToggleButton> */}
           <Button
             onClick={toggleDrawer}
             variant="inverse"
@@ -84,20 +90,23 @@ const Index: FC<IndexProps> = () => {
           </Button>
           {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
         </div>
-        <div className="flex-1 flex overflow-y-auto">
-          <div className="flex-1 flex flex-col">
-            <div className="flex-1 2xl:flex">
-              <div className="2xl:w-2/3 mx-4 mt-4">
-                <Hero openConfirmSignOut={openConfirmSignOut} />
-                <QuickActions openAllUsers={openAllUsers} openGiveFeedback={openGiveFeedback} />
-                <TipsAndTricks />
+        <div className="flex-1 flex relative overflow-hidden">
+          <ScrollShadow isVisible={isScrolled} />
+          <div className="flex-1 flex overflow-y-auto" ref={scrollContainer} onScroll={onScroll}>
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1 2xl:flex">
+                <div className="2xl:w-2/3 mx-4 mt-4">
+                  <Hero openConfirmSignOut={openConfirmSignOut} />
+                  <QuickActions openAllUsers={openAllUsers} openGiveFeedback={openGiveFeedback} />
+                  <TipsAndTricks />
+                </div>
+                <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
+                  <NewestUsers openAllUsers={openAllUsers} />
+                  <LatestChats openAllChats={openAllChats} />
+                </div>
               </div>
-              <div className="my-4 mr-4 ml-4 block lg:flex 2xl:block 2xl:flex-1">
-                <NewestUsers openAllUsers={openAllUsers} />
-                <LatestChats openAllChats={openAllChats} />
-              </div>
+              <Footer />
             </div>
-            <Footer />
           </div>
         </div>
         <DialogFeedback

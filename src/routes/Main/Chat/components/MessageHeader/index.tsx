@@ -107,8 +107,10 @@ const MessageHeader: FC<MessageHeaderProps> = ({
   );
 
   return (
+    // TODO create <NavBar>
     <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 bg-green-500 text-white">
       <div className="flex items-center min-w-0">
+        {/* TODO create <DrawerToggleButton> */}
         <Button
           onClick={toggleDrawer}
           variant="inverse"
