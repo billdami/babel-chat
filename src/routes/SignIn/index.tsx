@@ -1,15 +1,7 @@
 import React, { createRef, FC, FormEvent, useCallback, useMemo, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import { Age, Gender } from '../../types/user';
-import {
-  GENDERS,
-  MAX_AGE,
-  MAX_NICKNAME_LEN,
-  MIN_AGE,
-  MIN_NICKNAME_LEN,
-  UNSPECIFIED,
-} from '../../constants/user';
+import BetaBadge from '../../components/BetaBadge';
 import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
 import Checkbox from '../../components/Checkbox';
@@ -18,16 +10,26 @@ import ErrorText from '../../components/FormControl/ErrorText';
 import FormControl from '../../components/FormControl';
 import Input from '../../components/Input';
 import Link from '../../components/Link';
+import Logo from '../../components/Svgs/Logos/Logo';
 import Radio from '../../components/Radio';
 import Select, { SelectOption } from '../../components/Select';
-import Logo from '../../components/Svgs/Logos/Logo';
 import Spinner from '../../components/Spinner';
-import BetaBadge from '../../components/BetaBadge';
 import useAuth from '../../hooks/useAuth';
 import useScrollToTop from '../../hooks/useScrollToTop';
-import { COPYRIGHT_LINE } from '../../constants/app';
+import useQueryParams from '../../hooks/useQueryParams';
 import { envVar } from '../../utils/env';
+import { Age, Gender } from '../../types/user';
 import { ReCaptchaError, ReCaptchaLoadError, SignInError } from '../../errors/auth';
+import { COPYRIGHT_LINE } from '../../constants/app';
+import {
+  GENDERS,
+  MAX_AGE,
+  MAX_NICKNAME_LEN,
+  MIN_AGE,
+  MIN_NICKNAME_LEN,
+  UNSPECIFIED,
+} from '../../constants/user';
+import Alert from '../../components/Alert';
 
 interface SignInProps {}
 
@@ -48,6 +50,7 @@ const countryOptions: SelectOption<Country>[] = [
 
 const SignIn: FC<SignInProps> = () => {
   useScrollToTop();
+  const queryParams = useQueryParams();
   const { isSigningIn, signIn } = useAuth();
 
   const captcha = createRef<ReCAPTCHA>();
@@ -69,6 +72,8 @@ const SignIn: FC<SignInProps> = () => {
       agreedToToS,
     [nickname, agreedToToS]
   );
+
+  const wasSignedOut = queryParams.get('signedOut') === 'true';
 
   const onCaptchaExpired = useCallback(() => captcha.current?.reset(), [captcha]);
 
@@ -140,13 +145,17 @@ const SignIn: FC<SignInProps> = () => {
           </div>
         </div>
         <form onSubmit={onSubmit} className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
+          {wasSignedOut && (
+            <Alert variant="warning" icon="right-from-bracket" className="mb-4">
+              You have been signed out.
+            </Alert>
+          )}
           <p className="mb-4 md:mb-6">
             <span className="text-gray-500 font-bold">babel chat</span> is free and completely
             anonymous. If you’d like, you can provide some basic info below, but it is{' '}
             <strong className="font-bold">100% optional.</strong>&nbsp;&nbsp;
             <Link to="/about">Learn more</Link>
           </p>
-
           <FormControl label="Nickname" htmlFor="signup-nickname">
             <Input
               placeholder="Leave blank for a random nickname"
