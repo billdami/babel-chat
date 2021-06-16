@@ -1,4 +1,4 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { lsGet, lsSet } from '../utils/localStorage';
 
@@ -9,6 +9,7 @@ type ThemePref = Theme | null | undefined;
 
 interface ThemeContext {
   theme: Theme;
+  isDarkTheme: boolean;
   updateTheme: (newTheme: Theme, savePref: boolean) => void;
 }
 
@@ -33,13 +34,18 @@ export const initializeTheme = () => {
   return applyTheme(getTheme(), false);
 };
 
+const initTheme = getTheme();
+
 const themeContext = createContext<ThemeContext>({
-  theme: getMatchedTheme(queryList),
+  theme: initTheme,
+  isDarkTheme: initTheme === 'dark',
   updateTheme: () => {},
 });
 
 const useProvideTheme = (): ThemeContext => {
   const [theme, setTheme] = useState<Theme>(getTheme());
+
+  const isDarkTheme = useMemo(() => theme === 'dark', [theme]);
 
   const updateTheme = useCallback((newTheme: Theme, savePref: boolean = false) => {
     setTheme(newTheme);
@@ -60,7 +66,7 @@ const useProvideTheme = (): ThemeContext => {
     []
   );
 
-  return { theme, updateTheme };
+  return { theme, isDarkTheme, updateTheme };
 };
 
 export const ProvideTheme: FC<{}> = ({ children }) => {
