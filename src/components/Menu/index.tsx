@@ -13,6 +13,7 @@ import cn from 'classnames';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 
+import Backdrop from '../Backdrop';
 import useMedia from '../../hooks/useMedia';
 
 export interface MenuContentProps {
@@ -99,8 +100,7 @@ const Menu = <T extends MenuContentProps>({
         // TODO animate backdrop (opacity) and sheet (slide up/down) show/hide with react-spring <Transition>
         createPortal(
           <>
-            {/* TODO create <Backdrop> */}
-            <div className="fixed inset-0 bg-gray-900 bg-opacity-60" aria-hidden="true"></div>
+            <Backdrop />
             <div
               ref={setSheetElement}
               role="menu"
