@@ -10,12 +10,13 @@ import ErrorText from '../../components/FormControl/ErrorText';
 import FormControl from '../../components/FormControl';
 import Input from '../../components/Input';
 import Link from '../../components/Link';
-import Logo from '../../components/Svgs/Logos/Logo';
+import Logo from '../../components/Logo';
 import Radio from '../../components/Radio';
 import Select, { SelectOption } from '../../components/Select';
 import Spinner from '../../components/Spinner';
 import useAuth from '../../hooks/useAuth';
 import useScrollToTop from '../../hooks/useScrollToTop';
+import useTheme from '../../hooks/useTheme';
 import useQueryParams from '../../hooks/useQueryParams';
 import { envVar } from '../../utils/env';
 import { Age, Gender } from '../../types/user';
@@ -52,6 +53,7 @@ const SignIn: FC<SignInProps> = () => {
   useScrollToTop();
   const queryParams = useQueryParams();
   const { isSigningIn, signIn } = useAuth();
+  const { theme } = useTheme();
 
   const captcha = createRef<ReCAPTCHA>();
 
@@ -136,6 +138,7 @@ const SignIn: FC<SignInProps> = () => {
   );
 
   return (
+    // TODO add absolute positioned dark mode toggle to top right of all public pages
     <div className="mx-auto my-auto px-4 pt-4 pb-20 md:pb-4">
       <div className="w-full sm:w-116 mt-8 md:mt-4">
         <div className="flex justify-center mx-auto mb-4 md:mb-6 mt-4 md:mt-0">
@@ -144,7 +147,10 @@ const SignIn: FC<SignInProps> = () => {
             <BetaBadge className="-top-2 -right-4 md:-right-8" />
           </div>
         </div>
-        <form onSubmit={onSubmit} className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
+        <form
+          onSubmit={onSubmit}
+          className="p-4 md:p-6 mb-4 bg-white dark:bg-gray-800 rounded text-gray-700 dark:text-gray-400"
+        >
           {wasSignedOut && (
             <Alert variant="warning" icon="right-from-bracket" className="mb-4">
               You have been signed out.
@@ -228,8 +234,7 @@ const SignIn: FC<SignInProps> = () => {
             sitekey={envVar('CAPTCHA_SITE_KEY')!}
             size="invisible"
             badge="bottomright"
-            // TODO set based on light or dark app theme setting
-            theme="light"
+            theme={theme}
           />
 
           <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>

@@ -27,19 +27,19 @@ const baseClasses = `
 appearance-none
 block
 rounded-sm
-border
-border-gray-300
-bg-white
+dark:text-white dark:placeholder-gray-500
+bg-white dark:bg-gray-800
+border border-gray-300 dark:border-gray-600
 bg-caret
 bg-no-repeat
 bg-4x3
 bg-right-3-center
 transition-shadow
-focus:border-green-400
+focus:border-green-400 dark:focus:border-green-500
 focus:outline-none
 focus:ring-4
-focus:ring-opacity-50
-focus:ring-green-300
+focus:ring-green-300 dark:focus:ring-green-500
+focus:ring-opacity-50 dark:focus:ring-opacity-50
 disabled:opacity-50
 disabled:bg-gray-200
 disabled:cursor-not-allowed`;
