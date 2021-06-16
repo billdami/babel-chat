@@ -4,7 +4,7 @@ import cn from 'classnames';
 type ButtonVariant = 'primary' | 'secondary' | 'muted' | 'inverse' | 'link';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps
+export interface ButtonProps
   extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;

@@ -1,15 +1,13 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 
-import Badge from '../../../../../components/Badge';
 import Button from '../../../../../components/Button';
+import DrawerToggleButton from '../../../../../components/DrawerToggleButton';
 import Icon from '../../../../../components/Icon';
 import Menu from '../../../../../components/Menu';
 import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import UserStatus from '../../../../../components/UserStatus';
-import useDrawer from '../../../../../hooks/useDrawer';
-import useNotifications from '../../../../../hooks/useNotifications';
 import { ChatRecord } from '../../../../../types/chat';
 import { User, UserRecord } from '../../../../../types/user';
 
@@ -44,9 +42,6 @@ const MessageHeader: FC<MessageHeaderProps> = ({
   confirmToggleBlock,
   confirmReporSpam,
 }) => {
-  const { toggleDrawer } = useDrawer();
-  const { numUnread } = useNotifications();
-
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const userDetailsExist = !!userDetails?.nickname;
@@ -110,25 +105,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
     // TODO create <NavBar>
     <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 bg-green-500 text-white">
       <div className="flex items-center min-w-0">
-        {/* TODO create <DrawerToggleButton> */}
-        <Button
-          onClick={toggleDrawer}
-          variant="inverse"
-          className="mr-2 md:hidden relative flex-shrink-0"
-          outline
-        >
-          <Icon name="bars" size="sm" className="inline-block" />
-          {!!numUnread && (
-            <Badge
-              className="absolute -right-1 -top-1"
-              tooltip={
-                numUnread
-                  ? `You have ${numUnread} ${numUnread === 1 ? 'chat' : 'chats'} with new messages!`
-                  : ''
-              }
-            />
-          )}
-        </Button>
+        <DrawerToggleButton />
         {!isLoading &&
           (userDetailsExist ? (
             <div className="flex items-center min-w-0">

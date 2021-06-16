@@ -1,16 +1,13 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import Badge from '../../../components/Badge';
-import Button from '../../../components/Button';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
-import Icon from '../../../components/Icon';
+import DrawerToggleButton from '../../../components/DrawerToggleButton';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
 import useIsScrolled from '../../../hooks/useIsScrolled';
-import useNotifications from '../../../hooks/useNotifications';
 
 import Footer from './components/Footer';
 import Hero from './components/Hero';
@@ -25,8 +22,7 @@ const Index: FC<IndexProps> = () => {
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   const { signOut } = useAuth();
-  const { openDrawer, toggleDrawer, updateTab } = useDrawer();
-  const { numUnread } = useNotifications();
+  const { openDrawer, updateTab } = useDrawer();
   const { isScrolled, onScroll } = useIsScrolled(scrollContainer);
 
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
@@ -67,27 +63,7 @@ const Index: FC<IndexProps> = () => {
       <div className="Index flex flex-col flex-1">
         {/* TODO create <NavBar> */}
         <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
-          {/* TODO create <DrawerToggleButton> */}
-          <Button
-            onClick={toggleDrawer}
-            variant="inverse"
-            className="relative mr-2 md:hidden"
-            outline
-          >
-            <Icon name="bars" size="sm" className="inline-block" />
-            {!!numUnread && (
-              <Badge
-                className="absolute -right-1 -top-1"
-                tooltip={
-                  numUnread
-                    ? `You have ${numUnread} ${
-                        numUnread === 1 ? 'chat' : 'chats'
-                      } with new messages!`
-                    : ''
-                }
-              />
-            )}
-          </Button>
+          <DrawerToggleButton />
           {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
         </div>
         <div className="flex-1 flex relative overflow-hidden">
