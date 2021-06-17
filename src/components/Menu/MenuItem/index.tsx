@@ -13,7 +13,7 @@ const MenuItem: FC<MenuItemProps> = ({ children, className, isSheet, ...rest }) 
     className={cn(
       `flex items-center w-full
       leading-6 text-left text-gray-600
-      focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-green-300
+      focus:outline-none focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500
       disabled:opacity-50 disabled:bg-transparent disabled:cursor-not-allowed`,
       className,
       {

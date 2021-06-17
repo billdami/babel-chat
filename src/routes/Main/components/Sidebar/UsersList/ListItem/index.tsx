@@ -28,7 +28,7 @@ const ListItem: FC<ListItemProps> = ({ user, blockedIds }) => {
           px-3 py-1
           text-left
           hover:bg-opacity-50 hover:bg-gray-200
-          focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+          focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"
         activeClassName="bg-gray-200 hover:bg-opacity-100"
         to={`/main/chat/${user.id}`}
         onClick={closeDrawer}

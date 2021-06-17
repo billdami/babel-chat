@@ -25,7 +25,7 @@ const TileButton: FC<TileButtonProps> = ({ icon, label, onClick }) => {
         border border-gray-100
         shadow hover:shadow-md
         rounded-lg
-        focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-green-300"
+        focus:outline-none focus:ring-4 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"
       onClick={onClick}
     >
       <Icon name={icon} size="lg" className="mb-4" />

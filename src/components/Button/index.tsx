@@ -21,8 +21,8 @@ rounded
 transition-shadow
 focus:outline-none
 focus:ring-4
-focus:ring-opacity-50
-focus:ring-green-300
+focus:ring-green-300 dark:focus:ring-green-500
+focus:ring-opacity-50 dark:focus:ring-opacity-50
 disabled:shadow-none
 disabled:opacity-50
 disabled:cursor-not-allowed`;

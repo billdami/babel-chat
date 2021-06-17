@@ -27,7 +27,7 @@ const baseClasses = `
 appearance-none
 block
 rounded-sm
-dark:text-white dark:placeholder-gray-500
+dark:text-gray-300 dark:placeholder-gray-500
 bg-white dark:bg-gray-800
 border border-gray-300 dark:border-gray-600
 bg-caret dark:bg-caret-light
@@ -40,8 +40,8 @@ focus:outline-none
 focus:ring-4
 focus:ring-green-300 dark:focus:ring-green-500
 focus:ring-opacity-50 dark:focus:ring-opacity-50
-disabled:opacity-50
-disabled:bg-gray-200
+disabled:opacity-50 dark:disabled:opacity-30
+disabled:bg-gray-200 dark:disabled:bg-gray-700
 disabled:cursor-not-allowed`;
 
 const sizeClasses = {

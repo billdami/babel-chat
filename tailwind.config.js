@@ -31,7 +31,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      opacity: ['disabled'],
+      opacity: ['disabled', 'dark'],
       cursor: ['disabled'],
       boxShadow: ['disabled', 'active'],
       backgroundColor: ['disabled', 'active', 'checked'],

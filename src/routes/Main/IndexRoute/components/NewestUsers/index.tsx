@@ -41,7 +41,7 @@ const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
                 text-left
                 rounded
                 hover:bg-opacity-50 hover:bg-gray-200
-                focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 focus:ring-green-300"
+                focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"
             >
               <div className="relative flex-shrink-0 mr-2">
                 <UserAvatar user={user} className="border border-gray-100" />

@@ -8,10 +8,10 @@ const baseClasses = `text-green-500
 rounded
 hover:underline
 hover:text-green-600
-ring-green-300
+ring-green-300 dark:ring-green-500
 focus:outline-none
 focus:ring-4
-focus:ring-opacity-50`;
+focus:ring-opacity-50 dark:focus:ring-opacity-50`;
 
 const Anchor: FC<AnchorProps> = ({ className, children, ...rest }) => (
   <a className={cn(baseClasses, className)} {...rest}>
