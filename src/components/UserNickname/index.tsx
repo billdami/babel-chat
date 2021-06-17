@@ -19,7 +19,7 @@ const UserNickname: FC<UserNicknameProps> = ({
   isCurrentUser = false,
   isOffline = false,
   isBlocked = false,
-  mutedClassName = 'text-gray-400',
+  mutedClassName = 'text-gray-400 dark:text-gray-500',
 }) => (
   <h2 className={cn('truncate', className)}>
     <span

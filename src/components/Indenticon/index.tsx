@@ -1,6 +1,7 @@
 import React, { DetailedHTMLProps, FC, ImgHTMLAttributes, useMemo } from 'react';
 import identicon from 'identicon.js';
 
+import useTheme from '../../hooks/useTheme';
 import { md5 } from '../../utils/crypto';
 
 interface IdenticonProps
@@ -16,20 +17,20 @@ const emptyPixel =
 const cache: { [x: string]: string } = {};
 
 const Identicon: FC<IdenticonProps> = ({ identifier, size = 36, ...rest }) => {
+  const { theme, isDarkTheme } = useTheme();
+
   const src = useMemo(() => {
     let _src = emptyPixel;
     if (identifier) {
       const hash = md5(identifier);
-      // TODO include current dark/light theme in cache ID
-      const cacheId = `${identifier}__${size}`;
+      const cacheId = `${identifier}__${size}__${theme}`;
 
       if (cache[cacheId]) {
         _src = cache[cacheId];
       } else {
         const icon = new identicon(hash, {
           format: 'svg',
-          // TODO change in dark mode
-          background: [255, 255, 255, 255],
+          background: isDarkTheme ? [209, 213, 219, 255] : [255, 255, 255, 255],
           margin: 0,
           size,
         });
@@ -40,7 +41,7 @@ const Identicon: FC<IdenticonProps> = ({ identifier, size = 36, ...rest }) => {
     }
 
     return _src;
-  }, [identifier, size]);
+  }, [identifier, size, theme, isDarkTheme]);
 
   return <img width={size} height={size} alt="" src={src} {...rest} />;
 };
