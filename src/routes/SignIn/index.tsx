@@ -53,7 +53,7 @@ const SignIn: FC<SignInProps> = () => {
   useScrollToTop();
   const queryParams = useQueryParams();
   const { isSigningIn, signIn } = useAuth();
-  const { theme } = useTheme();
+  const { theme, isDarkTheme, updateTheme } = useTheme();
 
   const captcha = createRef<ReCAPTCHA>();
 
@@ -138,135 +138,147 @@ const SignIn: FC<SignInProps> = () => {
   );
 
   return (
-    // TODO add absolute positioned dark mode toggle to top right of all public pages
-    <div className="mx-auto my-auto px-4 pt-4 pb-20 md:pb-4">
-      <div className="w-full sm:w-116 mt-8 md:mt-4">
-        <div className="flex justify-center mx-auto mb-4 md:mb-6 mt-4 md:mt-0">
-          <div className="relative">
-            <Logo className="h-20 md:h-24 max-w-full" />
-            <BetaBadge className="-top-2 -right-4 md:-right-8" />
+    <>
+      <div className="mx-auto my-auto px-4 pt-4 pb-20 md:pb-4">
+        <div className="w-full sm:w-116 mt-12 md:mt-4">
+          <div className="flex justify-center mx-auto mb-4 md:mb-6 mt-4 md:mt-0">
+            <div className="relative">
+              <Logo className="h-20 md:h-24 max-w-full" />
+              <BetaBadge className="-top-2 -right-4 md:-right-8" />
+            </div>
+          </div>
+          <form
+            onSubmit={onSubmit}
+            className="p-4 md:p-6 mb-4 bg-white dark:bg-gray-800 rounded text-gray-700 dark:text-gray-400"
+          >
+            {wasSignedOut && (
+              <Alert variant="warning" icon="right-from-bracket" className="mb-4">
+                You have been signed out.
+              </Alert>
+            )}
+            <p className="mb-4 md:mb-6">
+              <span className="text-gray-500 font-bold">babel chat</span> is free and completely
+              anonymous. If you’d like, you can provide some basic info below, but it is{' '}
+              <strong className="font-bold">100% optional.</strong>&nbsp;&nbsp;
+              <Link to="/about">Learn more</Link>
+            </p>
+            <FormControl label="Nickname" htmlFor="signup-nickname">
+              <Input
+                placeholder="Leave blank for a random nickname"
+                id="signup-nickname"
+                autoComplete="nickname"
+                maxLength={MAX_NICKNAME_LEN}
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                fullWidth
+              />
+            </FormControl>
+
+            <FormControl label="Country" htmlFor="signup-country">
+              <Select
+                id="signup-country"
+                value={country}
+                groups={countryGroups}
+                options={countryOptions}
+                onChange={(e) => setCountry(e.target.value as Country)}
+                fullWidth
+              />
+            </FormControl>
+
+            <FormControl label="Age" htmlFor="signup-age">
+              <Select
+                id="signup-age"
+                value={`${age}`}
+                options={ageOptions}
+                onChange={(e) =>
+                  setAge(e.target.value !== UNSPECIFIED ? Number(e.target.value) : UNSPECIFIED)
+                }
+                fullWidth
+              />
+            </FormControl>
+
+            <FormControl label="Gender">
+              <div className="flex flex-wrap">
+                {GENDERS.map((g) => (
+                  <Radio
+                    key={g.value}
+                    className="mr-3"
+                    label={g.label}
+                    name="gender"
+                    id={`gender-${g.value}`}
+                    value={g.value}
+                    checked={gender === g.value}
+                    onChange={(e) => setGender(e.target.value as Gender)}
+                  />
+                ))}
+              </div>
+            </FormControl>
+
+            <Checkbox
+              type="checkbox"
+              id="agreed-to-tos"
+              className="my-6"
+              checked={agreedToToS}
+              onChange={(e) => setAgreedToToS(e.target.checked)}
+            >
+              I am over 18 and agree to the{' '}
+              <Link to="/terms-of-use" target="_blank">
+                terms <span className="hidden md:inline">of use</span>
+              </Link>
+            </Checkbox>
+
+            <ReCAPTCHA
+              ref={captcha}
+              onExpired={onCaptchaExpired}
+              onErrored={onCaptchaErrored}
+              sitekey={envVar('CAPTCHA_SITE_KEY')!}
+              size="invisible"
+              badge="bottomright"
+              theme={theme}
+            />
+
+            <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
+              {isSigningIn ? (
+                <>
+                  <Spinner
+                    size="sm"
+                    variant="inverse"
+                    className="inline-block mr-2"
+                    deferRender={false}
+                  />
+                  Signing in...
+                </>
+              ) : (
+                'Start chatting'
+              )}
+            </Button>
+            {!!submitError && <ErrorText className="mt-2 font-bold" text={submitError} />}
+          </form>
+          <div className="text-sm text-gray-400 dark:text-gray-600 text-center">
+            {COPYRIGHT_LINE}
+            <br />{' '}
+            <Link to="/privacy-policy" target="_blank">
+              privacy policy
+            </Link>{' '}
+            &bull;{' '}
+            <Link to="/terms-of-use" target="_blank">
+              terms of use
+            </Link>
           </div>
         </div>
-        <form
-          onSubmit={onSubmit}
-          className="p-4 md:p-6 mb-4 bg-white dark:bg-gray-800 rounded text-gray-700 dark:text-gray-400"
-        >
-          {wasSignedOut && (
-            <Alert variant="warning" icon="right-from-bracket" className="mb-4">
-              You have been signed out.
-            </Alert>
-          )}
-          <p className="mb-4 md:mb-6">
-            <span className="text-gray-500 font-bold">babel chat</span> is free and completely
-            anonymous. If you’d like, you can provide some basic info below, but it is{' '}
-            <strong className="font-bold">100% optional.</strong>&nbsp;&nbsp;
-            <Link to="/about">Learn more</Link>
-          </p>
-          <FormControl label="Nickname" htmlFor="signup-nickname">
-            <Input
-              placeholder="Leave blank for a random nickname"
-              id="signup-nickname"
-              autoComplete="nickname"
-              maxLength={MAX_NICKNAME_LEN}
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              fullWidth
-            />
-          </FormControl>
-
-          <FormControl label="Country" htmlFor="signup-country">
-            <Select
-              id="signup-country"
-              value={country}
-              groups={countryGroups}
-              options={countryOptions}
-              onChange={(e) => setCountry(e.target.value as Country)}
-              fullWidth
-            />
-          </FormControl>
-
-          <FormControl label="Age" htmlFor="signup-age">
-            <Select
-              id="signup-age"
-              value={`${age}`}
-              options={ageOptions}
-              onChange={(e) =>
-                setAge(e.target.value !== UNSPECIFIED ? Number(e.target.value) : UNSPECIFIED)
-              }
-              fullWidth
-            />
-          </FormControl>
-
-          <FormControl label="Gender">
-            <div className="flex flex-wrap">
-              {GENDERS.map((g) => (
-                <Radio
-                  key={g.value}
-                  className="mr-3"
-                  label={g.label}
-                  name="gender"
-                  id={`gender-${g.value}`}
-                  value={g.value}
-                  checked={gender === g.value}
-                  onChange={(e) => setGender(e.target.value as Gender)}
-                />
-              ))}
-            </div>
-          </FormControl>
-
-          <Checkbox
-            type="checkbox"
-            id="agreed-to-tos"
-            className="my-6"
-            checked={agreedToToS}
-            onChange={(e) => setAgreedToToS(e.target.checked)}
-          >
-            I am over 18 and agree to the{' '}
-            <Link to="/terms-of-use" target="_blank">
-              terms <span className="hidden md:inline">of use</span>
-            </Link>
-          </Checkbox>
-
-          <ReCAPTCHA
-            ref={captcha}
-            onExpired={onCaptchaExpired}
-            onErrored={onCaptchaErrored}
-            sitekey={envVar('CAPTCHA_SITE_KEY')!}
-            size="invisible"
-            badge="bottomright"
-            theme={theme}
-          />
-
-          <Button type="submit" size="lg" disabled={!isFormValid || isSigningIn} fullWidth>
-            {isSigningIn ? (
-              <>
-                <Spinner
-                  size="sm"
-                  variant="inverse"
-                  className="inline-block mr-2"
-                  deferRender={false}
-                />
-                Signing in...
-              </>
-            ) : (
-              'Start chatting'
-            )}
-          </Button>
-          {!!submitError && <ErrorText className="mt-2 font-bold" text={submitError} />}
-        </form>
-        <div className="text-sm text-gray-400 dark:text-gray-600 text-center">
-          {COPYRIGHT_LINE}
-          <br />{' '}
-          <Link to="/privacy-policy" target="_blank">
-            privacy policy
-          </Link>{' '}
-          &bull;{' '}
-          <Link to="/terms-of-use" target="_blank">
-            terms of use
-          </Link>
-        </div>
       </div>
-    </div>
+      <div className="absolute top-3 right-3 dark:text-gray-400">
+        {/* TODO replace with <ToggleSwitch> */}
+        {/* "moon" dark mode icon on right "enabled" side of toggle */}
+        <Checkbox
+          id="dark-mode-toggle"
+          label="Dark mode"
+          className="text-sm"
+          onChange={(e) => updateTheme(e.target.checked ? 'dark' : 'light', true)}
+          checked={isDarkTheme}
+        />
+      </div>
+    </>
   );
 };
 
