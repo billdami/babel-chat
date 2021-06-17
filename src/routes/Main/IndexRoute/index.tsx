@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import Checkbox from '../../../components/Checkbox';
+import DarkModeToggle from '../../../components/DarkModeToggle';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import DrawerToggleButton from '../../../components/DrawerToggleButton';
@@ -10,7 +10,6 @@ import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
 import useIsScrolled from '../../../hooks/useIsScrolled';
-import useTheme from '../../../hooks/useTheme';
 
 import Footer from './components/Footer';
 import Hero from './components/Hero';
@@ -26,7 +25,6 @@ const Index: FC<IndexProps> = () => {
 
   const { signOut } = useAuth();
   const { openDrawer, updateTab } = useDrawer();
-  const { isDarkTheme, updateTheme } = useTheme();
   const { isScrolled, onScroll } = useIsScrolled(scrollContainer);
 
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
@@ -67,17 +65,7 @@ const Index: FC<IndexProps> = () => {
       <div className="Index flex flex-col flex-1">
         <NavBar>
           <DrawerToggleButton />
-          <div className="ml-auto">
-            {/* TODO replace with <ToggleSwitch> */}
-            {/* "moon" dark mode icon on right "enabled" side of toggle */}
-            <Checkbox
-              id="dark-mode-toggle"
-              label="Dark mode"
-              className="text-sm"
-              onChange={(e) => updateTheme(e.target.checked ? 'dark' : 'light', true)}
-              checked={isDarkTheme}
-            />
-          </div>
+          <DarkModeToggle className="ml-auto" />
           {/* TODO [future] mute toggle button (right aligned in navbar) */}
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">

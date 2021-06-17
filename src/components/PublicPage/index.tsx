@@ -2,11 +2,10 @@ import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import BetaBadge from '../BetaBadge';
-import Checkbox from '../Checkbox';
+import DarkModeToggle from '../DarkModeToggle';
 import Link from '../Link';
 import Logo from '../Logo';
 import useScrollToTop from '../../hooks/useScrollToTop';
-import useTheme from '../../hooks/useTheme';
 import { COPYRIGHT_LINE } from '../../constants/app';
 
 interface PublicPageProps {
@@ -15,8 +14,6 @@ interface PublicPageProps {
 
 const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
   useScrollToTop();
-
-  const { isDarkTheme, updateTheme } = useTheme();
 
   return (
     <>
@@ -41,17 +38,7 @@ const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
           </div>
         </div>
       </div>
-      <div className="absolute top-3 right-3 dark:text-gray-400">
-        {/* TODO replace with <ToggleSwitch> */}
-        {/* "moon" dark mode icon on right "enabled" side of toggle */}
-        <Checkbox
-          id="dark-mode-toggle"
-          label="Dark mode"
-          className="text-sm"
-          onChange={(e) => updateTheme(e.target.checked ? 'dark' : 'light', true)}
-          checked={isDarkTheme}
-        />
-      </div>
+      <DarkModeToggle className="absolute top-3 right-3 dark:text-gray-400" />
     </>
   );
 };

@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
 import Checkbox from '../../components/Checkbox';
 import { Country } from '../../types/country';
+import DarkModeToggle from '../../components/DarkModeToggle';
 import ErrorText from '../../components/FormControl/ErrorText';
 import FormControl from '../../components/FormControl';
 import Input from '../../components/Input';
@@ -53,7 +54,7 @@ const SignIn: FC<SignInProps> = () => {
   useScrollToTop();
   const queryParams = useQueryParams();
   const { isSigningIn, signIn } = useAuth();
-  const { theme, isDarkTheme, updateTheme } = useTheme();
+  const { theme } = useTheme();
 
   const captcha = createRef<ReCAPTCHA>();
 
@@ -267,17 +268,7 @@ const SignIn: FC<SignInProps> = () => {
           </div>
         </div>
       </div>
-      <div className="absolute top-3 right-3 dark:text-gray-400">
-        {/* TODO replace with <ToggleSwitch> */}
-        {/* "moon" dark mode icon on right "enabled" side of toggle */}
-        <Checkbox
-          id="dark-mode-toggle"
-          label="Dark mode"
-          className="text-sm"
-          onChange={(e) => updateTheme(e.target.checked ? 'dark' : 'light', true)}
-          checked={isDarkTheme}
-        />
-      </div>
+      <DarkModeToggle className="absolute top-3 right-3 dark:text-gray-400" />
     </>
   );
 };

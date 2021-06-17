@@ -2,14 +2,13 @@ import React, { FC } from 'react';
 import cn from 'classnames';
 
 import Button from '../../../../../components/Button';
-import Checkbox from '../../../../../components/Checkbox';
+import DarkModeToggle from '../../../../../components/DarkModeToggle';
 import Icon from '../../../../../components/Icon';
 import UserAvatar from '../../../../../components/UserAvatar';
 import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import { MenuContentProps } from '../../../../../components/Menu';
 import MenuItem from '../../../../../components/Menu/MenuItem';
-import useTheme from '../../../../../hooks/useTheme';
 import { User } from '../../../../../types/user';
 
 export interface UserMenuProps extends MenuContentProps {
@@ -26,8 +25,6 @@ const UserMenu: FC<UserMenuProps> = ({
   openGiveFeedback,
   closeMenu,
 }) => {
-  const { isDarkTheme, updateTheme } = useTheme();
-
   return (
     <>
       <div
@@ -65,15 +62,8 @@ const UserMenu: FC<UserMenuProps> = ({
         Sign out
       </MenuItem>
       <div className="px-4 py-1 mt-1 border-t border-gray-100">
-        {/* TODO replace with <ToggleSwitch> */}
-        {/* "moon" dark mode icon on right "enabled" side of toggle */}
-        <Checkbox
-          id="dark-mode-toggle"
-          label="Dark mode"
-          className="text-sm text-gray-600"
-          onChange={(e) => updateTheme(e.target.checked ? 'dark' : 'light', true)}
-          checked={isDarkTheme}
-        />
+        <DarkModeToggle className="text-gray-600" />
+        {/* TODO show "Use device default theme" link when localStorage has a value, to clear it */}
       </div>
       {/* TODO [future] mute sounds toggle */}
       {/* TODO [future] avatar editor */}
