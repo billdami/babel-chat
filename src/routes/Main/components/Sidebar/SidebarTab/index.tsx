@@ -45,7 +45,7 @@ const SidebarTab: FC<SidebarTabProps> = ({
         </div>
       )}
       {label}
-      <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-xs font-bold">
+      <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs font-bold">
         <FormattedNumber value={count} />
       </span>
     </Tab>

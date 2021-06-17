@@ -222,7 +222,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
           />
         ))}
         {!sortedChats.length && !isLoading && (
-          <div className="px-3 py-8 text-gray-400 text-center text-sm">
+          <div className="px-3 py-8 text-gray-400 dark:text-gray-500 text-center text-sm">
             You don't have any active chats 😿
           </div>
         )}
