@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import Anchor from '../../components/Anchor';
 import BetaBadge from '../../components/BetaBadge';
 import Link from '../../components/Link';
-import Logo from '../../components/Svgs/Logos/Logo';
+import Logo from '../../components/Logo';
 import { COPYRIGHT_LINE } from '../../constants/app';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
@@ -28,8 +28,10 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               <BetaBadge className="-top-2 -right-4 md:-right-8" />
             </div>
           </div>
-          <div className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
-            <h2 className="font-bold text-xl text-gray-600 mb-4">Privacy Policy</h2>
+          <div className="p-4 md:p-6 mb-4 bg-white dark:bg-gray-800 rounded text-gray-700 dark:text-gray-400">
+            <h2 className="font-bold text-xl text-gray-600 dark:text-gray-500 mb-4">
+              Privacy Policy
+            </h2>
 
             <p className="mb-4">
               At babel chat, accessible from{' '}
@@ -54,13 +56,15 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               .
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Consent</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">Consent</h3>
 
             <p className="mb-4">
               By using our website, you hereby consent to our Privacy Policy and agree to its terms.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Information we collect</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Information we collect
+            </h3>
 
             <p className="mb-4">
               The personal information that you are asked to provide, and the reasons why you are
@@ -77,7 +81,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               items such as name, company name, address, email address, and telephone number.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">How we use your information</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              How we use your information
+            </h3>
 
             <p className="mb-4">We use the information we collect in various ways, including to:</p>
 
@@ -95,7 +101,7 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               <li>Find and prevent fraud</li>
             </ul>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Log Files</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">Log Files</h3>
 
             <p className="mb-4">
               babel chat follows a standard procedure of using log files. These files log visitors
@@ -108,7 +114,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               gathering demographic information.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Cookies and Web Beacons</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Cookies and Web Beacons
+            </h3>
 
             <p className="mb-4">
               Like any other website, babel chat uses 'cookies'. These cookies are used to store
@@ -126,7 +134,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               .
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Google DoubleClick DART Cookie</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Google DoubleClick DART Cookie
+            </h3>
 
             <p className="mb-4">
               Google is one of a third-party vendor on our site. It also uses cookies, known as DART
@@ -139,7 +149,7 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               </Anchor>
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
               Advertising Partners Privacy Policies
             </h3>
 
@@ -162,7 +172,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               third-party advertisers.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Third Party Privacy Policies</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Third Party Privacy Policies
+            </h3>
 
             <p className="mb-4">
               babel chat's Privacy Policy does not apply to other advertisers or websites. Thus, we
@@ -177,7 +189,7 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               be found at the browsers' respective websites.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
               CCPA Privacy Rights (Do Not Sell My Personal Information)
             </h3>
 
@@ -202,7 +214,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               exercise any of these rights, please contact us.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">GDPR Data Protection Rights</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              GDPR Data Protection Rights
+            </h3>
 
             <p className="mb-4">
               We would like to make sure you are fully aware of all of your data protection rights.
@@ -239,7 +253,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               exercise any of these rights, please contact us.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Children's Information</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Children's Information
+            </h3>
 
             <p className="mb-4">
               Another part of our priority is adding protection for children while using the
@@ -254,7 +270,9 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
               will do our best efforts to promptly remove such information from our records.
             </p>
           </div>
-          <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
+          <div className="pb-4 text-sm text-gray-400 dark:text-gray-600 text-center">
+            {COPYRIGHT_LINE}
+          </div>
         </div>
       </div>
     </>

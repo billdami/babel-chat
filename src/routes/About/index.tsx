@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import Link from '../../components/Link';
-import Logo from '../../components/Svgs/Logos/Logo';
+import Logo from '../../components/Logo';
 import BetaBadge from '../../components/BetaBadge';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import { COPYRIGHT_LINE } from '../../constants/app';
@@ -28,8 +28,10 @@ const About: FC<AboutProps> = () => {
               <BetaBadge className="-top-2 -right-4 md:-right-8" />
             </div>
           </div>
-          <div className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
-            <h2 className="font-bold text-xl text-gray-600 mb-4">What is babel chat?</h2>
+          <div className="p-4 md:p-6 mb-4 bg-white dark:bg-gray-800 rounded text-gray-700 dark:text-gray-400">
+            <h2 className="font-bold text-xl text-gray-600 dark:text-gray-500 mb-4">
+              What is babel chat?
+            </h2>
             <p className="mb-4">
               babel chat is a new, web-based chat app, that you can use to meet people from around
               the world. It is{' '}
@@ -47,7 +49,9 @@ const About: FC<AboutProps> = () => {
               want to chat with. babel chat features private, one-on-one chats only, where you won't
               get lost in massive and noisy group chatrooms.
             </p>
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Beta Disclaimer</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Beta Disclaimer
+            </h3>
             <p className="mb-4">
               The current version of babel chat is "beta" software, which means it is new, and is
               still being updated and improved all the time. Because of this, you may encounter the
@@ -59,13 +63,15 @@ const About: FC<AboutProps> = () => {
               </Anchor>
               .
             </p>
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Thanks!</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">Thanks!</h3>
             <p className="mb-4">Thank you for using babel chat, and we hope you enjoy chatting!</p>
             <p className="mb-4">
               <Link to="/">&larr; Go to the homepage</Link>
             </p>
           </div>
-          <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
+          <div className="pb-4 text-sm text-gray-400 dark:text-gray-600 text-center">
+            {COPYRIGHT_LINE}
+          </div>
         </div>
       </div>
     </>

@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import Anchor from '../../components/Anchor';
 import BetaBadge from '../../components/BetaBadge';
 import Link from '../../components/Link';
-import Logo from '../../components/Svgs/Logos/Logo';
+import Logo from '../../components/Logo';
 import { COPYRIGHT_LINE } from '../../constants/app';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
@@ -28,8 +28,10 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               <BetaBadge className="-top-2 -right-4 md:-right-8" />
             </div>
           </div>
-          <div className="p-4 md:p-6 mb-4 bg-white rounded text-gray-700">
-            <h2 className="font-bold text-xl text-gray-600 mb-4">Terms of Use</h2>
+          <div className="p-4 md:p-6 mb-4 bg-white dark:bg-gray-800 rounded text-gray-700 dark:text-gray-400">
+            <h2 className="font-bold text-xl text-gray-600 dark:text-gray-500 mb-4">
+              Terms of Use
+            </h2>
 
             <p className="mb-4">Welcome to babel chat!</p>
 
@@ -59,7 +61,7 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               they, are taken as interchangeable and therefore as referring to same.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Cookies</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">Cookies</h3>
 
             <p className="mb-4">
               We employ the use of cookies. By accessing and signing into babel chat, you agreed to
@@ -74,7 +76,7 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               partners may also use cookies.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">License</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">License</h3>
 
             <p className="mb-4">
               Unless otherwise stated, babel chat and/or its licensors own the intellectual property
@@ -152,7 +154,9 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               formats or media.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Hyperlinking to our Content</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Hyperlinking to our Content
+            </h3>
 
             <p className="mb-4">
               The following organizations may link to our Website without prior written approval:
@@ -235,14 +239,16 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               trademark license agreement.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">iFrames</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">iFrames</h3>
 
             <p className="mb-4">
               Without prior approval and written permission, you may not create frames around our
               Webpages that alter in any way the visual presentation or appearance of our Website.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Content Liability</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Content Liability
+            </h3>
 
             <p className="mb-4">
               We shall not be hold responsible for any content that appears on your Website. You
@@ -252,13 +258,17 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               other violation of, any third party rights.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Your Privacy</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Your Privacy
+            </h3>
 
             <p className="mb-4">
               Please read the <Link to="/privacy-policy">Privacy Policy</Link>.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Reservation of Rights</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
+              Reservation of Rights
+            </h3>
 
             <p className="mb-4">
               We reserve the right to request that you remove all links or any particular link to
@@ -268,7 +278,7 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               follow these linking terms and conditions.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">
               Removal of links from our website
             </h3>
 
@@ -284,7 +294,7 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               available or that the material on the website is kept up to date.
             </p>
 
-            <h3 className="font-bold text-lg text-gray-600 mb-4">Disclaimer</h3>
+            <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">Disclaimer</h3>
 
             <p className="mb-4">
               To the maximum extent permitted by applicable law, we exclude all representations,
@@ -319,7 +329,9 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
               free of charge, we will not be liable for any loss or damage of any nature.
             </p>
           </div>
-          <div className="pb-4 text-sm text-gray-400 text-center">{COPYRIGHT_LINE}</div>
+          <div className="pb-4 text-sm text-gray-400 dark:text-gray-600 text-center">
+            {COPYRIGHT_LINE}
+          </div>
         </div>
       </div>
     </>

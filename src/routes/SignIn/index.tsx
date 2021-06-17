@@ -254,7 +254,7 @@ const SignIn: FC<SignInProps> = () => {
           </Button>
           {!!submitError && <ErrorText className="mt-2 font-bold" text={submitError} />}
         </form>
-        <div className="text-sm text-gray-400 text-center">
+        <div className="text-sm text-gray-400 dark:text-gray-600 text-center">
           {COPYRIGHT_LINE}
           <br />{' '}
           <Link to="/privacy-policy" target="_blank">

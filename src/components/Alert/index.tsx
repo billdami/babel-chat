@@ -17,9 +17,12 @@ const baseClasses = `px-6 py-4
   rounded-sm rounded-tl-none rounded-bl-none`;
 
 const variants = {
-  warning: 'bg-yellow-100 border-yellow-500 text-yellow-700',
-  danger: 'bg-red-100 border-red-500 text-red-700',
-  success: 'bg-green-100 border-green-500 text-green-700',
+  warning:
+    'bg-yellow-100 border-yellow-500 text-yellow-700 dark:bg-yellow-700 dark:border-yellow-200 dark:text-yellow-200 dark:bg-opacity-100',
+  danger:
+    'bg-red-100 border-red-500 text-red-700 dark:bg-red-700 dark:border-red-200 dark:text-red-200 dark:bg-opacity-100',
+  success:
+    'bg-green-100 border-green-500 text-green-700 dark:bg-green-700 dark:border-green-200 dark:text-green-200 dark:bg-opacity-100',
 };
 
 const Alert: FC<AlertProps> = ({ children, className, variant, icon, ...rest }) => {

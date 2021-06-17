@@ -30,7 +30,7 @@ rounded-sm
 dark:text-white dark:placeholder-gray-500
 bg-white dark:bg-gray-800
 border border-gray-300 dark:border-gray-600
-bg-caret
+bg-caret dark:bg-caret-light
 bg-no-repeat
 bg-4x3
 bg-right-3-center
