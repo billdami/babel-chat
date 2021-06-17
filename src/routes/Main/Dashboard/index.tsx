@@ -18,9 +18,9 @@ import NewestUsers from './components/NewestUsers';
 import QuickActions from './components/QuickActions';
 import TipsAndTricks from './components/TipsAndTricks';
 
-interface IndexProps {}
+interface DashboardProps {}
 
-const Index: FC<IndexProps> = () => {
+const Dashboard: FC<DashboardProps> = () => {
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   const { signOut } = useAuth();
@@ -105,4 +105,4 @@ const Index: FC<IndexProps> = () => {
   );
 };
 
-export default Index;
+export default Dashboard;

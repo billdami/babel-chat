@@ -24,7 +24,7 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
   return (
     <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto 2xl:max-w-md lg:ml-2 2xl:ml-0">
       <div className="flex justify-between sm:justify-start 2xl:justify-between items-center mb-4">
-        <h3 className="text-xl text-gray-600 mr-2">My latest chats</h3>
+        <h3 className="text-xl text-gray-600 dark:text-gray-400 mr-2">My latest chats</h3>
         <Button variant="link" size="sm" className="md:hidden" onClick={openAllChats}>
           View all
         </Button>
@@ -51,7 +51,10 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
                     size={20}
                     className="flex-shrink-0 mr-2 border border-gray-100"
                   />
-                  <UserNickname user={chat.toUserDetails} className="flex-1 text-gray-800" />
+                  <UserNickname
+                    user={chat.toUserDetails}
+                    className="flex-1 text-gray-800 dark:text-gray-300"
+                  />
                 </div>
                 <div className="flex items-center">
                   <div className="ml-2 text-xs text-gray-400 whitespace-nowrap">
@@ -72,7 +75,9 @@ const LatestChats: FC<LatestChatsProps> = ({ openAllChats }) => {
         </div>
       )}
       {!isLoadingChats && !sortedChats.length && (
-        <div className="mb-4 text-sm text-gray-400">You don't have any active chats 😿</div>
+        <div className="mb-4 text-sm text-gray-400 dark:text-gray-500">
+          You don't have any active chats 😿
+        </div>
       )}
       {isLoadingChats && <Spinner />}
     </div>

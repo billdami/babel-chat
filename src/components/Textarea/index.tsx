@@ -12,7 +12,7 @@ block
 px-3 py-2
 rounded-sm
 dark:text-gray-300 dark:placeholder-gray-500
-bg-white dark:bg-gray-800
+dark:bg-transparent
 border border-gray-300 dark:border-gray-600
 transition-shadow
 focus:border-green-400 dark:focus:border-green-500

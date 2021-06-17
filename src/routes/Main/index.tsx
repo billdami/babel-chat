@@ -13,7 +13,7 @@ import { ACTIVE_TICK_INTERVAL } from '../../constants/user';
 import useAuth from '../../hooks/useAuth';
 
 import Chat from './Chat';
-import Index from './IndexRoute';
+import Dashboard from './Dashboard';
 import Sidebar from './components/Sidebar';
 
 interface MainProps {}
@@ -50,7 +50,7 @@ const Main: FC<MainProps> = () => {
         <Sidebar className="z-0 md:z-auto" />
         <div
           className={cn(
-            'Content flex-1 flex absolute md:static inset-0 transition-transform md:transition-none shadow-md md:shadow-none bg-white',
+            'flex-1 flex absolute md:static inset-0 transition-transform md:transition-none shadow-md md:shadow-none bg-white dark:bg-gray-700',
             { 'transform-gpu translate-x-80 md:transform-none md:translate-x-0': isDrawerOpen }
           )}
         >
@@ -63,7 +63,7 @@ const Main: FC<MainProps> = () => {
           )}
           <Switch>
             <Route exact path={path}>
-              <Index />
+              <Dashboard />
             </Route>
             <Route path={`${path}/chat/:userId`}>
               <Chat />

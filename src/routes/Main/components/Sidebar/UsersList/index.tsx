@@ -109,7 +109,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
   return (
     <div className="pb-2">
       <div className="mb-1">
-        <div className="flex px-3 py-2 bg-gray-200 bg-opacity-70">
+        <div className="flex px-3 py-2 bg-gray-200 dark:bg-gray-600 bg-opacity-70 dark:bg-opacity-70">
           <div className="relative flex-1">
             <Input
               placeholder="Search users"

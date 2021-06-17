@@ -28,7 +28,7 @@ appearance-none
 block
 rounded-sm
 dark:text-gray-300 dark:placeholder-gray-500
-bg-white dark:bg-gray-800
+dark:bg-transparent
 border border-gray-300 dark:border-gray-600
 bg-caret dark:bg-caret-light
 bg-no-repeat

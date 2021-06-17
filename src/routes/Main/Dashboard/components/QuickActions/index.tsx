@@ -20,9 +20,9 @@ const TileButton: FC<TileButtonProps> = ({ icon, label, onClick }) => {
       className="w-full
         px-4 py-8
         flex flex-col items-center
-        bg-white
-        text-gray-500 font-bold
-        border border-gray-100
+        bg-transparent
+        text-gray-500 dark:text-gray-300 font-bold
+        border border-gray-100 dark:border-gray-600
         shadow hover:shadow-md
         rounded-lg
         focus:outline-none focus:ring-4 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"

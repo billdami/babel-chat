@@ -24,7 +24,7 @@ const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
   return (
     <div className="mb-8 w-auto lg:w-1/2 2xl:w-auto 2xl:max-w-md lg:mr-2 2xl:mr-0">
       <div className="flex justify-between sm:justify-start 2xl:justify-between items-center mb-4">
-        <h3 className="text-xl text-gray-600 mr-2">Newest users</h3>
+        <h3 className="text-xl text-gray-600 dark:text-gray-400 mr-2">Newest users</h3>
         <Button variant="link" size="sm" className="md:hidden" onClick={openAllUsers}>
           View all
         </Button>
@@ -40,7 +40,7 @@ const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
                 px-2 py-1
                 text-left
                 rounded
-                hover:bg-opacity-50 hover:bg-gray-200
+                hover:bg-opacity-50 hover:bg-gray-200 dark:hover:bg-gray-600
                 focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"
             >
               <div className="relative flex-shrink-0 mr-2">
@@ -51,20 +51,20 @@ const NewestUsers: FC<NewestUsersProps> = ({ openAllUsers }) => {
                   <UserNickname
                     user={user}
                     isCurrentUser={user.id === authUser?.uid}
-                    className="text-gray-800"
+                    className="text-gray-800 dark:text-gray-300"
                   />
                   <div className="ml-2 text-xs text-gray-400 whitespace-nowrap">
                     <RelativeTime date={user.dateSignedIn} />
                   </div>
                 </div>
-                <UserDetails user={user} className="text-gray-400 text-sm" />
+                <UserDetails user={user} className="text-gray-400 dark:text-gray-500 text-sm" />
               </div>
             </RouterLink>
           ))}
         </div>
       )}
       {!isLoadingUsers && !sortedUsers.length && (
-        <div className="mb-4 text-sm text-gray-400">No users found</div>
+        <div className="mb-4 text-sm text-gray-400 dark:text-gray-500">No users found</div>
       )}
       {isLoadingUsers && <Spinner />}
     </div>

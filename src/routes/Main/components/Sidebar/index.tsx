@@ -22,7 +22,7 @@ import { useUserBlocks, useUsers } from '../../../../hooks/useUserRecord';
 import { ChatRecord } from '../../../../types/chat';
 
 import ChatsList from './ChatsList';
-import SidebarTab from './Tab';
+import SidebarTab from './SidebarTab';
 import UsersList from './UsersList';
 import UserMenu, { UserMenuProps } from './UserMenu';
 
@@ -82,13 +82,13 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   );
 
   return (
-    <div className={cn('flex-shrink-0 flex flex-col w-80 bg-gray-100', className)}>
-      <div className="flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 text-white">
+    <div className={cn('flex-shrink-0 flex flex-col w-80 bg-gray-100 dark:bg-gray-800', className)}>
+      <div className="flex-shrink-0 flex justify-between items-center py-2 px-3 bg-green-600 dark:bg-gray-700 text-white dark:text-gray-200">
         <div className="relative flex-shrink-0">
           <Link
             to="/main"
             onClick={closeDrawer}
-            className="block py-1 px-2 bg-white border border-white"
+            className="block py-1 px-2 bg-white dark:bg-gray-100 border border-white dark:border-gray-100"
           >
             <LogoIcon className="h-8" />
           </Link>
@@ -137,7 +137,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
         </div>
       </TabPanel>
-      <TabList className="flex-shrink-0 flex border-b bg-gray-200 border-gray-100">
+      <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:bg-opacity-60">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />
         <SidebarTab
           tabId="tab-chats"
