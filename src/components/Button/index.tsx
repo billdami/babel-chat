@@ -46,8 +46,15 @@ const outlineVariants = {
     'active:shadow-inner text-gray-500 border border-gray-300 hover:bg-gray-300 hover:text-white disabled:bg-transparent disabled:text-gray-500',
   muted:
     'active:shadow-inner text-gray-400 border border-gray-200 hover:bg-gray-200 hover:text-white disabled:bg-transparent disabled:text-gray-400',
-  inverse:
-    'active:shadow-inner text-green-200 border border-green-300 hover:bg-white hover:border-white hover:text-green-500 disabled:bg-transparent disabled:border-green-300 disabled:text-green-200',
+  inverse: `active:shadow-inner
+    text-green-200 dark:text-gray-400
+    border border-green-300 dark:border-gray-500
+    hover:bg-white dark:hover:bg-gray-500
+    hover:border-white dark:hover:border-gray-500
+    hover:text-green-500 dark:hover:text-gray-700
+    disabled:bg-transparent
+    disabled:border-green-300 dark:disabled:border-gray-500
+    disabled:text-green-200 dark:disabled:text-gray-400`,
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500 disabled:text-green-500 disabled:no-underline disabled:text-green-500',
 };
 
@@ -55,7 +62,12 @@ const activeVariants = {
   primary: 'shadow shadow-inner text-white bg-green-500 border border-transparent',
   secondary: 'shadow shadow-inner text-gray-500 bg-gray-100 border border-gray-300',
   muted: 'shadow-inner text-gray-400 bg-gray-100 border border-gray-400',
-  inverse: 'shadow shadow-inner text-green-400 bg-gray-100 border border-transparent',
+  inverse: `shadow
+    shadow-inner
+    text-green-400
+    bg-gray-100
+    border
+    border-transparent`,
   link: 'text-green-600 border border-transparent underline',
 };
 
@@ -63,7 +75,10 @@ const activeOutlineVariants = {
   primary: 'shadow-inner text-white border border-green-500 bg-green-500',
   secondary: 'shadow-inner text-white border border-gray-300 bg-gray-300',
   muted: 'shadow-inner text-white border border-gray-300 bg-gray-300',
-  inverse: 'shadow-inner text-green-500 border border-white bg-white',
+  inverse: `shadow-inner
+    text-green-500 dark:text-gray-700
+    border border-white dark:border-gray-500
+    bg-white dark:bg-gray-500`,
   link: 'text-green-600 border border-transparent underline',
 };
 
