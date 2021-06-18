@@ -10,6 +10,8 @@ interface IdenticonProps
   size?: number;
 }
 
+const backgroundLight = [255, 255, 255, 255];
+const backgroundDark = [229, 231, 235, 255];
 const emptyPixel =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
 
@@ -30,7 +32,7 @@ const Identicon: FC<IdenticonProps> = ({ identifier, size = 36, ...rest }) => {
       } else {
         const icon = new identicon(hash, {
           format: 'svg',
-          background: isDarkTheme ? [209, 213, 219, 255] : [255, 255, 255, 255],
+          background: isDarkTheme ? backgroundDark : backgroundLight,
           margin: 0,
           size,
         });

@@ -212,7 +212,7 @@ const MessageList: FC<MessageListProps> = ({
           {/* TODO [future] show "warning!" alert when there are no messages yet, and the user is convicted of being a spammer */}
 
           {emptyChat && (
-            <div className="px-2 md:px-3 py-3 text-sm text-gray-400">
+            <div className="px-2 md:px-3 py-3 text-sm text-gray-400 dark:text-gray-500">
               Nothing here yet...say hi and introduce yourself!
             </div>
           )}
@@ -239,6 +239,7 @@ const MessageList: FC<MessageListProps> = ({
                   <span
                     className={cn('font-bold', {
                       'text-green-500': authors[message.author]?.isSelf,
+                      'dark:text-gray-300': !authors[message.author]?.isSelf,
                     })}
                   >
                     {authors[message.author]?.isSelf

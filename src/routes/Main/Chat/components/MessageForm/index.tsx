@@ -65,7 +65,7 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
 
   return (
     <form
-      className="flex-shrink-0 flex py-2 px-2 md:px-4 border-t border-gray-200"
+      className="flex-shrink-0 flex py-2 px-2 md:px-4 border-t border-gray-200 dark:border-gray-800 dark:border-opacity-50 dark:bg-gray-600 dark:bg-opacity-30"
       onSubmit={onMessageSubmit}
     >
       {/* TODO allow input to be focused and visible without the entire document being shifted up */}

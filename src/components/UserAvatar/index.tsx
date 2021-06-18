@@ -13,7 +13,7 @@ interface UserAvatarProps
 
 const UserAvatar: FC<UserAvatarProps> = ({ user, size = 32, className, ...rest }) => {
   return (
-    <div className={cn('p-1 rounded bg-white dark:bg-gray-300', className)} {...rest}>
+    <div className={cn('p-1 rounded bg-white dark:bg-gray-200', className)} {...rest}>
       <Identicon identifier={user ? `${user.nickname}#${user.uuid}` : ''} size={size} />
     </div>
   );

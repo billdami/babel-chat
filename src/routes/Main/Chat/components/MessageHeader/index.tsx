@@ -122,7 +122,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
                     user={userDetails}
                     isOffline={isOffline}
                     className="md:text-lg md:leading-5"
-                    mutedClassName="text-green-200"
+                    mutedClassName="text-green-200 dark:text-gray-400"
                   />
                   <UserStatus
                     user={!isOffline ? userDetails : null}
@@ -131,7 +131,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
                 </div>
                 <UserDetails
                   user={userDetails}
-                  className="text-xs md:text-sm leading-3 text-green-200"
+                  className="text-xs md:text-sm leading-3 text-green-200 dark:text-gray-400"
                 />
               </div>
             </div>
