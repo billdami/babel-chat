@@ -1,14 +1,12 @@
 import React, { FC, SVGProps } from 'react';
 
-import useTheme from '../../hooks/useTheme';
 import IconSVG from '../Svgs/Logos/Icon';
-import IconDarkSVG from '../Svgs/Logos/IconDark';
 
 interface LogoProps extends SVGProps<SVGSVGElement> {}
 
 const Logo: FC<LogoProps> = ({ ...rest }) => {
-  const { isDarkTheme } = useTheme();
-  return isDarkTheme ? <IconDarkSVG {...rest} /> : <IconSVG {...rest} />;
+  // icon logo is the same in light and dark themes, for now
+  return <IconSVG {...rest} />;
 };
 
 export default Logo;

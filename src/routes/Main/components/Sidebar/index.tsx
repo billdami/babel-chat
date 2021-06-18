@@ -88,11 +88,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           <Link
             to="/main"
             onClick={closeDrawer}
-            className="block py-1 px-2 bg-white dark:bg-gray-500 border border-white dark:border-gray-500"
+            className="block py-1 px-2 bg-white dark:bg-gray-800 border border-white dark:border-gray-800"
           >
             <LogoIcon className="h-8" />
           </Link>
-          <BetaBadge className="-top-1 -right-6" target="_blank" small muted />
+          <BetaBadge className="-top-1 -right-6" target="_blank" small />
         </div>
         <Menu<UserMenuProps>
           isOpen={isUserMenuOpen}

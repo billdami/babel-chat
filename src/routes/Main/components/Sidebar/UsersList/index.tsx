@@ -111,6 +111,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
       <div className="mb-1">
         <div className="flex px-3 py-2 bg-gray-200 dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-40">
           <div className="relative flex-1">
+            {/* TODO create <SearchInput> */}
             <Input
               placeholder="Search users"
               inputSize="sm"
@@ -123,7 +124,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
             {!!searchTerm.length && (
               <button
                 type="button"
-                className="absolute right-0 top-0 px-3 py-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="absolute right-0 top-0 px-3 py-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none"
                 onClick={() => setSearchTerm('')}
               >
                 <Icon name="x-mark" size="sm" />
@@ -191,7 +192,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
         />
       </div>
       {sortedUsers.length > 0 && sortedUsers.length !== users?.length && (
-        <div className="px-3 mb-1 text-sm text-gray-600">
+        <div className="px-3 mb-1 text-sm text-gray-600 dark:text-gray-400">
           <span className="font-bold">
             <FormattedNumber value={sortedUsers.length} />
           </span>{' '}
@@ -210,7 +211,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
           <ListItem key={user.id} user={user} blockedIds={blockedIds} />
         ))}
         {!sortedUsers.length && !isLoading && (
-          <div className="px-3 py-8 text-gray-400 text-center text-sm">
+          <div className="px-3 py-8 text-gray-400 dark:text-gray-500 text-center text-sm">
             No users found.
             <Button variant="link" size="sm" className="inline-block" onClick={clearFilters}>
               Clear filters
