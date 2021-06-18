@@ -139,12 +139,12 @@ const ListItem: FC<ListItemProps> = ({
           block flex-1  min-w-0
           pr-3 py-1
           text-left
-          hover:bg-opacity-50 hover:bg-gray-200
+          hover:bg-opacity-50 hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:bg-opacity-30
           focus:outline-none
           focus:ring-inset focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500`,
           { 'pl-3': !isEditing, 'pl-1 rounded-l': isEditing }
         )}
-        activeClassName="bg-gray-200 hover:bg-opacity-100"
+        activeClassName="bg-gray-200 hover:bg-opacity-100 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-opacity-50"
         to={`/main/chat/${chat.id}`}
         onClick={closeDrawer}
         onMouseEnter={onMouseEnter}
@@ -153,7 +153,7 @@ const ListItem: FC<ListItemProps> = ({
         <div className="flex items-center justify-between min-w-0">
           <div className="flex items-center min-w-0">
             <UserAvatar user={chat.toUserDetails} size={20} className="flex-shrink-0 mr-2" />
-            <UserNickname user={chat.toUserDetails} className="text-gray-800" />
+            <UserNickname user={chat.toUserDetails} className="text-gray-80 dark:text-gray-300" />
           </div>
           {(!chat.dateLastSeen || chat.dateLastSeen < chat.dateLastMessage) && (
             <Badge

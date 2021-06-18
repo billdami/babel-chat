@@ -29,7 +29,7 @@ const ListItem: FC<ListItemProps> = ({ user, blockedIds }) => {
           text-left
           hover:bg-opacity-50 hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:bg-opacity-30
           focus:outline-none focus:ring-inset focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"
-        activeClassName="bg-gray-200 hover:bg-opacity-100 dark:bg-gray-900 dark:bg-opacity-50"
+        activeClassName="bg-gray-200 hover:bg-opacity-100 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-opacity-50"
         to={`/main/chat/${user.id}`}
         onClick={closeDrawer}
       >

@@ -164,7 +164,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
   return (
     <div className="pb-2">
       {(!!sortedChats.length || isEditing) && (
-        <div className="px-3 py-2 mb-1 bg-gray-200 bg-opacity-70">
+        <div className="px-3 py-2 mb-1 bg-gray-200 dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-40">
           {isEditing ? (
             <EditToolbar
               sortedChats={sortedChats}

@@ -49,7 +49,7 @@ const Checkbox: FC<CheckboxProps> = ({
         disabled:cursor-not-allowed`,
         {
           'mt-1': !standalone,
-          'bg-check-indeterminate bg-green-500 border-green-500 ': isIndeterminate,
+          'bg-check-indeterminate bg-green-500 border-green-500 dark:bg-green-500': isIndeterminate,
         },
         inputClassName
       )}
