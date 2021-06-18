@@ -7,9 +7,9 @@ import DialogConfirm from '../../../../components/DialogConfirm';
 import DialogFeedback from '../../../../components/DialogFeedback';
 import Icon from '../../../../components/Icon';
 import Link from '../../../../components/Link';
+import LogoIcon from '../../../../components/LogoIcon';
 import Menu from '../../../../components/Menu';
 import ScrollShadow from '../../../../components/ScrollShadow';
-import LogoIcon from '../../../../components/Svgs/Logos/Icon';
 import TabList from '../../../../components/Tab/TabList';
 import TabPanel from '../../../../components/Tab/TabPanel';
 import useAuth from '../../../../hooks/useAuth';
@@ -88,11 +88,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           <Link
             to="/main"
             onClick={closeDrawer}
-            className="block py-1 px-2 bg-white dark:bg-gray-100 border border-white dark:border-gray-100"
+            className="block py-1 px-2 bg-white dark:bg-gray-500 border border-white dark:border-gray-500"
           >
             <LogoIcon className="h-8" />
           </Link>
-          <BetaBadge className="-top-1 -right-6" target="_blank" small />
+          <BetaBadge className="-top-1 -right-6" target="_blank" small muted />
         </div>
         <Menu<UserMenuProps>
           isOpen={isUserMenuOpen}

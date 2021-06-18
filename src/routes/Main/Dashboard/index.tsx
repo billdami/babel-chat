@@ -60,7 +60,7 @@ const Dashboard: FC<DashboardProps> = () => {
   return (
     <>
       <Helmet>
-        <title>Dashboard | babel chat</title>
+        <title>Home | babel chat</title>
       </Helmet>
       <div className="Index flex flex-col flex-1">
         <NavBar>

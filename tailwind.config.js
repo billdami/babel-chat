@@ -38,6 +38,7 @@ module.exports = {
       backgroundImage: ['checked', 'dark'],
       backgroundOpacity: ['active'],
       borderColor: ['checked'],
+      borderOpacity: ['dark'],
       textColor: ['disabled'],
       textDecoration: ['disabled'],
     },
