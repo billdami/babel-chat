@@ -16,13 +16,16 @@ import Icon from '../../../../../components/Icon';
 import Input from '../../../../../components/Input';
 import { MSG_MAX_LEN } from '../../../../../constants/chat';
 import useMedia from '../../../../../hooks/useMedia';
+import { getUserName } from '../../../../../utils/user';
+import { User } from '../../../../../types/user';
 
 interface MessageFormProps {
+  userDetails?: User;
   canSend: boolean;
   onSubmit: (message: string) => void;
 }
 
-const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
+const MessageForm: FC<MessageFormProps> = ({ userDetails, canSend, onSubmit }) => {
   const { userId } = useParams<ChatRouteParams>();
   const { isMobile } = useMedia();
 
@@ -71,8 +74,8 @@ const MessageForm: FC<MessageFormProps> = ({ canSend, onSubmit }) => {
       {/* TODO allow input to be focused and visible without the entire document being shifted up */}
       <Input
         type="text"
-        className="flex-1 mr-3"
-        placeholder="Type a message..."
+        className="flex-1 mr-3 dark:bg-gray-600"
+        placeholder={`Message ${getUserName(userDetails)}`}
         id="signup-nickname"
         autoComplete="off"
         value={newMessage}

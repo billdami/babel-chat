@@ -7,6 +7,7 @@ import firebase from 'firebase/app';
 import { ChatRecord, ChatSort } from '../types/chat';
 
 import { getFirebaseTimestamp } from './firebase';
+import { getUserName } from './user';
 
 export const getMessageListId = (userOneId?: string, userTwoId?: string) =>
   userOneId && userTwoId
@@ -77,8 +78,8 @@ export const sortChatRecords = (a: ChatRecord, b: ChatRecord, sorts: ChatSort[])
 
     switch (sort.property) {
       case 'nickname':
-        aVal = `${a.toUserDetails.nickname}#${a.toUserDetails.uuid}`;
-        bVal = `${b.toUserDetails.nickname}#${b.toUserDetails.uuid}`;
+        aVal = getUserName(a.toUserDetails);
+        bVal = getUserName(b.toUserDetails);
         d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
         break;
       case 'dateLastMessage':

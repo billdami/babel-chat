@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# babel-chat
+
+The frontend web client for babel chat, built with React and Firebase.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

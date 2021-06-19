@@ -183,7 +183,11 @@ const Chat: FC<ChatProps> = () => {
           isSpamReported={isSpamReported}
           confirmToggleBlock={confirmToggleBlock}
         />
-        <MessageForm canSend={canSendMessage} onSubmit={onMessageSubmit} />
+        <MessageForm
+          userDetails={userDetails}
+          canSend={canSendMessage}
+          onSubmit={onMessageSubmit}
+        />
         <DialogConfirm
           isOpen={isConfirmBlockOpen}
           onCancel={() => setIsConfirmBlockOpen(false)}
