@@ -105,7 +105,7 @@ const Menu = <T extends MenuContentProps>({
               ref={setSheetElement}
               role="menu"
               className={cn(
-                'z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border bg-white',
+                'z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
                 sheetClassName
               )}
             >
@@ -125,7 +125,7 @@ const Menu = <T extends MenuContentProps>({
         <div
           ref={setPopperElement}
           role="menu"
-          className={cn('z-10 bg-white rounded shadow-lg', menuClassName)}
+          className={cn('z-10 bg-white dark:bg-gray-600 rounded shadow-lg', menuClassName)}
           style={styles.popper}
           {...attributes.popper}
         >

@@ -38,14 +38,21 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
 }) => (
   <>
     <div
-      className={cn('flex items-start justify-between pb-2 mb-2 border-b border-gray-100', {
-        'px-4': !isSheet,
-      })}
+      className={cn(
+        'flex items-start justify-between pb-2 mb-2 border-b border-gray-100 dark:border-gray-500 dark:border-opacity-40',
+        {
+          'px-4': !isSheet,
+        }
+      )}
     >
       <div className="flex items-center min-w-0">
         <UserAvatar user={user} className="flex-shrink-0 mr-2 border border-gray-200" />
         <div className="min-w-0">
-          <UserNickname user={user} className="text-gray-800" />
+          <UserNickname
+            user={user}
+            className="text-gray-800 dark:text-gray-300"
+            mutedClassName="dark:text-gray-400"
+          />
           <UserDetails user={user} className="text-gray-400" shortCountry />
         </div>
       </div>
@@ -79,7 +86,7 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
       />
       Report spam
     </MenuItem>
-    <div className="mt-2 pt-2 border-t border-gray-100">
+    <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-500 dark:border-opacity-40">
       <MenuItem isSheet={isSheet} onClick={closeChat}>
         <Icon
           name="x-mark"
