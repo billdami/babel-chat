@@ -270,12 +270,14 @@ const SignIn: FC<SignInProps> = () => {
           </div>
           {isMobile && (
             <div className="flex justify-center mt-4">
-              <DarkModeToggle />
+              <DarkModeToggle className="text-gray-500 dark:text-yellow-300" />
             </div>
           )}
         </div>
       </div>
-      {!isMobile && <DarkModeToggle className="absolute top-3 right-3" />}
+      {!isMobile && (
+        <DarkModeToggle className="absolute top-3 right-3 text-gray-500 dark:text-yellow-300" />
+      )}
     </>
   );
 };

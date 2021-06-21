@@ -3,6 +3,7 @@ import cn from 'classnames';
 
 import useTheme from '../../hooks/useTheme';
 import ToggleSwitch from '../ToggleSwitch';
+import Icon from '../Icon';
 
 interface DarkModeToggleProps {
   className?: string;
@@ -13,14 +14,14 @@ const DarkModeToggle: FC<DarkModeToggleProps> = ({ className = '', toggleClassNa
   const { isDarkTheme, updateTheme } = useTheme();
 
   return (
-    <div className={cn(className, 'flex')}>
-      {/* "moon" dark mode icon on right "enabled" side of toggle */}
+    <div className={cn(className, 'flex items-center')}>
       <ToggleSwitch
         srLabel="Toggle dark mode"
         onClick={() => updateTheme(isDarkTheme ? 'light' : 'dark', true)}
         checked={isDarkTheme}
         className={toggleClassName}
       />
+      <Icon name="moon" className="ml-2 transition-colors duration-200" />
     </div>
   );
 };

@@ -66,7 +66,7 @@ const Dashboard: FC<DashboardProps> = () => {
         <NavBar>
           <DrawerToggleButton />
           <DarkModeToggle
-            className="ml-auto"
+            className="ml-auto text-green-200 dark:text-yellow-300"
             toggleClassName="border border-green-400 dark:border-0"
           />
           {/* TODO [future] mute toggle button (right aligned in navbar) */}

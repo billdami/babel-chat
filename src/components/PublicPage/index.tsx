@@ -45,7 +45,9 @@ const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
           )}
         </div>
       </div>
-      {!isMobile && <DarkModeToggle className="absolute top-3 right-3" />}
+      {!isMobile && (
+        <DarkModeToggle className="absolute top-3 right-3 text-gray-500 dark:text-yellow-300" />
+      )}
     </>
   );
 };

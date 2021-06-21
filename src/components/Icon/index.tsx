@@ -17,6 +17,7 @@ import MagnifyingGlass from '../Svgs/Icons/MagnifyingGlass';
 import MessageCheck from '../Svgs/Icons/MessageCheck';
 import MessageExclamation from '../Svgs/Icons/MessageExclamation';
 import MessagePen from '../Svgs/Icons/MessagePen';
+import Moon from '../Svgs/Icons/Moon';
 import OctagonExclamation from '../Svgs/Icons/OctagonExclamation';
 import PaperPlane from '../Svgs/Icons/PaperPlane';
 import RightFromBracket from '../Svgs/Icons/RightFromBracket';
@@ -44,6 +45,7 @@ export type IconName =
   | 'message-check'
   | 'message-exclamation'
   | 'message-pen'
+  | 'moon'
   | 'octagon-exclamation'
   | 'paper-plane'
   | 'right-from-bracket'
@@ -92,6 +94,8 @@ const getSvg = (name: IconName) => {
       return MessageExclamation;
     case 'message-pen':
       return MessagePen;
+    case 'moon':
+      return Moon;
     case 'trash-can':
       return TrashCan;
     case 'paper-plane':
