@@ -83,11 +83,12 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
             key={index}
           >
             <Select
-              className="w-full md:w-40 dark:bg-gray-500 dark:bg-opacity-70"
+              className="w-full md:w-40"
               inputSize="sm"
               options={SortOptions}
               value={sort.property}
               onChange={(e) => onSortPropertyChange(e, sort)}
+              inverse
             />
             <Button
               variant="secondary"

@@ -7,14 +7,13 @@ interface InputProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   inputSize?: InputSize;
   fullWidth?: boolean;
+  inverse?: boolean;
 }
 
 const baseClasses = `
 appearance-none
 block
 rounded-sm
-dark:text-gray-300 dark:placeholder-gray-500
-dark:bg-transparent
 border border-gray-300 dark:border-gray-600
 transition-shadow
 focus:border-green-400 dark:focus:border-green-500
@@ -26,6 +25,10 @@ disabled:opacity-50 dark:disabled:opacity-30
 disabled:bg-gray-200 dark:disabled:bg-gray-700
 disabled:cursor-not-allowed`;
 
+const regularStyle = `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`;
+
+const inverseStyle = `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-70`;
+
 const sizeClasses = {
   sm: 'py-1 px-3 text-sm',
   md: 'py-2 px-3',
@@ -33,13 +36,19 @@ const sizeClasses = {
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, inputSize = 'md', fullWidth = false, ...rest }, ref) => (
+  ({ className, inputSize = 'md', fullWidth = false, inverse = false, ...rest }, ref) => (
     <input
       ref={ref}
       type="text"
-      className={cn(baseClasses, className, sizeClasses[inputSize], {
-        'w-full': fullWidth,
-      })}
+      className={cn(
+        baseClasses,
+        className,
+        sizeClasses[inputSize],
+        inverse ? inverseStyle : regularStyle,
+        {
+          'w-full': fullWidth,
+        }
+      )}
       {...rest}
     />
   )

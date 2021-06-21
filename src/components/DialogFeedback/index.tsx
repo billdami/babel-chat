@@ -77,7 +77,9 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
       <form onSubmit={submit}>
         <div className="p-4">
           <div className="flex justify-between items-start">
-            <div className="text-lg leading-6 text-gray-900">Give us feedback</div>
+            <div className="text-lg leading-6 text-gray-900 dark:text-gray-300">
+              Give us feedback
+            </div>
             <Button size="sm" variant="muted" className="flex-shrink-0" onClick={cancel} outline>
               <Icon name="x-mark" size="sm" />
             </Button>
@@ -90,7 +92,7 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
               </Alert>
             ) : (
               <>
-                <p className="mb-4 text-sm text-gray-600">
+                <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
                   Want to report an issue, or have a suggestion on how we can make babel chat even
                   better? Send us a message using the form below, we'd love to hear from you!
                 </p>
@@ -103,8 +105,9 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                     placeholder="Email address (optional)"
                     className="mb-2"
                     fullWidth
+                    inverse
                   />
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-gray-400 dark:text-gray-500">
                     Only provide an email address if you'd like to hear back from us.
                   </div>
                 </div>
@@ -116,13 +119,14 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                   placeholder="Message"
                   className="mb-2"
                   fullWidth
+                  inverse
                 />
-                <div className="text-xs text-gray-400">1,000 characters max</div>
+                <div className="text-xs text-gray-400 dark:text-gray-500">1,000 characters max</div>
               </>
             )}
           </div>
         </div>
-        <div className="flex justify-end px-4 py-3 bg-gray-50">
+        <div className="flex justify-end px-4 py-3 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-20">
           {hasSubmitted ? (
             <>
               <Button variant="link" onClick={cancel}>

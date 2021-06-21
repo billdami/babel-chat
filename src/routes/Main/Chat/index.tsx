@@ -200,7 +200,12 @@ const Chat: FC<ChatProps> = () => {
               <>
                 <div className="mb-4">
                   Are you sure you want to unblock{' '}
-                  <UserNickname user={userDetails} className="inline" />?
+                  <UserNickname
+                    user={userDetails}
+                    className="inline text-gray-400 dark:text-gray-300"
+                    mutedClassName="dark:text-gray-400"
+                  />
+                  ?
                 </div>
                 <div className="mb-4">
                   You will receive messages and notifications from this user again.
@@ -210,7 +215,12 @@ const Chat: FC<ChatProps> = () => {
               <>
                 <div className="mb-4">
                   Are you sure you want to block{' '}
-                  <UserNickname user={userDetails} className="inline" />?
+                  <UserNickname
+                    user={userDetails}
+                    className="inline text-gray-400 dark:text-gray-300"
+                    mutedClassName="dark:text-gray-400"
+                  />
+                  ?
                 </div>
                 <div className="mb-4">
                   You will no longer receive messages from (or be able to send messages to) them,
@@ -225,18 +235,23 @@ const Chat: FC<ChatProps> = () => {
           onCancel={() => setIsConfirmReportSpamOpen(false)}
           onConfirm={reportSpam}
           icon="octagon-exclamation"
-          iconClassName="bg-red-100 text-red-400"
+          iconClassName="bg-red-100 text-red-400 dark:bg-red-400 dark:text-red-100"
           title="Report spam"
           confirmText="Report"
           message={
             <>
               <div className="mb-4">
-                <span className="text-red-500 font-bold uppercase">Warning!</span> This action is
-                irreversible and <span className="font-bold">cannot be undone</span>.
+                <span className="text-red-500 dark:text-red-400 font-bold uppercase">Warning!</span>{' '}
+                This action is irreversible and <span className="font-bold">cannot be undone</span>.
               </div>
               <div className="mb-4">
                 Are you sure you want to report{' '}
-                <UserNickname user={userDetails} className="inline" /> for spamming?
+                <UserNickname
+                  user={userDetails}
+                  className="inline text-gray-400 dark:text-gray-300"
+                  mutedClassName="dark:text-gray-400"
+                />{' '}
+                for spamming?
               </div>
               <div className="mb-4">
                 This will also <span className="font-bold">permanently</span> block this user, and

@@ -19,6 +19,7 @@ interface SelectProps
   extends DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
   inputSize?: SelectSize;
   fullWidth?: boolean;
+  inverse?: boolean;
   groups?: string[];
   options?: SelectOption[] | null;
 }
@@ -27,8 +28,6 @@ const baseClasses = `
 appearance-none
 block
 rounded-sm
-dark:text-gray-300 dark:placeholder-gray-500
-dark:bg-transparent
 border border-gray-300 dark:border-gray-600
 bg-caret dark:bg-caret-light
 bg-no-repeat
@@ -44,6 +43,10 @@ disabled:opacity-50 dark:disabled:opacity-30
 disabled:bg-gray-200 dark:disabled:bg-gray-700
 disabled:cursor-not-allowed`;
 
+const regularStyle = `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`;
+
+const inverseStyle = `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-70`;
+
 const sizeClasses = {
   sm: 'py-1 pl-3 pr-7 text-sm',
   md: 'py-2 pl-3 pr-7',
@@ -54,6 +57,7 @@ const Select: FC<SelectProps> = ({
   className,
   inputSize = 'md',
   fullWidth = false,
+  inverse = false,
   groups,
   options,
   ...rest
@@ -73,9 +77,15 @@ const Select: FC<SelectProps> = ({
 
   return (
     <select
-      className={cn(baseClasses, className, sizeClasses[inputSize], {
-        'w-full': fullWidth,
-      })}
+      className={cn(
+        baseClasses,
+        className,
+        sizeClasses[inputSize],
+        inverse ? inverseStyle : regularStyle,
+        {
+          'w-full': fullWidth,
+        }
+      )}
       {...rest}
     >
       {!!groupedOptions.length ? (
