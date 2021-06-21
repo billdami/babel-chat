@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import cn from 'classnames';
 
-import Checkbox from '../Checkbox';
 import useTheme from '../../hooks/useTheme';
+import ToggleSwitch from '../ToggleSwitch';
 
 interface DarkModeToggleProps {
   className?: string;
@@ -13,14 +13,11 @@ const DarkModeToggle: FC<DarkModeToggleProps> = ({ className = '', toggleClassNa
   const { isDarkTheme, updateTheme } = useTheme();
 
   return (
-    <div className={cn(className)}>
-      {/* TODO replace with <ToggleSwitch> */}
+    <div className={cn(className, 'flex')}>
       {/* "moon" dark mode icon on right "enabled" side of toggle */}
-      <Checkbox
-        id="dark-mode-toggle"
-        label="Dark mode"
-        className={cn('text-sm', toggleClassName)}
-        onChange={(e) => updateTheme(e.target.checked ? 'dark' : 'light', true)}
+      <ToggleSwitch
+        srLabel="Toggle dark mode"
+        onClick={() => updateTheme(isDarkTheme ? 'light' : 'dark', true)}
         checked={isDarkTheme}
       />
     </div>

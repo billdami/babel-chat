@@ -5,6 +5,7 @@ import BetaBadge from '../BetaBadge';
 import DarkModeToggle from '../DarkModeToggle';
 import Link from '../Link';
 import Logo from '../Logo';
+import useMedia from '../../hooks/useMedia';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import { COPYRIGHT_LINE } from '../../constants/app';
 
@@ -14,6 +15,7 @@ interface PublicPageProps {
 
 const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
   useScrollToTop();
+  const { isMobile } = useMedia();
 
   return (
     <>
@@ -36,9 +38,14 @@ const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
           <div className="pb-4 text-sm text-gray-400 dark:text-gray-600 text-center">
             {COPYRIGHT_LINE}
           </div>
+          {isMobile && (
+            <div className="flex justify-center pb-8">
+              <DarkModeToggle />
+            </div>
+          )}
         </div>
       </div>
-      <DarkModeToggle className="absolute top-3 right-3 dark:text-gray-400" />
+      {!isMobile && <DarkModeToggle className="absolute top-3 right-3" />}
     </>
   );
 };

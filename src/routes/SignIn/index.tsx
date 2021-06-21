@@ -1,6 +1,7 @@
 import React, { createRef, FC, FormEvent, useCallback, useMemo, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
+import Alert from '../../components/Alert';
 import BetaBadge from '../../components/BetaBadge';
 import Button from '../../components/Button';
 import { COUNTRIES } from '../../constants/countries';
@@ -16,6 +17,7 @@ import Radio from '../../components/Radio';
 import Select, { SelectOption } from '../../components/Select';
 import Spinner from '../../components/Spinner';
 import useAuth from '../../hooks/useAuth';
+import useMedia from '../../hooks/useMedia';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import useTheme from '../../hooks/useTheme';
 import useQueryParams from '../../hooks/useQueryParams';
@@ -31,7 +33,6 @@ import {
   MIN_NICKNAME_LEN,
   UNSPECIFIED,
 } from '../../constants/user';
-import Alert from '../../components/Alert';
 
 interface SignInProps {}
 
@@ -55,6 +56,7 @@ const SignIn: FC<SignInProps> = () => {
   const queryParams = useQueryParams();
   const { isSigningIn, signIn } = useAuth();
   const { theme } = useTheme();
+  const { isMobile } = useMedia();
 
   const captcha = createRef<ReCAPTCHA>();
 
@@ -266,9 +268,14 @@ const SignIn: FC<SignInProps> = () => {
               terms of use
             </Link>
           </div>
+          {isMobile && (
+            <div className="flex justify-center mt-4">
+              <DarkModeToggle />
+            </div>
+          )}
         </div>
       </div>
-      <DarkModeToggle className="absolute top-3 right-3 dark:text-gray-400" />
+      {!isMobile && <DarkModeToggle className="absolute top-3 right-3" />}
     </>
   );
 };
