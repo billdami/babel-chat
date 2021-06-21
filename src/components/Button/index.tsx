@@ -30,8 +30,13 @@ disabled:cursor-not-allowed`;
 const variants = {
   primary:
     'shadow active:shadow-inner hover:shadow-md text-white bg-green-400 border border-transparent hover:bg-green-500 disabled:bg-green-400',
-  secondary:
-    'shadow active:shadow-inner hover:shadow-md text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 disabled:bg-white',
+  secondary: `shadow active:shadow-inner
+    hover:shadow-md
+    text-gray-500 dark:text-gray-300
+    bg-white dark:bg-gray-600
+    border border-gray-300 dark:border-gray-700
+    hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:bg-opacity-30
+    disabled:bg-white dark:disabled:bg-gray-600 dark:disabled:bg-opacity-100`,
   muted: `active:shadow-inner
     text-gray-400 dark:bg-gray-400
     bg-gray-100 dark:bg-gray-700
@@ -50,8 +55,8 @@ const outlineVariants = {
     'active:shadow-inner text-gray-500 border border-gray-300 hover:bg-gray-300 hover:text-white disabled:bg-transparent disabled:text-gray-500',
   muted: `active:shadow-inner
     text-gray-400
-    border border-gray-200
-    hover:bg-gray-200
+    border border-gray-200 dark:border-gray-500 dark:border-opacity-40
+    hover:bg-gray-200 dark:hover:bg-gray-500 dark:hover:border-opacity-40
     hover:text-white
     disabled:bg-transparent
     disabled:text-gray-400`,
@@ -69,7 +74,10 @@ const outlineVariants = {
 
 const activeVariants = {
   primary: 'shadow shadow-inner text-white bg-green-500 border border-transparent',
-  secondary: 'shadow shadow-inner text-gray-500 bg-gray-100 border border-gray-300',
+  secondary: `shadow shadow-inner
+    text-gray-500 dark:text-gray-300
+    bg-gray-100 dark:bg-gray-700 dark:bg-opacity-30
+    border border-gray-300 dark:border-gray-700`,
   muted: `shadow-inner
     text-gray-400
     bg-gray-100 dark:bg-gray-700
