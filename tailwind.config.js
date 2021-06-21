@@ -39,6 +39,7 @@ module.exports = {
       backgroundOpacity: ['active'],
       borderColor: ['checked'],
       borderOpacity: ['dark'],
+      borderWidth: ['dark'],
       textColor: ['disabled'],
       textDecoration: ['disabled'],
     },

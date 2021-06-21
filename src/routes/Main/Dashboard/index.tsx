@@ -65,7 +65,10 @@ const Dashboard: FC<DashboardProps> = () => {
       <div className="Index flex flex-col flex-1">
         <NavBar>
           <DrawerToggleButton />
-          <DarkModeToggle className="ml-auto" />
+          <DarkModeToggle
+            className="ml-auto"
+            toggleClassName="border border-green-400 dark:border-0"
+          />
           {/* TODO [future] mute toggle button (right aligned in navbar) */}
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">

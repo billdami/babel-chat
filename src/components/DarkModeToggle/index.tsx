@@ -19,6 +19,7 @@ const DarkModeToggle: FC<DarkModeToggleProps> = ({ className = '', toggleClassNa
         srLabel="Toggle dark mode"
         onClick={() => updateTheme(isDarkTheme ? 'light' : 'dark', true)}
         checked={isDarkTheme}
+        className={toggleClassName}
       />
     </div>
   );
