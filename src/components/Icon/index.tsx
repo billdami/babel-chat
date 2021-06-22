@@ -24,6 +24,8 @@ import RightFromBracket from '../Svgs/Icons/RightFromBracket';
 import Thumbtack from '../Svgs/Icons/Thumbtack';
 import TrashCan from '../Svgs/Icons/TrashCan';
 import User from '../Svgs/Icons/User';
+import Volume from '../Svgs/Icons/Volume';
+import VolumeXMark from '../Svgs/Icons/VolumeXMark';
 import XMark from '../Svgs/Icons/XMark';
 
 type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -52,6 +54,8 @@ export type IconName =
   | 'thumbtack'
   | 'trash-can'
   | 'user'
+  | 'volume'
+  | 'volume-x-mark'
   | 'x-mark';
 
 interface IconProps extends SVGProps<SVGSVGElement> {
@@ -108,6 +112,10 @@ const getSvg = (name: IconName) => {
       return OctagonExclamation;
     case 'user':
       return User;
+    case 'volume':
+      return Volume;
+    case 'volume-x-mark':
+      return VolumeXMark;
     case 'x-mark':
       return XMark;
   }

@@ -7,8 +7,15 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import useSound from 'use-sound';
 
 import { ChatRecord } from '../types/chat';
+// @ts-ignore
+import muteSfx from '../audio/mute.mp3';
+// @ts-ignore
+import unmuteSfx from '../audio/unmute.mp3';
+// @ts-ignore
+import pingSfx from '../audio/ping.mp3';
 
 import useAuth from './useAuth';
 import { useChats } from './useChatRecord';
@@ -36,6 +43,9 @@ const useProvideNotifications = () => {
 
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
+  const [playMute] = useSound(muteSfx, { volume: 0.25 });
+  const [playUnmute] = useSound(unmuteSfx, { volume: 0.5 });
+
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
   const unreadChats = useMemo<ChatRecord[]>(
@@ -49,7 +59,13 @@ const useProvideNotifications = () => {
 
   const prevNumUnread = usePrevious<number>(numUnread);
 
-  const toggleMute = useCallback((muted: boolean) => setIsMuted(muted), []);
+  const toggleMute = useCallback(
+    (muted: boolean) => {
+      muted ? playMute() : playUnmute();
+      setIsMuted(muted);
+    },
+    [playMute, playUnmute]
+  );
 
   useEffect(() => {
     // TODO use setTimeout or something to wait a few ms to see if there is still new unreads

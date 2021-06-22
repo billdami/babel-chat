@@ -1,14 +1,17 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
 
+import Button from '../../../components/Button';
 import DarkModeToggle from '../../../components/DarkModeToggle';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import DrawerToggleButton from '../../../components/DrawerToggleButton';
+import Icon from '../../../components/Icon';
 import NavBar from '../../../components/NavBar';
 import NotificationHeadTags from '../../../components/NotificationHeadTags';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
+import useNotifications from '../../../hooks/useNotifications';
 import useIsScrolled from '../../../hooks/useIsScrolled';
 
 import Footer from './components/Footer';
@@ -25,6 +28,7 @@ const Dashboard: FC<DashboardProps> = () => {
 
   const { signOut } = useAuth();
   const { openDrawer, updateTab } = useDrawer();
+  const { isMuted, toggleMute } = useNotifications();
   const { isScrolled, onScroll } = useIsScrolled(scrollContainer);
 
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
@@ -63,11 +67,19 @@ const Dashboard: FC<DashboardProps> = () => {
       <div className="Index flex flex-col flex-1">
         <NavBar>
           <DrawerToggleButton />
-          <DarkModeToggle
-            className="ml-auto text-green-200 dark:text-yellow-300"
-            toggleClassName="border border-green-400 dark:border-0"
-          />
-          {/* TODO [future] mute toggle button (right aligned in navbar) */}
+          <div className="flex flex-shrink-0 ml-auto">
+            <DarkModeToggle
+              className="text-green-200 dark:text-yellow-300"
+              toggleClassName="border border-green-400 dark:border-0"
+            />
+            <Button onClick={() => toggleMute(!isMuted)} variant="inverse" className="ml-3" outline>
+              <Icon
+                name={isMuted ? 'volume-x-mark' : 'volume'}
+                size="sm"
+                className="inline-block"
+              />
+            </Button>
+          </div>
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />

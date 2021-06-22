@@ -9,6 +9,8 @@ import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import { MenuContentProps } from '../../../../../components/Menu';
 import MenuItem from '../../../../../components/Menu/MenuItem';
+import MuteToggle from '../../../../../components/MuteToggle';
+import useNotifications from '../../../../../hooks/useNotifications';
 import useTheme from '../../../../../hooks/useTheme';
 import { User } from '../../../../../types/user';
 
@@ -27,6 +29,7 @@ const UserMenu: FC<UserMenuProps> = ({
   closeMenu,
 }) => {
   const { hasLocalThemePref, clearThemePref } = useTheme();
+  const { isMuted } = useNotifications();
 
   const handleClearTheme = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -85,12 +88,22 @@ const UserMenu: FC<UserMenuProps> = ({
           { 'px-4': !isSheet }
         )}
       >
+        {/* TODO [future] avatar editor */}
+        <div className="flex items-center mb-2">
+          <label htmlFor="user-menu-mute-toggle" className="text-gray-600 dark:text-gray-300">
+            {isMuted ? 'Unmute sounds' : 'Mute sounds'}
+          </label>
+          <MuteToggle
+            className="ml-auto text-gray-500 dark:text-gray-300"
+            buttonId="user-menu-mute-toggle"
+          />
+        </div>
         <div className="flex items-center">
           <label htmlFor="user-menu-dark-mode-toggle" className="text-gray-600 dark:text-gray-300">
             Dark mode
           </label>
           <DarkModeToggle
-            className="text-gray-500 dark:text-yellow-300 ml-auto"
+            className="ml-auto text-gray-500 dark:text-yellow-300"
             buttonId="user-menu-dark-mode-toggle"
           />
         </div>
@@ -102,8 +115,6 @@ const UserMenu: FC<UserMenuProps> = ({
           </div>
         )}
       </div>
-      {/* TODO [future] mute sounds toggle */}
-      {/* TODO [future] avatar editor */}
     </>
   );
 };
