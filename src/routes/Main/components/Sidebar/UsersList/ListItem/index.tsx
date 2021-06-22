@@ -12,13 +12,17 @@ import { UserRecord } from '../../../../../../types/user';
 interface ListItemProps {
   user: UserRecord;
   blockedIds: string[];
+  activeChatIds: string[];
+  unreadChatIds: string[];
 }
 
-const ListItem: FC<ListItemProps> = ({ user, blockedIds }) => {
+const ListItem: FC<ListItemProps> = ({ user, blockedIds, activeChatIds, unreadChatIds }) => {
   const { user: authUser } = useAuth();
   const { closeDrawer } = useDrawer();
 
   const isBlocked = useMemo<boolean>(() => blockedIds.includes(user.id), [blockedIds, user]);
+  const hasChat = useMemo<boolean>(() => activeChatIds.includes(user.id), [activeChatIds, user]);
+  const hasUnread = useMemo<boolean>(() => unreadChatIds.includes(user.id), [unreadChatIds, user]);
 
   return (
     <li>
@@ -45,6 +49,8 @@ const ListItem: FC<ListItemProps> = ({ user, blockedIds }) => {
             user={user}
             isCurrentUser={user.id === authUser?.uid}
             isBlocked={isBlocked}
+            hasChat={hasChat}
+            hasUnread={hasUnread}
             className="text-gray-800 dark:text-gray-300"
           />
           <UserDetails user={user} className="text-gray-400 dark:text-gray-500 text-sm" />

@@ -10,6 +10,7 @@ import Menu from '../../../../../components/Menu';
 import Spinner from '../../../../../components/Spinner';
 import useCurrentUser from '../../../../../hooks/useCurrentUser';
 import { UserRecord, UserSort, UserFilter } from '../../../../../types/user';
+import { ChatRecord } from '../../../../../types/chat';
 import { filterUserRecords, groupUserFilters, sortUserRecords } from '../../../../../utils/user';
 import { DEFAULT_USER_SORTS, MAX_USER_FILTERS } from '../../../../../constants/user';
 
@@ -21,9 +22,17 @@ interface UsersListProps {
   users?: UserRecord[];
   isLoading: boolean;
   blockedIds: string[];
+  activeChats: ChatRecord[];
+  unreadChats: ChatRecord[];
 }
 
-const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
+const UsersList: FC<UsersListProps> = ({
+  users,
+  isLoading,
+  blockedIds,
+  activeChats,
+  unreadChats,
+}) => {
   const { user } = useCurrentUser();
 
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -39,6 +48,7 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
 
   const hasMaxFilters = filters.length >= MAX_USER_FILTERS;
 
+  // TODO toggle checkbox to hide/show blocked users (default to hiding them)
   // TODO move blocked users filter into its own useMemo, as users filtered out by blocking
   // should not show as as "has filters state", and should not be included in the tab count
   // blockedIds, showBlockedUsers
@@ -59,6 +69,9 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
       ? filteredUsers.sort((a, b) => sortUserRecords(a, b, _sorts, currentTime, user?.country))
       : filteredUsers;
   }, [filteredUsers, debouncedSorts, user]);
+
+  const activeChatIds = useMemo<string[]>(() => activeChats.map((c) => c.id), [activeChats]);
+  const unreadChatIds = useMemo<string[]>(() => unreadChats.map((c) => c.id), [unreadChats]);
 
   const updateSort = useCallback(
     (sort: UserSort, updates: Partial<UserSort>) => {
@@ -208,7 +221,13 @@ const UsersList: FC<UsersListProps> = ({ users, isLoading, blockedIds }) => {
       )}
       <ul>
         {sortedUsers?.map((user) => (
-          <ListItem key={user.id} user={user} blockedIds={blockedIds} />
+          <ListItem
+            key={user.id}
+            user={user}
+            blockedIds={blockedIds}
+            activeChatIds={activeChatIds}
+            unreadChatIds={unreadChatIds}
+          />
         ))}
         {!sortedUsers.length && !isLoading && (
           <div className="px-3 py-8 text-gray-400 dark:text-gray-500 text-center text-sm">

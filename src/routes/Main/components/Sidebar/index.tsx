@@ -37,7 +37,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user: authUser, signOut } = useAuth();
   const { user } = useCurrentUser();
   const { activeTab, closeDrawer } = useDrawer();
-  const { numUnread } = useNotifications();
+  const { numUnread, unreadChats } = useNotifications();
   const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(authUser?.uid);
@@ -123,7 +123,13 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
       >
         <ScrollShadow isVisible={isUsersScrolled} />
         <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
-          <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
+          <UsersList
+            users={users}
+            isLoading={isLoadingUsers}
+            blockedIds={blockedIds}
+            activeChats={visibleChats}
+            unreadChats={unreadChats}
+          />
         </div>
       </TabPanel>
       <TabPanel
