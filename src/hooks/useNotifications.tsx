@@ -10,17 +10,20 @@ import React, {
 import useSound from 'use-sound';
 
 import { ChatRecord } from '../types/chat';
+import { lsGet, lsRemove, lsSet } from '../utils/localStorage';
 // @ts-ignore
 import muteSfx from '../audio/mute.mp3';
 // @ts-ignore
 import unmuteSfx from '../audio/unmute.mp3';
 // @ts-ignore
-import pingSfx from '../audio/ping.mp3';
+// import pingSfx from '../audio/ping.mp3';
 
 import useAuth from './useAuth';
 import { useChats } from './useChatRecord';
 import usePrevious from './usePrevious';
 import { useUserBlocks } from './useUserRecord';
+
+type MutePref = 'muted' | null | undefined;
 
 interface NotificationsContext {
   unreadChats: ChatRecord[];
@@ -29,10 +32,15 @@ interface NotificationsContext {
   toggleMute: (muted: boolean) => void;
 }
 
+export const getMutePref = (): boolean => {
+  const pref = lsGet<MutePref>('muteSounds');
+  return pref === 'muted';
+};
+
 const notificationsContext = createContext<NotificationsContext>({
   unreadChats: [],
   numUnread: 0,
-  isMuted: false,
+  isMuted: getMutePref(),
   toggleMute: () => {},
 });
 
@@ -41,7 +49,7 @@ const useProvideNotifications = () => {
   const [chats] = useChats(user?.uid);
   const [userBlocks] = useUserBlocks(user?.uid);
 
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(getMutePref());
 
   const [playMute] = useSound(muteSfx, { volume: 0.25 });
   const [playUnmute] = useSound(unmuteSfx, { volume: 0.5 });
@@ -63,6 +71,11 @@ const useProvideNotifications = () => {
     (muted: boolean) => {
       muted ? playMute() : playUnmute();
       setIsMuted(muted);
+      if (muted) {
+        lsSet('muteSounds', 'muted');
+      } else {
+        lsRemove('muteSounds');
+      }
     },
     [playMute, playUnmute]
   );
