@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import { useThrottledCallback } from 'use-debounce';
 import useSound from 'use-sound';
 
 import { ChatRecord } from '../types/chat';
@@ -16,7 +17,7 @@ import muteSfx from '../audio/mute.mp3';
 // @ts-ignore
 import unmuteSfx from '../audio/unmute.mp3';
 // @ts-ignore
-// import pingSfx from '../audio/ping.mp3';
+import pingSfx from '../audio/ping.mp3';
 
 import useAuth from './useAuth';
 import { useChats } from './useChatRecord';
@@ -53,6 +54,11 @@ const useProvideNotifications = () => {
 
   const [playMute] = useSound(muteSfx, { volume: 0.25 });
   const [playUnmute] = useSound(unmuteSfx, { volume: 0.5 });
+  const [playNotification] = useSound(pingSfx, { volume: 0.75, soundEnabled: !isMuted });
+
+  const throttledPlayNotification = useThrottledCallback(playNotification, 1000, {
+    trailing: false,
+  });
 
   const blockedIds = useMemo<string[]>(() => userBlocks?.map((b) => b.id) ?? [], [userBlocks]);
 
@@ -86,15 +92,12 @@ const useProvideNotifications = () => {
     // in which case they will be marked read immediately after
 
     // notification sound should play only when the number of unread increases
-    if (numUnread > prevNumUnread && !isMuted) {
-      // TODO implement notification sounds
-      // TODO useThrottledCallback so sounds dont play more than once a second
-      // @see (https://github.com/xnimorz/use-debounce#usethrottledcallback)
-      console.log('You have new unread messages!');
+    if (numUnread > prevNumUnread) {
+      throttledPlayNotification();
     }
 
     // TODO if there are unread notifications, show indicator text in browser title
-  }, [numUnread, prevNumUnread, isMuted]);
+  }, [numUnread, prevNumUnread, throttledPlayNotification]);
 
   return {
     unreadChats,
