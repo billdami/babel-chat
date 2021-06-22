@@ -1,11 +1,11 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 
 import DarkModeToggle from '../../../components/DarkModeToggle';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import DrawerToggleButton from '../../../components/DrawerToggleButton';
 import NavBar from '../../../components/NavBar';
+import NotificationHeadTags from '../../../components/NotificationHeadTags';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
@@ -59,9 +59,7 @@ const Dashboard: FC<DashboardProps> = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Home | babel chat</title>
-      </Helmet>
+      <NotificationHeadTags title="Home | babel chat" />
       <div className="Index flex flex-col flex-1">
         <NavBar>
           <DrawerToggleButton />

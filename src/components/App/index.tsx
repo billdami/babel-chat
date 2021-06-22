@@ -1,19 +1,19 @@
 import React, { FC } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
-import useAuth from '../../hooks/useAuth';
-import useIsAppOffline from '../../hooks/useIsAppOffline';
+import AppOffline from '../AppOffline';
+import ProtectedRoute from '../ProtectedRoute';
+import NotificationHeadTags from '../NotificationHeadTags';
+import Splash from '../Splash';
+import UnprotectedRoute from '../UnprotectedRoute';
+import About from '../../routes/About';
 import Main from '../../routes/Main';
 import PageNotFound from '../../routes/PageNotFound';
+import PrivacyPolicy from '../../routes/PrivacyPolicy';
 import SignIn from '../../routes/SignIn';
 import TermsOfUse from '../../routes/TermsOfUse';
-import PrivacyPolicy from '../../routes/PrivacyPolicy';
-import About from '../../routes/About';
-import ProtectedRoute from '../ProtectedRoute';
-import UnprotectedRoute from '../UnprotectedRoute';
-import Splash from '../Splash';
-import AppOffline from '../AppOffline';
+import useAuth from '../../hooks/useAuth';
+import useIsAppOffline from '../../hooks/useIsAppOffline';
 import usePageTracking from '../../hooks/usePageTracking';
 
 interface AppProps {}
@@ -27,9 +27,7 @@ const App: FC<AppProps> = () => {
 
   return (
     <>
-      <Helmet>
-        <title>babel chat - Meet and chat with people from around the world.</title>
-      </Helmet>
+      <NotificationHeadTags />
       <div className="App h-full min-h-full max-h-full flex">
         {isSplashVisible ? (
           <Splash />

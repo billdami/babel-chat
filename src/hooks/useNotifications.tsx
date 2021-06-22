@@ -64,7 +64,7 @@ const useProvideNotifications = () => {
       console.log('You have new unread messages!');
     }
 
-    // TODO if there are unread notifications, show indicator in browser title/tab
+    // TODO if there are unread notifications, show indicator text in browser title
   }, [numUnread, prevNumUnread, isMuted]);
 
   return {
