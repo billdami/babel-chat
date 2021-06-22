@@ -2,7 +2,7 @@ import React, { DetailedHTMLProps, FC } from 'react';
 import cn from 'classnames';
 
 type ButtonVariant = 'primary' | 'secondary' | 'muted' | 'inverse' | 'link';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface ButtonProps
   extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
@@ -106,12 +106,14 @@ const activeOutlineVariants = {
 };
 
 const textSizes = {
+  xs: 'text-xs',
   sm: 'text-sm',
   md: '',
   lg: 'text-lg',
 };
 
 const paddingSizes = {
+  xs: 'px-1 py-1',
   sm: 'px-2 py-1',
   md: 'px-4 py-2',
   lg: 'px-6 py-4',

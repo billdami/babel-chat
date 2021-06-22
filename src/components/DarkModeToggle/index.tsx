@@ -8,9 +8,14 @@ import Icon from '../Icon';
 interface DarkModeToggleProps {
   className?: string;
   toggleClassName?: string;
+  buttonId?: string;
 }
 
-const DarkModeToggle: FC<DarkModeToggleProps> = ({ className = '', toggleClassName = '' }) => {
+const DarkModeToggle: FC<DarkModeToggleProps> = ({
+  className = '',
+  toggleClassName = '',
+  buttonId = '',
+}) => {
   const { isDarkTheme, updateTheme } = useTheme();
 
   return (
@@ -20,8 +25,9 @@ const DarkModeToggle: FC<DarkModeToggleProps> = ({ className = '', toggleClassNa
         onClick={() => updateTheme(isDarkTheme ? 'light' : 'dark', true)}
         checked={isDarkTheme}
         className={toggleClassName}
+        id={buttonId}
       />
-      <Icon name="moon" className="ml-2 transition-colors duration-200" />
+      <Icon name="moon" size="sm" className="ml-2 transition-colors duration-200" />
     </div>
   );
 };

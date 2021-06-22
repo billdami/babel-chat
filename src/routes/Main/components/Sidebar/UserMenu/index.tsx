@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, MouseEvent as ReactMouseEvent, useCallback } from 'react';
 import cn from 'classnames';
 
 import Button from '../../../../../components/Button';
@@ -9,6 +9,7 @@ import UserDetails from '../../../../../components/UserDetails';
 import UserNickname from '../../../../../components/UserNickname';
 import { MenuContentProps } from '../../../../../components/Menu';
 import MenuItem from '../../../../../components/Menu/MenuItem';
+import useTheme from '../../../../../hooks/useTheme';
 import { User } from '../../../../../types/user';
 
 export interface UserMenuProps extends MenuContentProps {
@@ -25,6 +26,16 @@ const UserMenu: FC<UserMenuProps> = ({
   openGiveFeedback,
   closeMenu,
 }) => {
+  const { hasLocalThemePref, clearThemePref } = useTheme();
+
+  const handleClearTheme = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.stopPropagation();
+      clearThemePref();
+    },
+    [clearThemePref]
+  );
+
   return (
     <>
       <div
@@ -68,12 +79,28 @@ const UserMenu: FC<UserMenuProps> = ({
         />
         Sign out
       </MenuItem>
-      <div className="px-4 pt-2 mt-1 border-t border-gray-100 dark:border-gray-500 dark:border-opacity-40">
+      <div
+        className={cn(
+          'pt-2 mt-1 border-t border-gray-100 dark:border-gray-500 dark:border-opacity-40',
+          { 'px-4': !isSheet }
+        )}
+      >
         <div className="flex items-center">
-          <span className="text-gray-400">Dark mode</span>
-          <DarkModeToggle className="text-gray-500 dark:text-yellow-300 ml-9" />
+          <label htmlFor="user-menu-dark-mode-toggle" className="text-gray-600 dark:text-gray-300">
+            Dark mode
+          </label>
+          <DarkModeToggle
+            className="text-gray-500 dark:text-yellow-300 ml-auto"
+            buttonId="user-menu-dark-mode-toggle"
+          />
         </div>
-        {/* TODO show "Use device default theme" link when localStorage has a value, to clear it */}
+        {hasLocalThemePref && (
+          <div>
+            <Button variant="link" size="xs" className="-ml-1" onClick={handleClearTheme}>
+              Use device default theme
+            </Button>
+          </div>
+        )}
       </div>
       {/* TODO [future] mute sounds toggle */}
       {/* TODO [future] avatar editor */}

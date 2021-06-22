@@ -17,3 +17,13 @@ export const lsSet = (key: string, value: string): void => {
     return;
   }
 };
+
+export const lsRemove = (key: string): void => {
+  try {
+    return localStorage.removeItem(key);
+  } catch (err) {
+    //localStorage removeItem() may fail if access is blocked/disabled
+    // for the site by the browser
+    return;
+  }
+};
