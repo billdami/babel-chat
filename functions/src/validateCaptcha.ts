@@ -15,9 +15,7 @@ const funcValidateCaptcha = functions.https.onRequest(
       const token = req.body?.token ? `${req.body?.token}` : '';
       const ip = req.ip ?? '';
 
-      functions.logger.info(`validateCaptcha request`, `token: ${token}`, `ip: ${ip}`, {
-        structuredData: true,
-      });
+      functions.logger.info(`validateCaptcha request`, `token: ${token}`, `ip: ${ip}`);
 
       if (req.method !== 'POST') {
         res.status(400).send('request must be a POST.');
@@ -45,28 +43,16 @@ const funcValidateCaptcha = functions.https.onRequest(
         const result = await recaptchaRes.json();
 
         if (result.success) {
-          functions.logger.info(
-            `validateCaptcha request - successs`,
-            `token: ${token}`,
-            JSON.stringify(result),
-            { structuredData: true }
-          );
+          functions.logger.info(`validateCaptcha request - successs`, `token: ${token}`, result);
 
           res.status(200).send('recaptcha verification success.');
         } else {
-          functions.logger.info(
-            `validateCaptcha request - failure`,
-            `token: ${token}`,
-            JSON.stringify(result),
-            { structuredData: true }
-          );
+          functions.logger.info(`validateCaptcha request - failure`, `token: ${token}`, result);
 
           res.status(400).send('recaptcha verification failed. are you a robot?');
         }
       } catch (err) {
-        functions.logger.info(`validateCaptcha request - failure`, `token: ${token}`, err, {
-          structuredData: true,
-        });
+        functions.logger.info(`validateCaptcha request - failure`, `token: ${token}`, err);
 
         res.status(400).send('recaptcha request failed.');
       }

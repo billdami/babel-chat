@@ -6,13 +6,13 @@ interface TipsAndTricksProps {}
 
 const TipsAndTricks: FC<TipsAndTricksProps> = () => {
   return (
-    <div className="mb-6 2xl:mb-2 p-4 rounded-lg bg-gray-50">
-      <h3 className="text-xl text-gray-600 mb-2">New here?</h3>
-      <p className="mb-4 text-gray-800 max-w-3xl">
+    <div className="mb-6 2xl:mb-2 p-4 rounded-lg bg-gray-50 dark:bg-gray-600 dark:bg-opacity-30">
+      <h3 className="text-xl text-gray-600 dark:text-gray-400 mb-2">New here?</h3>
+      <p className="mb-4 text-gray-800 dark:text-gray-300 max-w-3xl">
         Welcome to the babel chat community! We hope you enjoy your stay. Here's a few tips and
         tricks to make sure you have the best possible chat experience:
       </p>
-      <ul className="list-disc pl-8 mb-4 text-gray-800 max-w-3xl">
+      <ul className="list-disc pl-8 mb-4 text-gray-800 dark:text-gray-300 max-w-3xl">
         <li className="mb-1">
           <strong className="font-bold">It is completely anonymous.</strong> babel chat does not
           require you to provide any personal information, and has no registration process. Some

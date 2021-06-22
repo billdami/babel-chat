@@ -25,7 +25,7 @@ export const deleteOrphanedData = async (
     await Promise.all(deletes);
     functions.logger.info(`checked ${deletes.length} ${collection} for orphans`);
   } catch (err) {
-    functions.logger.error(`${collection} delete failed`, err, { structuredData: true });
+    functions.logger.error(`${collection} delete failed`, err);
   }
 };
 
@@ -45,7 +45,7 @@ export const cleanupDatabase = async (env: 'production' | 'development'): Promis
     await Promise.all(userDeletes);
     functions.logger.info(`deleted ${userDeletes.length} stale users`);
   } catch (err) {
-    functions.logger.error('users delete failed', err, { structuredData: true });
+    functions.logger.error('users delete failed', err);
   }
 
   // delete any /chat_messages whose split key (on "_") of
@@ -70,7 +70,7 @@ export const cleanupDatabase = async (env: 'production' | 'development'): Promis
     await Promise.all(chatMessageDeletes);
     functions.logger.info(`checked ${chatMessageDeletes.length} chat_messages for orphans`);
   } catch (err) {
-    functions.logger.error('chat_messsages delete failed', err, { structuredData: true });
+    functions.logger.error('chat_messsages delete failed', err);
   }
 
   // delete any /user_uuids whose value does not have a matching /users key

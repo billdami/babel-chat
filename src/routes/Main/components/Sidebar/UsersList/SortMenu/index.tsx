@@ -63,7 +63,7 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
   return (
     <>
       <div className="flex items-end justify-between mb-2 px-4">
-        <div className="text-gray-600 font-bold">Sort users by</div>
+        <div className="text-gray-600 dark:text-gray-400 font-bold">Sort users by</div>
         {isSheet && (
           <Button
             size="sm"
@@ -76,15 +76,19 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
           </Button>
         )}
       </div>
-      <div className="border-t border-gray-100">
+      <div className="border-t border-gray-100 dark:border-gray-500 dark:border-opacity-40">
         {sorts?.map((sort, index) => (
-          <div className="flex px-4 py-2 border-b border-gray-100" key={index}>
+          <div
+            className="flex px-4 py-2 border-b border-gray-100 dark:border-gray-500 dark:border-opacity-40"
+            key={index}
+          >
             <Select
               className="w-full md:w-40"
               inputSize="sm"
               options={SortOptions}
               value={sort.property}
               onChange={(e) => onSortPropertyChange(e, sort)}
+              inverse
             />
             <Button
               variant="secondary"

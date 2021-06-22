@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import DarkModeToggle from '../../../components/DarkModeToggle';
 import DialogConfirm from '../../../components/DialogConfirm';
 import DialogFeedback from '../../../components/DialogFeedback';
 import DrawerToggleButton from '../../../components/DrawerToggleButton';
@@ -17,9 +18,9 @@ import NewestUsers from './components/NewestUsers';
 import QuickActions from './components/QuickActions';
 import TipsAndTricks from './components/TipsAndTricks';
 
-interface IndexProps {}
+interface DashboardProps {}
 
-const Index: FC<IndexProps> = () => {
+const Dashboard: FC<DashboardProps> = () => {
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   const { signOut } = useAuth();
@@ -59,12 +60,16 @@ const Index: FC<IndexProps> = () => {
   return (
     <>
       <Helmet>
-        <title>Dashboard | babel chat</title>
+        <title>Home | babel chat</title>
       </Helmet>
       <div className="Index flex flex-col flex-1">
         <NavBar>
           <DrawerToggleButton />
-          {/* TODO [future] dark mode switch and mute toggle in (right aligned in navbar) */}
+          <DarkModeToggle
+            className="ml-auto text-green-200 dark:text-yellow-300"
+            toggleClassName="border border-green-400 dark:border-0"
+          />
+          {/* TODO [future] mute toggle button (right aligned in navbar) */}
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
@@ -103,4 +108,4 @@ const Index: FC<IndexProps> = () => {
   );
 };
 
-export default Index;
+export default Dashboard;

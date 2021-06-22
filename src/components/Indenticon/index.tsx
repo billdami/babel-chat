@@ -1,6 +1,7 @@
 import React, { DetailedHTMLProps, FC, ImgHTMLAttributes, useMemo } from 'react';
 import identicon from 'identicon.js';
 
+import useTheme from '../../hooks/useTheme';
 import { md5 } from '../../utils/crypto';
 
 interface IdenticonProps
@@ -9,6 +10,8 @@ interface IdenticonProps
   size?: number;
 }
 
+const backgroundLight = [255, 255, 255, 255];
+const backgroundDark = [229, 231, 235, 255];
 const emptyPixel =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
 
@@ -16,20 +19,20 @@ const emptyPixel =
 const cache: { [x: string]: string } = {};
 
 const Identicon: FC<IdenticonProps> = ({ identifier, size = 36, ...rest }) => {
+  const { theme, isDarkTheme } = useTheme();
+
   const src = useMemo(() => {
     let _src = emptyPixel;
     if (identifier) {
       const hash = md5(identifier);
-      // TODO include current dark/light theme in cache ID
-      const cacheId = `${identifier}__${size}`;
+      const cacheId = `${identifier}__${size}__${theme}`;
 
       if (cache[cacheId]) {
         _src = cache[cacheId];
       } else {
         const icon = new identicon(hash, {
           format: 'svg',
-          // TODO change in dark mode
-          background: [255, 255, 255, 255],
+          background: isDarkTheme ? backgroundDark : backgroundLight,
           margin: 0,
           size,
         });
@@ -40,7 +43,7 @@ const Identicon: FC<IdenticonProps> = ({ identifier, size = 36, ...rest }) => {
     }
 
     return _src;
-  }, [identifier, size]);
+  }, [identifier, size, theme, isDarkTheme]);
 
   return <img width={size} height={size} alt="" src={src} {...rest} />;
 };

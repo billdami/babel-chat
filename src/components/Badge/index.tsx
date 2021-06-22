@@ -24,7 +24,7 @@ const sizes = {
 
 const variants = {
   alert: 'bg-red-500',
-  muted: 'bg-gray-400',
+  muted: 'bg-gray-400 dark:bg-gray-800 dark:border-gray-500',
 };
 
 const variantPulse = {

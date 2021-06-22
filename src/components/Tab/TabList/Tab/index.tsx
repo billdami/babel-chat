@@ -6,6 +6,7 @@ interface TabProps {
   activeTabId: any;
   className?: string;
   activeClassName?: string;
+  inactiveClassName?: string;
   liClassName?: string;
   onClick?: (tabId: any, event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
@@ -16,6 +17,7 @@ const Tab: FC<TabProps> = ({
   onClick,
   className = '',
   activeClassName = '',
+  inactiveClassName = '',
   liClassName = '',
   children,
   ...rest
@@ -27,7 +29,11 @@ const Tab: FC<TabProps> = ({
       aria-controls={tabId}
       aria-selected={tabId === activeTabId}
       onClick={(event) => onClick?.(tabId, event)}
-      className={cn(className, tabId === activeTabId && activeClassName)}
+      className={cn(
+        className,
+        tabId === activeTabId && activeClassName,
+        tabId !== activeTabId && inactiveClassName
+      )}
       {...rest}
     >
       {children}

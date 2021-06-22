@@ -12,12 +12,13 @@ const MenuItem: FC<MenuItemProps> = ({ children, className, isSheet, ...rest }) 
     role="menuitem"
     className={cn(
       `flex items-center w-full
-      leading-6 text-left text-gray-600
-      focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-green-300
-      disabled:opacity-50 disabled:bg-transparent disabled:cursor-not-allowed`,
+      leading-6 text-left text-gray-600 dark:text-gray-300
+      focus:outline-none focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500
+      disabled:opacity-50 disabled:bg-transparent dark:disabled:bg-transparent disabled:cursor-not-allowed`,
       className,
       {
-        'px-4 py-1 hover:bg-gray-200 hover:bg-opacity-30 active:bg-opacity-100': !isSheet,
+        'px-4 py-1 hover:bg-gray-200 dark:hover:bg-gray-500 hover:bg-opacity-30 dark:hover:bg-opacity-30 active:bg-opacity-100':
+          !isSheet,
         'py-2': isSheet,
       }
     )}

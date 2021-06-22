@@ -25,7 +25,7 @@ const AdvancedFilters: FC<AdvancedFiltersProps> = ({
   // TODO animate this show/hide with react-spring
   // TODO maybe set a max height and scroll
   return isOpen ? (
-    <div className="pt-3 pb-2 text-sm bg-gray-200 bg-opacity-70 shadow-inner">
+    <div className="pt-3 pb-2 text-sm bg-gray-200 dark:bg-gray-900 bg-opacity-70 dark:bg-opacity-20 shadow-inner">
       {filters.map((filter, index) => (
         // TODO animate adding/removing filters with react-spring
         <FilterItem key={index} filter={filter} update={updateFilter} remove={removeFilter} />

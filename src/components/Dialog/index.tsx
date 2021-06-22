@@ -85,10 +85,16 @@ const Dialog: FC<DialogProps> = ({
               // TODO add modal={false} prop to omit backdrop, close on click outside, etc
               aria-modal={true}
               className={cn(
-                `relative inline-block overflow-hidden
-                align-bottom
-                bg-white rounded shadow-xl text-left
-                md:my-8 md:align-middle md:max-w-lg md:w-full`,
+                `relative
+                overflow-hidden
+                inline-block
+                md:max-w-lg md:w-full
+                md:my-8
+                align-bottom md:align-middle
+                bg-white dark:bg-gray-600
+                rounded
+                shadow-xl
+                text-left`,
                 className
               )}
             >

@@ -4,7 +4,7 @@ interface NavBarProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, 
 
 const NavBar: FC<NavBarProps> = ({ children }) => {
   return (
-    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 text-white">
+    <div className="flex-shrink-0 flex justify-between items-center py-2 px-2 md:px-3 min-h-navbar bg-green-500 dark:bg-gray-600 dark:bg-opacity-70 text-white dark:text-gray-200">
       {children}
     </div>
   );

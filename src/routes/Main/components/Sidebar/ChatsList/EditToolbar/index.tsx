@@ -43,11 +43,11 @@ const EditToolbar: FC<EditToolbarProps> = ({
           isIndeterminate={
             !!selectedChatIds.length && selectedChatIds.length !== sortedChats.length
           }
-          inputClassName="bg-white"
+          inputClassName="bg-white dark:bg-transparent dark:checked:bg-green-500"
           standalone
         />
         {!!selectedChatIds.length && (
-          <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 text-gray-600 text-sm font-bold">
+          <span className="inline-block px-2 ml-2 rounded-sm bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-sm font-bold">
             <FormattedNumber value={selectedChatIds.length} />
           </span>
         )}

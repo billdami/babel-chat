@@ -21,7 +21,7 @@ const DialogConfirm: FC<DialogConfirmProps> = ({
   message,
   confirmText = 'OK',
   cancelText = 'Nevermind',
-  iconClassName = 'bg-gray-100 text-gray-500',
+  iconClassName = 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400',
   icon,
   onCancel,
   onConfirm,
@@ -61,7 +61,7 @@ const DialogConfirm: FC<DialogConfirmProps> = ({
           )}
           <div className="flex-1">
             <div className="flex justify-between items-start">
-              <div className="text-lg leading-6 text-gray-900">{title}</div>
+              <div className="text-lg leading-6 text-gray-900 dark:text-gray-300">{title}</div>
               <Button
                 size="sm"
                 variant="muted"
@@ -72,11 +72,11 @@ const DialogConfirm: FC<DialogConfirmProps> = ({
                 <Icon name="x-mark" size="sm" />
               </Button>
             </div>
-            <div className="my-2 text-sm text-gray-600">{message}</div>
+            <div className="my-2 text-sm text-gray-600 dark:text-gray-400">{message}</div>
           </div>
         </div>
       </div>
-      <div className="flex justify-end px-4 py-3 bg-gray-50">
+      <div className="flex justify-end px-4 py-3 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-20">
         <Button variant="link" onClick={() => onCancel()}>
           {cancelText}
         </Button>

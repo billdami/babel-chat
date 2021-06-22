@@ -2,7 +2,7 @@ import React, { DetailedHTMLProps, FC } from 'react';
 import cn from 'classnames';
 
 type ButtonVariant = 'primary' | 'secondary' | 'muted' | 'inverse' | 'link';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface ButtonProps
   extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
@@ -21,8 +21,8 @@ rounded
 transition-shadow
 focus:outline-none
 focus:ring-4
-focus:ring-opacity-50
-focus:ring-green-300
+focus:ring-green-300 dark:focus:ring-green-500
+focus:ring-opacity-50 dark:focus:ring-opacity-50
 disabled:shadow-none
 disabled:opacity-50
 disabled:cursor-not-allowed`;
@@ -30,10 +30,19 @@ disabled:cursor-not-allowed`;
 const variants = {
   primary:
     'shadow active:shadow-inner hover:shadow-md text-white bg-green-400 border border-transparent hover:bg-green-500 disabled:bg-green-400',
-  secondary:
-    'shadow active:shadow-inner hover:shadow-md text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 disabled:bg-white',
-  muted:
-    'active:shadow-inner text-gray-400 bg-gray-100 border border-gray-300 hover:border-gray-400 disabled:border-gray-300',
+  secondary: `shadow active:shadow-inner
+    hover:shadow-md
+    text-gray-500 dark:text-gray-300
+    bg-white dark:bg-gray-600
+    border border-gray-300 dark:border-gray-700
+    hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:bg-opacity-30
+    disabled:bg-white dark:disabled:bg-gray-600 dark:disabled:bg-opacity-100`,
+  muted: `active:shadow-inner
+    text-gray-400 dark:bg-gray-400
+    bg-gray-100 dark:bg-gray-700
+    border border-gray-300 dark:border-gray-800
+    hover:border-gray-400 dark:hover:border-gray-900
+    disabled:border-gray-300 dark:disabled:border-gray-800`,
   inverse:
     'shadow active:shadow-inner hover:shadow-md text-green-400 bg-white border border-transparent hover:bg-gray-100 disabled:bg-white',
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500 disabled:no-underline disabled:text-green-500',
@@ -44,36 +53,67 @@ const outlineVariants = {
     'active:shadow-inner text-green-500 border border-green-500 hover:bg-green-500 hover:text-white disabled:bg-transparent disabled:text-green-500',
   secondary:
     'active:shadow-inner text-gray-500 border border-gray-300 hover:bg-gray-300 hover:text-white disabled:bg-transparent disabled:text-gray-500',
-  muted:
-    'active:shadow-inner text-gray-400 border border-gray-200 hover:bg-gray-200 hover:text-white disabled:bg-transparent disabled:text-gray-400',
-  inverse:
-    'active:shadow-inner text-green-200 border border-green-300 hover:bg-white hover:border-white hover:text-green-500 disabled:bg-transparent disabled:border-green-300 disabled:text-green-200',
+  muted: `active:shadow-inner
+    text-gray-400
+    border border-gray-200 dark:border-gray-500 dark:border-opacity-40
+    hover:bg-gray-200 dark:hover:bg-gray-500 dark:hover:border-opacity-40
+    hover:text-white
+    disabled:bg-transparent
+    disabled:text-gray-400`,
+  inverse: `active:shadow-inner
+    text-green-200 dark:text-gray-400
+    border border-green-300 dark:border-gray-500
+    hover:bg-white dark:hover:bg-gray-500
+    hover:border-white dark:hover:border-gray-500
+    hover:text-green-500 dark:hover:text-gray-700
+    disabled:bg-transparent
+    disabled:border-green-300 dark:disabled:border-gray-500
+    disabled:text-green-200 dark:disabled:text-gray-400`,
   link: 'text-green-500 border border-transparent hover:text-green-600 hover:underline disabled:text-green-500 disabled:text-green-500 disabled:no-underline disabled:text-green-500',
 };
 
 const activeVariants = {
   primary: 'shadow shadow-inner text-white bg-green-500 border border-transparent',
-  secondary: 'shadow shadow-inner text-gray-500 bg-gray-100 border border-gray-300',
-  muted: 'shadow-inner text-gray-400 bg-gray-100 border border-gray-400',
-  inverse: 'shadow shadow-inner text-green-400 bg-gray-100 border border-transparent',
+  secondary: `shadow shadow-inner
+    text-gray-500 dark:text-gray-300
+    bg-gray-100 dark:bg-gray-700 dark:bg-opacity-30
+    border border-gray-300 dark:border-gray-700`,
+  muted: `shadow-inner
+    text-gray-400
+    bg-gray-100 dark:bg-gray-700
+    border border-gray-400 dark:border-gray-900`,
+  inverse: `shadow
+    shadow-inner
+    text-green-400
+    bg-gray-100
+    border
+    border-transparent`,
   link: 'text-green-600 border border-transparent underline',
 };
 
 const activeOutlineVariants = {
   primary: 'shadow-inner text-white border border-green-500 bg-green-500',
   secondary: 'shadow-inner text-white border border-gray-300 bg-gray-300',
-  muted: 'shadow-inner text-white border border-gray-300 bg-gray-300',
-  inverse: 'shadow-inner text-green-500 border border-white bg-white',
+  muted: `shadow-inner
+    text-white
+    border border-gray-300
+    bg-gray-300`,
+  inverse: `shadow-inner
+    text-green-500 dark:text-gray-700
+    border border-white dark:border-gray-500
+    bg-white dark:bg-gray-500`,
   link: 'text-green-600 border border-transparent underline',
 };
 
 const textSizes = {
+  xs: 'text-xs',
   sm: 'text-sm',
   md: '',
   lg: 'text-lg',
 };
 
 const paddingSizes = {
+  xs: 'px-1 py-1',
   sm: 'px-2 py-1',
   md: 'px-4 py-2',
   lg: 'px-6 py-4',

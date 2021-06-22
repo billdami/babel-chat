@@ -37,9 +37,9 @@ const Radio: FC<RadioProps> = ({
         focus:border-green-500
         focus:outline-none
         focus:ring-4
-        focus:ring-opacity-50
-        focus:ring-green-300
-        disabled:opacity-50
+        focus:ring-green-300 dark:focus:ring-green-500
+        focus:ring-opacity-50 dark:focus:ring-opacity-50
+        disabled:opacity-50 dark:disabled:opacity-30
         disabled:cursor-not-allowed"
       {...rest}
     />

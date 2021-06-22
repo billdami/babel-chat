@@ -45,6 +45,9 @@ export const createUser = async (
   return userRef;
 };
 
+export const getUserName = (user?: User | null, includeUUID: boolean = true): string =>
+  `${user?.nickname ?? ''}${includeUUID && user?.uuid ? `#${user.uuid}` : ''}`;
+
 export const deleteUser = async (uid: string): Promise<void> => {
   const db = firebase.database();
   const userRef = db.ref(`users/${uid}`);
@@ -140,8 +143,8 @@ export const sortUserRecords = (
 
     switch (sort.property) {
       case 'nickname':
-        aVal = `${a.nickname}#${a.uuid}`;
-        bVal = `${b.nickname}#${b.uuid}`;
+        aVal = getUserName(a);
+        bVal = getUserName(b);
         d = sort.isDescending ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
         break;
       case 'country':
@@ -208,7 +211,7 @@ export const filterUserRecords = (
   groupedFilters: UserFilter[][]
 ): boolean => {
   // TODO [future] parse advanced query syntax (e.g.  “gender:female age:25-50 country:US”, "age:>25", "nickname:"foo"")
-  const fullNickname = `${user.nickname.toLocaleUpperCase()}#${user.uuid}`;
+  const fullNickname = getUserName(user).toLocaleUpperCase();
 
   if (term && fullNickname.indexOf(term) === -1) {
     return false;
