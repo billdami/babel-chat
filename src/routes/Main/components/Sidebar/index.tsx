@@ -149,7 +149,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
         </div>
       </TabPanel>
-      <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:bg-opacity-60">
+      <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:border-opacity-60 dark:bg-opacity-60">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />
         <SidebarTab
           tabId="tab-chats"

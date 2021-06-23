@@ -107,7 +107,7 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                     variant="inverse"
                     fullWidth
                   />
-                  <div className="text-xs text-gray-400 dark:text-gray-500">
+                  <div className="text-xs text-gray-400 dark:text-opacity-60">
                     Only provide an email address if you'd like to hear back from us.
                   </div>
                 </div>
@@ -121,7 +121,9 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                   variant="inverse"
                   fullWidth
                 />
-                <div className="text-xs text-gray-400 dark:text-gray-500">1,000 characters max</div>
+                <div className="text-xs text-gray-400 dark:text-opacity-60">
+                  1,000 characters max
+                </div>
               </>
             )}
           </div>

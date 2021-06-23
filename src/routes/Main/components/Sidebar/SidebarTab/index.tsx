@@ -33,8 +33,8 @@ const SidebarTab: FC<SidebarTabProps> = ({
         focus:outline-none
         focus:ring-inset focus:ring-2 focus:ring-opacity-50 dark:focus:ring-opacity-50 focus:ring-green-300 dark:focus:ring-green-500"
       liClassName="w-1/2 flex-none"
-      inactiveClassName="dark:border-gray-900"
-      activeClassName="bg-gray-100 dark:bg-gray-800 border-transparent dark:border-transparent"
+      inactiveClassName="dark:border-gray-900 dark:border-opacity-0"
+      activeClassName="bg-gray-100 dark:bg-gray-800 border-transparent dark:border-opacity-0"
       tabId={tabId}
       activeTabId={activeTab}
       onClick={updateTab}
