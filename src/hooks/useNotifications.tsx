@@ -75,12 +75,13 @@ const useProvideNotifications = () => {
 
   const toggleMute = useCallback(
     (muted: boolean) => {
-      muted ? playMute() : playUnmute();
       setIsMuted(muted);
       if (muted) {
         lsSet('muteSounds', 'muted');
+        playMute();
       } else {
         lsRemove('muteSounds');
+        playUnmute();
       }
     },
     [playMute, playUnmute]
