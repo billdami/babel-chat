@@ -1,10 +1,12 @@
 import React, { DetailedHTMLProps, TextareaHTMLAttributes, forwardRef } from 'react';
 import cn from 'classnames';
 
+type TextareaVariant = 'regular' | 'inverse' | 'muted';
+
 interface TextareaProps
   extends DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> {
+  variant?: TextareaVariant;
   fullWidth?: boolean;
-  inverse?: boolean;
 }
 
 const baseClasses = `
@@ -23,16 +25,18 @@ disabled:opacity-50 dark:disabled:opacity-30
 disabled:bg-gray-200 dark:disabled:bg-gray-700
 disabled:cursor-not-allowed`;
 
-const regularStyle = `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`;
-
-const inverseStyle = `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-70`;
+const variants = {
+  regular: `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`,
+  inverse: `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-50`,
+  muted: `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-600 dark:bg-opacity-70`,
+};
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, fullWidth = false, inverse = false, value, ...rest }, ref) => (
+  ({ className, fullWidth = false, variant = 'regular', value, ...rest }, ref) => (
     <textarea
       ref={ref}
       value={value}
-      className={cn(baseClasses, className, inverse ? inverseStyle : regularStyle, {
+      className={cn(baseClasses, className, variants[variant], {
         'w-full': fullWidth,
       })}
       {...rest}

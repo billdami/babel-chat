@@ -10,7 +10,6 @@ import UserNickname from '../../../../../components/UserNickname';
 import { MenuContentProps } from '../../../../../components/Menu';
 import MenuItem from '../../../../../components/Menu/MenuItem';
 import MuteToggle from '../../../../../components/MuteToggle';
-import useNotifications from '../../../../../hooks/useNotifications';
 import useTheme from '../../../../../hooks/useTheme';
 import { User } from '../../../../../types/user';
 
@@ -29,7 +28,6 @@ const UserMenu: FC<UserMenuProps> = ({
   closeMenu,
 }) => {
   const { hasLocalThemePref, clearThemePref } = useTheme();
-  const { isMuted } = useNotifications();
 
   const handleClearTheme = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -91,7 +89,7 @@ const UserMenu: FC<UserMenuProps> = ({
         {/* TODO [future] avatar editor */}
         <div className="flex items-center mb-2">
           <label htmlFor="user-menu-mute-toggle" className="text-gray-600 dark:text-gray-300">
-            {isMuted ? 'Unmute sounds' : 'Mute sounds'}
+            Mute
           </label>
           <MuteToggle
             className="ml-auto text-gray-500 dark:text-gray-300"

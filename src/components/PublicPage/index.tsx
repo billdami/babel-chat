@@ -41,7 +41,7 @@ const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
           </div>
           {isMobile && (
             <div className="flex justify-center pb-8">
-              <DarkModeToggle />
+              <DarkModeToggle className="text-gray-500 dark:text-yellow-300" />
             </div>
           )}
         </div>

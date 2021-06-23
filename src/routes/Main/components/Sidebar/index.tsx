@@ -121,7 +121,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ScrollShadow isVisible={isUsersScrolled} />
+        <ScrollShadow
+          isVisible={isUsersScrolled}
+          gradClassName="from-gray-700 dark:from-gray-900"
+        />
         <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
           <UsersList
             users={users}
@@ -138,7 +141,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ScrollShadow isVisible={isChatsScrolled} />
+        <ScrollShadow
+          isVisible={isChatsScrolled}
+          gradClassName="from-gray-700 dark:from-gray-900"
+        />
         <div className="flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
         </div>
