@@ -12,6 +12,7 @@ const NotificationHeadTags: FC<NotificationHeadTagsProps> = ({ title = DEFAULT_T
   const { numUnread } = useNotifications();
   const iconPostfix = useMemo(() => `${numUnread}-${new Date().getTime()}`, [numUnread]);
 
+  // TODO [BUG] (CHROME ONLY) title/favicon don't update if the tab is inactive
   return (
     <Helmet>
       <title>
