@@ -84,11 +84,11 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
           >
             <Select
               className="w-full md:w-40"
+              variant="inverse"
               inputSize="sm"
               options={SortOptions}
               value={sort.property}
               onChange={(e) => onSortPropertyChange(e, sort)}
-              inverse
             />
             <Button
               variant="secondary"

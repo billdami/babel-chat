@@ -21,6 +21,7 @@ const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
     <>
       <Helmet>
         <title>{title} | babel chat</title>
+        <link rel="icon" href={`${process.env.PUBLIC_URL}/img/favicon-32x32.png`} />
       </Helmet>
       <div className="w-full sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 mx-auto p-4">
         <div className="mt-8 md:mt-10">
@@ -40,7 +41,7 @@ const PublicPage: FC<PublicPageProps> = ({ children, title }) => {
           </div>
           {isMobile && (
             <div className="flex justify-center pb-8">
-              <DarkModeToggle />
+              <DarkModeToggle className="text-gray-500 dark:text-yellow-300" />
             </div>
           )}
         </div>

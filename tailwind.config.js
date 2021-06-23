@@ -37,7 +37,7 @@ module.exports = {
       backgroundColor: ['disabled', 'active', 'checked'],
       backgroundImage: ['checked', 'dark'],
       backgroundOpacity: ['active'],
-      borderColor: ['checked'],
+      borderColor: ['checked', 'dark'],
       borderOpacity: ['dark'],
       borderWidth: ['dark'],
       textColor: ['disabled'],

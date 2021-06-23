@@ -37,7 +37,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
   const { user: authUser, signOut } = useAuth();
   const { user } = useCurrentUser();
   const { activeTab, closeDrawer } = useDrawer();
-  const { numUnread } = useNotifications();
+  const { numUnread, unreadChats } = useNotifications();
   const [userBlocks] = useUserBlocks(authUser?.uid);
   const [users, isLoadingUsers /*error*/] = useUsers();
   const [chats, isLoadingChats] = useChats(authUser?.uid);
@@ -121,9 +121,18 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ScrollShadow isVisible={isUsersScrolled} />
+        <ScrollShadow
+          isVisible={isUsersScrolled}
+          gradClassName="from-gray-700 dark:from-gray-900"
+        />
         <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
-          <UsersList users={users} isLoading={isLoadingUsers} blockedIds={blockedIds} />
+          <UsersList
+            users={users}
+            isLoading={isLoadingUsers}
+            blockedIds={blockedIds}
+            activeChats={visibleChats}
+            unreadChats={unreadChats}
+          />
         </div>
       </TabPanel>
       <TabPanel
@@ -132,12 +141,15 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         activeTabId={activeTab}
         unmountWhenHidden={false}
       >
-        <ScrollShadow isVisible={isChatsScrolled} />
+        <ScrollShadow
+          isVisible={isChatsScrolled}
+          gradClassName="from-gray-700 dark:from-gray-900"
+        />
         <div className="flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
         </div>
       </TabPanel>
-      <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:bg-opacity-60">
+      <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:border-opacity-60 dark:bg-opacity-60">
         <SidebarTab tabId="tab-users" label="Users" count={users?.length} />
         <SidebarTab
           tabId="tab-chats"

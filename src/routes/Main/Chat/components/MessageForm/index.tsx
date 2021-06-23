@@ -62,7 +62,6 @@ const MessageForm: FC<MessageFormProps> = ({ userDetails, canSend, onSubmit }) =
 
   useLayoutEffect(() => {
     // when transitioning to a chat, focus the input
-    // TODO should this happen on mobile?
     setTimeout(() => newMessageInput.current?.focus(), 100);
   }, [userId]);
 
@@ -74,7 +73,8 @@ const MessageForm: FC<MessageFormProps> = ({ userDetails, canSend, onSubmit }) =
       {/* TODO allow input to be focused and visible without the entire document being shifted up */}
       <Input
         type="text"
-        className="flex-1 mr-3 dark:bg-gray-600"
+        className="flex-1 mr-3"
+        variant="muted"
         placeholder={`Message ${getUserName(userDetails)}`}
         id="signup-nickname"
         autoComplete="off"

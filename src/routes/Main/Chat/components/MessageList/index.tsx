@@ -239,6 +239,7 @@ const MessageList: FC<MessageListProps> = ({
                   <span
                     className={cn('font-bold', {
                       'text-green-500 dark:text-green-400': authors[message.author]?.isSelf,
+                      'text-red-500 dark:text-red-400': message.author === SYSTEM_ID,
                     })}
                   >
                     {authors[message.author]?.isSelf

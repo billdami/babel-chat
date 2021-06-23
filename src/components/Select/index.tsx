@@ -2,6 +2,7 @@ import React, { DetailedHTMLProps, FC, useMemo } from 'react';
 import cn from 'classnames';
 
 type SelectSize = 'sm' | 'md' | 'lg';
+type SelectVariant = 'regular' | 'inverse' | 'muted';
 
 export interface SelectOption<T = string> {
   value: T;
@@ -18,8 +19,8 @@ export interface SelectOptionGroup<T = string> {
 interface SelectProps
   extends DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
   inputSize?: SelectSize;
+  variant?: SelectVariant;
   fullWidth?: boolean;
-  inverse?: boolean;
   groups?: string[];
   options?: SelectOption[] | null;
 }
@@ -43,11 +44,13 @@ disabled:opacity-50 dark:disabled:opacity-30
 disabled:bg-gray-200 dark:disabled:bg-gray-700
 disabled:cursor-not-allowed`;
 
-const regularStyle = `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`;
+const variants = {
+  regular: `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`,
+  inverse: `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-50`,
+  muted: `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-600 dark:bg-opacity-70`,
+};
 
-const inverseStyle = `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-70`;
-
-const sizeClasses = {
+const sizes = {
   sm: 'py-1 pl-3 pr-7 text-sm',
   md: 'py-2 pl-3 pr-7',
   lg: 'py-3 pl-3 pr-7 text-lg',
@@ -57,7 +60,7 @@ const Select: FC<SelectProps> = ({
   className,
   inputSize = 'md',
   fullWidth = false,
-  inverse = false,
+  variant = 'regular',
   groups,
   options,
   ...rest
@@ -77,15 +80,9 @@ const Select: FC<SelectProps> = ({
 
   return (
     <select
-      className={cn(
-        baseClasses,
-        className,
-        sizeClasses[inputSize],
-        inverse ? inverseStyle : regularStyle,
-        {
-          'w-full': fullWidth,
-        }
-      )}
+      className={cn(baseClasses, className, sizes[inputSize], variants[variant], {
+        'w-full': fullWidth,
+      })}
       {...rest}
     >
       {!!groupedOptions.length ? (

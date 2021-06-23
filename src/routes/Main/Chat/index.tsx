@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
 import DialogConfirm from '../../../components/DialogConfirm';
+import NotificationHeadTags from '../../../components/NotificationHeadTags';
 import UserNickname from '../../../components/UserNickname';
 import useAuth from '../../../hooks/useAuth';
 import useCurrentUser from '../../../hooks/useCurrentUser';
@@ -149,11 +149,9 @@ const Chat: FC<ChatProps> = () => {
 
   return (
     <>
-      <Helmet>
-        <title>
-          {userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''}chat | babel chat
-        </title>
-      </Helmet>
+      <NotificationHeadTags
+        title={`${userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''}chat | babel chat`}
+      />
       <div className="Chat flex flex-col flex-1 min-w-0">
         <MessageHeader
           userDetails={userDetails}
