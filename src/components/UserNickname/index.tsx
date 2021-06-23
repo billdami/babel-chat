@@ -45,7 +45,7 @@ const UserNickname: FC<UserNicknameProps> = ({
     {hasChat && (
       <span className="relative mx-1 text-gray-600 dark:text-gray-300">
         <Icon
-          name={hasUnread ? 'message-exclamation' : 'message'}
+          name="message"
           size="xs"
           className="inline-block"
           title="You have an active chat with this user."
