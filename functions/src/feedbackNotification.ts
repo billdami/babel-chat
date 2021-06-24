@@ -36,26 +36,27 @@ const funcFeedbackNotification = (env: 'production' | 'development'): CloudFunct
           to: config.mail?.to,
           from: config.mail?.to,
           subject: `[FEEDBACK] babel chat - ${user?.nickname}#${user?.uuid}`,
-          text: `New feedback babelchat.online message received:\n\n
+          text: `New feedback babelchat.online message received:
 
----------------\n
-Email: ${feedbackMessage.email}\n\n
-Nickname: ${user?.nickname}#${user?.uuid}\n
-Country: ${user?.country}\n
-Age: ${user?.age}\n
-Gender: ${user?.gender}\n
----------------\n
+---------------
+Email: ${feedbackMessage.email}
+Nickname: ${user?.nickname}#${user?.uuid}
+Country: ${user?.country}
+Age: ${user?.age}
+Gender: ${user?.gender}
+---------------
 
-Message:\n\n
+Message:
 
-${feedbackMessage.message}\n\n
+${feedbackMessage.message}
 
----------------\n
-Additional Info:\n\n
+---------------
+Additional info:
 
-User ID: ${user?.id}\n
+User ID: ${user?.id}
 Browser data:\n ${JSON.stringify(feedbackMessage.browser, undefined, 2)}`,
         });
+        functions.logger.info('sent feedback email notification', feedbackMessage);
       } catch (err) {
         functions.logger.error('sending feedback email notification failed', err);
       }
