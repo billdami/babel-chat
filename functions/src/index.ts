@@ -4,6 +4,7 @@ import funcProcessSpamReport from './processSpamReport';
 import funcRegisterUser from './registerUser';
 import funcSchedCleanupDatabase from './schedCleanupDatabase';
 import funcValidateCaptcha from './validateCaptcha';
+import funcFeedbackNotification from './feedbackNotification';
 
 /**
  * @see https://firebase.google.com/docs/functions/typescript
@@ -15,6 +16,7 @@ export const productionCleanupDatabase = funcCleanupDatabase('production');
 export const productionSchedCleanupDatabase = funcSchedCleanupDatabase('production');
 export const productionRegisterUser = funcRegisterUser('production');
 export const productionProcessSpamReport = funcProcessSpamReport('production');
+export const productionFeedbackNotification = funcFeedbackNotification('production');
 
 // development
 export const developmentCleanupUserSignOut = funcCleanupUserSignOut('development');
@@ -22,6 +24,7 @@ export const developmentCleanupDatabase = funcCleanupDatabase('development');
 export const developmentSchedCleanupDatabase = funcSchedCleanupDatabase('development');
 export const developmentRegisterUser = funcRegisterUser('development');
 export const developmentProcessSpamReport = funcProcessSpamReport('development');
+export const developmentFeedbackNotification = funcFeedbackNotification('development');
 
 // all enviroments
 export const validateCaptcha = funcValidateCaptcha;
