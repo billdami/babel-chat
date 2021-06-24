@@ -36,7 +36,7 @@ const funcFeedbackNotification = (env: 'production' | 'development'): CloudFunct
           to: config.mail?.to,
           from: config.mail?.to,
           subject: `[FEEDBACK] babel chat - ${user?.nickname}#${user?.uuid}`,
-          text: `New feedback babelchat.online message received:
+          text: `New babelchat.online feedback message received:
 
 ---------------
 Email: ${feedbackMessage.email}
