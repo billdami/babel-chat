@@ -26,11 +26,13 @@ interface MessageHeaderProps {
   canReportSpam: boolean;
   closeChat: () => void;
   removeChat: () => void;
+  toggleChatPinned: () => void;
   confirmToggleBlock: () => void;
   confirmReporSpam: () => void;
 }
 
 const MessageHeader: FC<MessageHeaderProps> = ({
+  originChat,
   userDetails,
   isBlocked = false,
   isLoading = false,
@@ -40,12 +42,14 @@ const MessageHeader: FC<MessageHeaderProps> = ({
   canReportSpam,
   closeChat,
   removeChat,
+  toggleChatPinned,
   confirmToggleBlock,
   confirmReporSpam,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const userDetailsExist = !!userDetails?.nickname;
+  const isPinned = !!originChat?.isPinned;
 
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -60,6 +64,11 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       removeChat();
     }
   }, [canRemove, closeMenu, removeChat]);
+
+  const onToggleChatPinned = useCallback(() => {
+    closeMenu();
+    toggleChatPinned();
+  }, [closeMenu, toggleChatPinned]);
 
   const onConfirmReportSpam = useCallback(() => {
     if (canReportSpam) {
@@ -77,6 +86,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
 
   const actionsMenuProps = useMemo<ActionsMenuProps>(
     () => ({
+      isPinned,
       isBlocked,
       canRemove,
       canBlock,
@@ -84,17 +94,20 @@ const MessageHeader: FC<MessageHeaderProps> = ({
       closeMenu,
       user: userDetails,
       closeChat: onCloseChat,
+      toggleChatPinned: onToggleChatPinned,
       removeChat: onRemoveChat,
       confirmToggleBlock: onConfirmToggleBlock,
       confirmReporSpam: onConfirmReportSpam,
     }),
     [
       userDetails,
+      isPinned,
       isBlocked,
       canRemove,
       canBlock,
       canReportSpam,
       onCloseChat,
+      onToggleChatPinned,
       onRemoveChat,
       onConfirmToggleBlock,
       onConfirmReportSpam,

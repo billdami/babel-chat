@@ -44,6 +44,15 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
     return _sorts.length ? chats.sort((a, b) => sortChatRecords(a, b, _sorts)) : chats;
   }, [chats, debouncedSorts]);
 
+  const pinnedChats = useMemo<ChatRecord[]>(
+    () => sortedChats.filter((c) => c.isPinned),
+    [sortedChats]
+  );
+  const unpinnedChats = useMemo<ChatRecord[]>(
+    () => sortedChats.filter((c) => !c.isPinned),
+    [sortedChats]
+  );
+
   const currentChatId = useMemo<string | undefined>(
     () =>
       (matchPath(location.pathname, { path: '/main/chat/:userId' })?.params as ChatRouteParams)
@@ -132,6 +141,58 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
     [chats, deselectAllChats, updateUser]
   );
 
+  const pinChat = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+        const update = { isPinned: true };
+        chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
+  const unpinChat = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+        const update = { isPinned: false };
+        chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
+  const toggleChatsPinned = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+        chatRecs.forEach((chat) =>
+          ops.push(chat!.ref?.update({ isPinned: !chat?.isPinned }).catch(() => {}))
+        );
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
   const blockUsers = useCallback(async () => {
     if (!user?.id) {
       return;
@@ -170,6 +231,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
               sortedChats={sortedChats}
               selectedChatIds={selectedChatIds}
               stopEditing={stopEditing}
+              toggleChatsPinned={toggleChatsPinned}
               markChatsRead={markChatsRead}
               confirmBlockUsers={confirmBlockUsers}
               removeChats={removeChats}
@@ -209,13 +271,36 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
         </div>
       )}
       <ul>
-        {sortedChats.map((chat) => (
+        {!!pinnedChats.length && (
+          <div className="pb-2 mb-2 border-b border-gray-200 border-opacity-70 dark:border-gray-700 dark:border-opacity-50">
+            <div className="px-3 mt-4 mb-2 text-gray-400 dark:text-gray-500 text-xs font-bold uppercase">
+              <Icon name="thumbtack" size="sm" className="inline-block mr-2" /> Pinned Chats
+            </div>
+            {pinnedChats.map((chat) => (
+              <ListItem
+                key={chat.id}
+                chat={chat}
+                selectedChatIds={selectedChatIds}
+                isEditing={isEditing}
+                toggleChatSelection={toggleChatSelection}
+                pinChat={pinChat}
+                unpinChat={unpinChat}
+                markChatRead={markChatsRead}
+                blockUser={confirmBlockUsers}
+                removeChat={removeChats}
+              />
+            ))}
+          </div>
+        )}
+        {unpinnedChats.map((chat) => (
           <ListItem
             key={chat.id}
             chat={chat}
             selectedChatIds={selectedChatIds}
             isEditing={isEditing}
             toggleChatSelection={toggleChatSelection}
+            pinChat={pinChat}
+            unpinChat={unpinChat}
             markChatRead={markChatsRead}
             blockUser={confirmBlockUsers}
             removeChat={removeChats}

@@ -86,6 +86,13 @@ const Chat: FC<ChatProps> = () => {
     }
   }, [canRemove, originChat, updateUser, closeChat]);
 
+  const toggleChatPinned = useCallback(() => {
+    if (originChat) {
+      originChat.ref?.update({ isPinned: !originChat.isPinned });
+      updateUser({ dateLastActive: getFirebaseTimestamp() });
+    }
+  }, [originChat, updateUser]);
+
   const toggleBlock = useCallback(() => {
     if (canBlock && authUser?.uid && userDetails?.id) {
       if (isBlocked) {
@@ -150,7 +157,9 @@ const Chat: FC<ChatProps> = () => {
   return (
     <>
       <NotificationHeadTags
-        title={`${userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''}chat | babel chat`}
+        title={`${
+          userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''
+        }chat | babel chat`}
       />
       <div className="Chat flex flex-col flex-1 min-w-0">
         <MessageHeader
@@ -165,6 +174,7 @@ const Chat: FC<ChatProps> = () => {
           canReportSpam={canReportSpam}
           closeChat={closeChat}
           removeChat={removeChat}
+          toggleChatPinned={toggleChatPinned}
           confirmToggleBlock={confirmToggleBlock}
           confirmReporSpam={confirmReporSpam}
         />

@@ -10,6 +10,7 @@ interface EditToolbarProps {
   sortedChats: ChatRecord[];
   selectedChatIds: string[];
   stopEditing: () => void;
+  toggleChatsPinned: (chatIds: string[]) => void;
   markChatsRead: (chatIds: string[]) => void;
   confirmBlockUsers: (chatIds: string[]) => void;
   removeChats: (chatIds: string[]) => void;
@@ -21,6 +22,7 @@ const EditToolbar: FC<EditToolbarProps> = ({
   sortedChats,
   selectedChatIds,
   stopEditing,
+  toggleChatsPinned,
   markChatsRead,
   confirmBlockUsers,
   removeChats,
@@ -57,11 +59,12 @@ const EditToolbar: FC<EditToolbarProps> = ({
           <Button
             variant="muted"
             size="sm"
-            onClick={() => markChatsRead(selectedChatIds)}
+            className="ml-1"
+            onClick={() => removeChats(selectedChatIds)}
             disabled={!selectedChatIds.length}
-            title="Mark as read"
+            title="Remove"
           >
-            <Icon name="message-check" size="sm" />
+            <Icon name="trash-can" size="sm" />
           </Button>
           <Button
             variant="muted"
@@ -77,11 +80,21 @@ const EditToolbar: FC<EditToolbarProps> = ({
             variant="muted"
             size="sm"
             className="ml-1"
-            onClick={() => removeChats(selectedChatIds)}
+            onClick={() => markChatsRead(selectedChatIds)}
             disabled={!selectedChatIds.length}
-            title="Remove"
+            title="Mark as read"
           >
-            <Icon name="trash-can" size="sm" />
+            <Icon name="message-check" size="sm" />
+          </Button>
+          <Button
+            variant="muted"
+            size="sm"
+            className="ml-1"
+            onClick={() => toggleChatsPinned(selectedChatIds)}
+            disabled={!selectedChatIds.length}
+            title="Toggle pinned"
+          >
+            <Icon name="thumbtack" size="sm" />
           </Button>
         </div>
         <Button variant="link" size="sm" className="-mr-2" onClick={stopEditing}>

@@ -1,12 +1,16 @@
 import React, { FC } from 'react';
 
+import { DONATE_URL } from '../../constants/app';
+
 import Anchor from '../Anchor';
 
-interface DonateButtonProps {}
+interface DonateButtonProps {
+  className?: string;
+}
 
-const DonateButton: FC<DonateButtonProps> = () => {
+const DonateButton: FC<DonateButtonProps> = ({ className = '' }) => {
   return (
-    <Anchor href="https://www.buymeacoffee.com/babelchat" target="_blank" rel="noreferrer">
+    <Anchor href={DONATE_URL} target="_blank" rel="noreferrer" className={className}>
       <img
         src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
         alt="Buy Me A Coffee"

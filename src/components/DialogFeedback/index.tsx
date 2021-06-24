@@ -9,6 +9,9 @@ import Spinner from '../Spinner';
 import Textarea from '../Textarea';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import { createFeedbackMessage } from '../../utils/user';
+import DonateButton from '../DonateButton';
+import Anchor from '../Anchor';
+import { DONATE_URL } from '../../constants/app';
 
 interface DialogFeedbackProps extends DialogProps {
   onSubmit?: () => void;
@@ -126,6 +129,15 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
                 </div>
               </>
             )}
+          </div>
+          <div className="flex items-center my-2 text-sm text-gray-600 dark:text-gray-400 font-bold">
+            <DonateButton className="flex-shrink-0 mr-2 hidden md:block" />
+            <span>
+              Love babel chat? Help us keep it online and make it even better.{' '}
+              <Anchor href={DONATE_URL} target="_blank" rel="noreferrer">
+                Donate!
+              </Anchor>
+            </span>
           </div>
         </div>
         <div className="flex justify-end px-4 py-3 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-20">

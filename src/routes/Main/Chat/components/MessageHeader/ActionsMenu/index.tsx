@@ -12,12 +12,14 @@ import MenuItem from '../../../../../../components/Menu/MenuItem';
 
 export interface ActionsMenuProps extends MenuContentProps {
   user?: User;
+  isPinned?: boolean;
   isBlocked?: boolean;
   canRemove?: boolean;
   canBlock?: boolean;
   canReportSpam?: boolean;
   closeChat?: () => void;
   removeChat?: () => void;
+  toggleChatPinned?: () => void;
   confirmToggleBlock?: () => void;
   confirmReporSpam?: () => void;
   closeMenu?: () => void;
@@ -26,12 +28,14 @@ export interface ActionsMenuProps extends MenuContentProps {
 const ActionsMenu: FC<ActionsMenuProps> = ({
   isSheet,
   user,
+  isPinned,
   isBlocked,
   canRemove,
   canBlock,
   canReportSpam,
   closeChat,
   removeChat,
+  toggleChatPinned,
   confirmToggleBlock,
   confirmReporSpam,
   closeMenu,
@@ -62,6 +66,18 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
         </Button>
       )}
     </div>
+    <MenuItem isSheet={isSheet} onClick={toggleChatPinned}>
+      <Icon
+        name="thumbtack"
+        size="sm"
+        className={cn('inline-block text-gray-400', {
+          'mr-2': !isSheet,
+          'mr-3': isSheet,
+          'text-opacity-50': isPinned,
+        })}
+      />
+      {isPinned ? 'Unpin chat' : 'Pin chat'}
+    </MenuItem>
     <MenuItem isSheet={isSheet} onClick={removeChat} disabled={!canRemove}>
       <Icon
         name="trash-can"
