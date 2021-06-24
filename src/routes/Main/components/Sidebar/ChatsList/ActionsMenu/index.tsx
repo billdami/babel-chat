@@ -24,7 +24,11 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
   <>
     {isPinned ? (
       <MenuItem onClick={unpinChat}>
-        <Icon name="thumbtack" size="sm" className="inline-block mr-2 text-red-400" />
+        <Icon
+          name="thumbtack"
+          size="sm"
+          className="inline-block mr-2 text-gray-400 text-opacity-50"
+        />
         Unpin
       </MenuItem>
     ) : (
