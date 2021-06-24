@@ -132,6 +132,58 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
     [chats, deselectAllChats, updateUser]
   );
 
+  const pinChat = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+        const update = { isPinned: true };
+        chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
+  const unpinChat = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+        const update = { isPinned: false };
+        chatRecs.forEach((chat) => ops.push(chat!.ref?.update(update).catch(() => {})));
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
+  const toggleChatsPinned = useCallback(
+    async (chatIds: string[]) => {
+      try {
+        const ops: Promise<any>[] = [];
+        const chatRecs = chatIds.map((id) => chats.find((c) => c.id === id)).filter(Boolean);
+        chatRecs.forEach((chat) =>
+          ops.push(chat!.ref?.update({ isPinned: !chat?.isPinned }).catch(() => {}))
+        );
+        await Promise.all(ops.filter(Boolean));
+        deselectAllChats();
+        updateUser({ dateLastActive: getFirebaseTimestamp() });
+      } catch (err) {
+        // TODO handle
+      }
+    },
+    [chats, deselectAllChats, updateUser]
+  );
+
   const blockUsers = useCallback(async () => {
     if (!user?.id) {
       return;
@@ -170,6 +222,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
               sortedChats={sortedChats}
               selectedChatIds={selectedChatIds}
               stopEditing={stopEditing}
+              toggleChatsPinned={toggleChatsPinned}
               markChatsRead={markChatsRead}
               confirmBlockUsers={confirmBlockUsers}
               removeChats={removeChats}
@@ -216,6 +269,8 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
             selectedChatIds={selectedChatIds}
             isEditing={isEditing}
             toggleChatSelection={toggleChatSelection}
+            pinChat={pinChat}
+            unpinChat={unpinChat}
             markChatRead={markChatsRead}
             blockUser={confirmBlockUsers}
             removeChat={removeChats}
