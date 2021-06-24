@@ -83,11 +83,7 @@ const Dashboard: FC<DashboardProps> = () => {
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
-          <div
-            className="flex-1 flex overflow-y-scroll md:overflow-y-auto"
-            ref={scrollContainer}
-            onScroll={onScroll}
-          >
+          <div className="flex-1 flex overflow-y-auto" ref={scrollContainer} onScroll={onScroll}>
             <div className="flex-1 flex flex-col">
               <div className="flex-1 2xl:flex">
                 <div className="2xl:w-2/3 mx-4 mt-4">

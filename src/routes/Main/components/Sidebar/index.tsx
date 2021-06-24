@@ -125,11 +125,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isUsersScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div
-          className="flex-1 overflow-y-scroll md:overflow-y-auto"
-          ref={usersEl}
-          onScroll={onUsersScroll}
-        >
+        <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
           <UsersList
             users={users}
             isLoading={isLoadingUsers}
