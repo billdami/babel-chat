@@ -88,7 +88,7 @@ const UserMenu: FC<UserMenuProps> = ({
       >
         {/* TODO [future] avatar editor */}
         <div className="flex items-center mb-2">
-          <label htmlFor="user-menu-mute-toggle" className="text-gray-600 dark:text-gray-300">
+          <label htmlFor="user-menu-mute-toggle" className="text-gray-600 dark:text-gray-300 mr-4">
             Mute
           </label>
           <MuteToggle
@@ -97,7 +97,10 @@ const UserMenu: FC<UserMenuProps> = ({
           />
         </div>
         <div className="flex items-center">
-          <label htmlFor="user-menu-dark-mode-toggle" className="text-gray-600 dark:text-gray-300">
+          <label
+            htmlFor="user-menu-dark-mode-toggle"
+            className="text-gray-600 dark:text-gray-300 mr-4"
+          >
             Dark mode
           </label>
           <DarkModeToggle
