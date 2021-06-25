@@ -184,7 +184,7 @@ const MessageList: FC<MessageListProps> = ({
     <div className="flex-1 flex relative overflow-hidden">
       <ScrollShadow isVisible={isScrolled} />
       <div
-        className="flex-1 flex flex-col relative overflow-y-auto"
+        className="flex-1 flex flex-col relative overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
         ref={containerElement}
         onScroll={onContainerScroll}
       >

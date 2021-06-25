@@ -126,7 +126,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isUsersScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div className="relative flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
+        <div
+          className="relative flex-1 overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
+          ref={usersEl}
+          onScroll={onUsersScroll}
+        >
           <UsersList
             users={users}
             isLoading={isLoadingUsers}
@@ -147,7 +151,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isChatsScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div className="relative flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
+        <div
+          className="relative flex-1 overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
+          ref={chatsEl}
+          onScroll={onChatsScroll}
+        >
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
           <ForceScrollable />
         </div>

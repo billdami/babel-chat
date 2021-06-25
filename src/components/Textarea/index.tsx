@@ -26,7 +26,7 @@ disabled:bg-gray-200 dark:disabled:bg-gray-700
 disabled:cursor-not-allowed`;
 
 const variants = {
-  regular: `dark:text-gray-300 dark:placeholder-gray-500 dark:bg-transparent`,
+  regular: `dark:text-gray-300 dark:placeholder-gray-500 bg-white dark:bg-transparent`,
   inverse: `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-500 dark:bg-opacity-50`,
   muted: `dark:text-gray-300 dark:placeholder-gray-400 dark:bg-gray-600 dark:bg-opacity-70`,
 };

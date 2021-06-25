@@ -85,7 +85,7 @@ const Dashboard: FC<DashboardProps> = () => {
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
           <div
-            className="relative flex-1 flex overflow-y-auto"
+            className="relative flex-1 flex overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
             ref={scrollContainer}
             onScroll={onScroll}
           >
