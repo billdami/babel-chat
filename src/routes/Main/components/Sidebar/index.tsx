@@ -5,6 +5,7 @@ import BetaBadge from '../../../../components/BetaBadge';
 import Button from '../../../../components/Button';
 import DialogConfirm from '../../../../components/DialogConfirm';
 import DialogFeedback from '../../../../components/DialogFeedback';
+import ForceScrollable from '../../../../components/ForceScrollable';
 import Icon from '../../../../components/Icon';
 import Link from '../../../../components/Link';
 import LogoIcon from '../../../../components/LogoIcon';
@@ -133,10 +134,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
             activeChats={visibleChats}
             unreadChats={unreadChats}
           />
-          <div
-            className="md:hidden absolute left-0 right-0 -bottom-px h-px pointer-events-none"
-            role="presentation"
-          ></div>
+          <ForceScrollable />
         </div>
       </TabPanel>
       <TabPanel
@@ -151,10 +149,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
         />
         <div className="relative flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
-          <div
-            className="md:hidden absolute left-0 right-0 -bottom-px h-px pointer-events-none"
-            role="presentation"
-          ></div>
+          <ForceScrollable />
         </div>
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:border-opacity-60 dark:bg-opacity-60">
