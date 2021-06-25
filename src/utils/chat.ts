@@ -68,11 +68,12 @@ export const createChatMessage = async (
   });
 
   // when a message is sent, maintain a map of all users that have
-  // chat message lists with the destination user so that we can
-  // quickly find all chats with them (to do things like sending
-  // system messages on log out)
+  // chat message lists between both the origin and destination users
+  // so that we can quickly find all chats with them (to do things
+  // like sending system messages on log out)
   db.ref().update({
     [`chat_message_users/${destUserId}/${originUserId}`]: true,
+    [`chat_message_users/${originUserId}/${destUserId}`]: true,
   });
 
   return messageRef;
