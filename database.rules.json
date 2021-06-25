@@ -97,6 +97,18 @@
         }
       }
     },
+    "chat_message_users": {
+      "$to_user_id": {
+        // authenticated users can create/update chat message user id maps for any user, using their own ID
+        "$from_user_id": {
+          ".write": "root.child('APP_OFFLINE').val() !== true &&
+            auth != null &&
+            $from_user_id === auth.uid &&
+            newData.exists()",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
     "spam_users": {
       ".indexOn": ["dateConvicted"],
       // all authenticated users can read all spam_users

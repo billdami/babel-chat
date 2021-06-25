@@ -139,6 +139,12 @@
       }
     }
   },
+  "chat_message_users": {
+    "to_user_id": {
+      "from_user_id1": true,
+      "from_user_id2": true
+    }
+  },
   "spam_users": {
     "user5": {
       "dateConvicted": 123456789
