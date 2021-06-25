@@ -4,8 +4,45 @@ import * as admin from 'firebase-admin';
 import { CloudFunction } from 'firebase-functions';
 import { DataSnapshot } from 'firebase-functions/lib/providers/database';
 
-import { DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './utils/constants';
+import { CHAT_SYSTEM_ID, DB_NAME_DEVELOPMENT, DB_NAME_PRODUCTION } from './utils/constants';
 import { setupApp } from './utils/firebase';
+import { getMessageListId } from './utils/chat';
+
+const sendSystemMessages = async (
+  db: admin.database.Database,
+  userId: string,
+  snapshot: functions.database.DataSnapshot
+) => {
+  const user = snapshot.val();
+  const systemMsg = {
+    dateSent: admin.database.ServerValue.TIMESTAMP,
+    author: CHAT_SYSTEM_ID,
+    isSystem: true,
+    content: `${user?.nickname ?? 'This user'} has signed out.`,
+  };
+
+  const messageUsersRef = db.ref(`chat_message_users/${userId}`);
+  const messageUsers = await messageUsersRef.get();
+  const operations: Promise<void | admin.database.Reference>[] = [];
+
+  messageUsers.forEach((snapshot) => {
+    if (snapshot.key) {
+      const listId = getMessageListId(userId, snapshot.key);
+      operations.push(
+        db
+          .ref(`chat_messages/${listId}`)
+          .push(systemMsg)
+          .catch(() => {})
+      );
+    }
+  });
+
+  try {
+    await Promise.all(operations);
+  } finally {
+    messageUsersRef.remove();
+  }
+};
 
 const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunction<DataSnapshot> =>
   functions.database
@@ -83,6 +120,9 @@ const funcCleanupUserSignOut = (env: 'production' | 'development'): CloudFunctio
             .remove()
             .catch(() => {})
         );
+
+        // add log out system messages on all chats with user
+        operations.push(sendSystemMessages(db, userId, snapshot).catch(() => {}));
 
         return Promise.all(operations).then(deleteAppInstance);
       }

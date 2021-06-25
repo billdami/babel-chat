@@ -239,7 +239,7 @@ const MessageList: FC<MessageListProps> = ({
                   <span
                     className={cn('font-bold', {
                       'text-green-500 dark:text-green-400': authors[message.author]?.isSelf,
-                      'text-red-500 dark:text-red-400': message.author === SYSTEM_ID,
+                      'text-red-500 dark:text-red-400 uppercase': message.author === SYSTEM_ID,
                     })}
                   >
                     {authors[message.author]?.isSelf
@@ -247,7 +247,13 @@ const MessageList: FC<MessageListProps> = ({
                       : authors[message.author]?.nickname || 'Unknown'}
                     :
                   </span>{' '}
-                  <span>{message.content}</span>
+                  <span
+                    className={cn({
+                      'italic text-gray-600 dark:text-gray-400': message.author === SYSTEM_ID,
+                    })}
+                  >
+                    {message.content}
+                  </span>
                 </div>
               ))}
             </div>
