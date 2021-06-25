@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import Anchor from '../../components/Anchor';
 import Link from '../../components/Link';
 import PublicPage from '../../components/PublicPage';
+import { TWITTER_URL, TWITTER_USER } from '../../constants/app';
 
 interface AboutProps {}
 
@@ -34,8 +35,8 @@ const About: FC<AboutProps> = () => {
         issue or missing feature. However, we encourage you to report any problems you find, or send
         us suggestions for changes and new features. You can do so within the app via the 'Give us
         feedback' option, or by contacting us on Twitter at{' '}
-        <Anchor target="_blank" href="https://twitter.com/babelChatOnline">
-          @babelChatOnline
+        <Anchor target="_blank" href={TWITTER_URL}>
+          {TWITTER_USER}
         </Anchor>
         .
       </p>

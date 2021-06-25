@@ -11,7 +11,7 @@ import useCurrentUser from '../../hooks/useCurrentUser';
 import { createFeedbackMessage } from '../../utils/user';
 import DonateButton from '../DonateButton';
 import Anchor from '../Anchor';
-import { DONATE_URL } from '../../constants/app';
+import { DONATE_URL, TWITTER_URL, TWITTER_USER } from '../../constants/app';
 
 interface DialogFeedbackProps extends DialogProps {
   onSubmit?: () => void;
@@ -97,7 +97,12 @@ const DialogFeedback: FC<DialogFeedbackProps> = ({ onCancel, onSubmit, isOpen, .
               <>
                 <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
                   Want to report an issue, or have a suggestion on how we can make babel chat even
-                  better? Send us a message using the form below, we'd love to hear from you!
+                  better? Send us a message using the form below, we'd love to hear from you! Or
+                  find us on Twitter at{' '}
+                  <Anchor target="_blank" href={TWITTER_URL}>
+                    {TWITTER_USER}
+                  </Anchor>
+                  .
                 </p>
                 <div className="mb-4">
                   <Input

@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 
+import Anchor from '../../../../../components/Anchor';
 import Icon from '../../../../../components/Icon';
+import { TWITTER_URL, TWITTER_USER } from '../../../../../constants/app';
 
 interface TipsAndTricksProps {}
 
@@ -36,6 +38,13 @@ const TipsAndTricks: FC<TipsAndTricksProps> = () => {
           trusted and legitimate website.
         </li>
       </ul>
+      <p className="mb-4 text-gray-800 dark:text-gray-300 max-w-3xl">
+        Want to get in touch with us? Find us on Twitter at{' '}
+        <Anchor target="_blank" href={TWITTER_URL}>
+          {TWITTER_USER}
+        </Anchor>
+        .
+      </p>
     </div>
   );
 };
