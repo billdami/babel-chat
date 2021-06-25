@@ -18,8 +18,8 @@ const Hero: FC<HeroProps> = ({ openConfirmSignOut }) => {
 
   return (
     <div className="mb-6 py-4 pr-8 bg-gradient-to-l from-green-200 dark:from-gray-800 rounded-r-lg">
-      <div className="text-right text-sm">
-        Signed in as {!!user && <UserNickname user={user} className="inline" />} (
+      <div className="text-right text-sm break-all">
+        Signed in as {!!user && <UserNickname user={user} className="inline" untruncated />} (
         <Button variant="link" size="sm" onClick={openConfirmSignOut} inline>
           sign out
         </Button>
