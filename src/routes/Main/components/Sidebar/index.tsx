@@ -125,7 +125,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isUsersScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
+        <div className="relative flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
           <UsersList
             users={users}
             isLoading={isLoadingUsers}
@@ -133,6 +133,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
             activeChats={visibleChats}
             unreadChats={unreadChats}
           />
+          <div
+            className="md:hidden absolute left-0 right-0 -bottom-px h-px pointer-events-none"
+            role="presentation"
+          ></div>
         </div>
       </TabPanel>
       <TabPanel
@@ -145,8 +149,12 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isChatsScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div className="flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
+        <div className="relative flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
+          <div
+            className="md:hidden absolute left-0 right-0 -bottom-px h-px pointer-events-none"
+            role="presentation"
+          ></div>
         </div>
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:border-opacity-60 dark:bg-opacity-60">
