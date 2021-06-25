@@ -64,7 +64,7 @@ const Dashboard: FC<DashboardProps> = () => {
   return (
     <>
       <NotificationHeadTags title="Home | babel chat" />
-      <div className="Index flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         <NavBar>
           <DrawerToggleButton />
           <div className="flex flex-shrink-0 ml-auto">
@@ -84,7 +84,7 @@ const Dashboard: FC<DashboardProps> = () => {
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
           <div className="flex-1 flex overflow-y-auto" ref={scrollContainer} onScroll={onScroll}>
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col min-w-0">
               <div className="flex-1 2xl:flex">
                 <div className="2xl:w-2/3 mx-4 mt-4">
                   <Hero openConfirmSignOut={openConfirmSignOut} />

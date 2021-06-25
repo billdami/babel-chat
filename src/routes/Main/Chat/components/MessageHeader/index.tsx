@@ -169,7 +169,7 @@ const MessageHeader: FC<MessageHeaderProps> = ({
             // TODO create <MenuTrigger> component
             <Button
               variant="inverse"
-              className="ml-2 flex-shrink-0"
+              className="ml-2 flex-shrink-0 whitespace-nowrap"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-haspopup={true}
               aria-expanded={isMenuOpen}

@@ -24,6 +24,10 @@ module.exports = {
         '116': '29rem',
         '120': '30rem',
       },
+      maxWidth: {
+        '40': '10rem',
+        '72': '18rem'
+      },
       minHeight: {
         'navbar': '3.625rem'
       }

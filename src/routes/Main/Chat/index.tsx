@@ -206,12 +206,13 @@ const Chat: FC<ChatProps> = () => {
           message={
             isBlocked ? (
               <>
-                <div className="mb-4">
+                <div className="mb-4 break-all">
                   Are you sure you want to unblock{' '}
                   <UserNickname
                     user={userDetails}
                     className="inline text-gray-400 dark:text-gray-300"
                     mutedClassName="dark:text-gray-400"
+                    untruncated
                   />
                   ?
                 </div>
@@ -221,12 +222,13 @@ const Chat: FC<ChatProps> = () => {
               </>
             ) : (
               <>
-                <div className="mb-4">
+                <div className="mb-4 break-all">
                   Are you sure you want to block{' '}
                   <UserNickname
                     user={userDetails}
                     className="inline text-gray-400 dark:text-gray-300"
                     mutedClassName="dark:text-gray-400"
+                    untruncated
                   />
                   ?
                 </div>
@@ -252,12 +254,13 @@ const Chat: FC<ChatProps> = () => {
                 <span className="text-red-500 dark:text-red-400 font-bold uppercase">Warning!</span>{' '}
                 This action is irreversible and <span className="font-bold">cannot be undone</span>.
               </div>
-              <div className="mb-4">
+              <div className="mb-4 break-all">
                 Are you sure you want to report{' '}
                 <UserNickname
                   user={userDetails}
                   className="inline text-gray-400 dark:text-gray-300"
                   mutedClassName="dark:text-gray-400"
+                  untruncated
                 />{' '}
                 for spamming?
               </div>

@@ -45,7 +45,7 @@ const ActionsMenu: FC<ActionsMenuProps> = ({
       className={cn(
         'flex items-start justify-between pb-2 mb-2 border-b border-gray-100 dark:border-gray-500 dark:border-opacity-40',
         {
-          'px-4': !isSheet,
+          'px-4 max-w-72': !isSheet,
         }
       )}
     >

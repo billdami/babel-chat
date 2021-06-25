@@ -15,6 +15,7 @@ interface UserNicknameProps {
   hasChat?: boolean;
   hasUnread?: boolean;
   mutedClassName?: string;
+  untruncated?: boolean;
 }
 
 const UserNickname: FC<UserNicknameProps> = ({
@@ -25,9 +26,10 @@ const UserNickname: FC<UserNicknameProps> = ({
   isBlocked = false,
   hasChat = false,
   hasUnread = false,
+  untruncated = false,
   mutedClassName = 'text-gray-400 dark:text-gray-500',
 }) => (
-  <h2 className={cn('truncate', className)}>
+  <h2 className={cn({ truncate: !untruncated }, className)}>
     <span
       className={cn({ 'line-through': isBlocked })}
       title={isBlocked ? `${getUserName(user)} is blocked` : ''}
