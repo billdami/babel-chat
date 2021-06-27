@@ -2,7 +2,6 @@ import React, { FC, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import cn from 'classnames';
 
-import PageNotFound from '../PageNotFound';
 import { ProvideNotifications } from '../../hooks/useNotifications';
 import useDrawer from '../../hooks/useDrawer';
 import useBodyClass from '../../hooks/useBodyClass';
@@ -14,6 +13,7 @@ import useAuth from '../../hooks/useAuth';
 
 import Chat from './Chat';
 import Dashboard from './Dashboard';
+import PageNotFound from './PageNotFound';
 import Sidebar from './components/Sidebar';
 
 interface MainProps {}
