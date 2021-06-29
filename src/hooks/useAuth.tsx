@@ -152,6 +152,7 @@ const useProvideAuth = () => {
   }, [isSessionLoading, signOut]);
 
   useEffect(() => {
+    // TODO [BUG] this possibly might not be triggering if the browser tab is inactive/very stale
     if (hasSignedOut) {
       // reload the entire sign in page to reset recaptcha, etc
       setTimeout(() => (window.location.href = '/sign-in?signedOut=true'), 1);

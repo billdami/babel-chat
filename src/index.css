@@ -536,6 +536,10 @@
 }
 
 @layer utilities {
+  .touch-pan-y {
+    touch-action: pan-y;
+  }
+
   @variants responsive, dark {
     .scrollable-light::-webkit-scrollbar,
     .scrollable-dark::-webkit-scrollbar {
