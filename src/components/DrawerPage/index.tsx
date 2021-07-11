@@ -29,6 +29,8 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
         newX = DRAWER_OPEN_X;
       }
 
+      // TODO if dragging is still buggy on mobile, worst case make it swipe based:
+      // https://v10-beta--use-gesture.netlify.app/docs/state/#swipe-drag-only
       // open the drawer if the gesture is:
       // finished, swiping right, and met the threshold
       api.start({ x: newX, y: 0, immediate: down });
@@ -39,8 +41,9 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
     {
       enabled: isMobile && !isDrawerOpen,
       axis: 'x',
+      filterTaps: true,
       preventScrollAxis: undefined,
-      threshold: 20,
+      threshold: 50,
     }
   );
 
