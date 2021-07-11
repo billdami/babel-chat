@@ -18,18 +18,17 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
   const bind = useDrag(
-    ({ down, intentional, last, active, movement: [mx, my], initial: [ix, iy] }) => {
+    ({ down, intentional, last, active, movement: [mx, my] }) => {
       if (!intentional) {
         return;
       }
 
-      let newX = mx;
-
+      let newX = isDrawerOpen ? DRAWER_OPEN_X + mx : mx;
       if (!down) {
+        newX = isDrawerOpen ? DRAWER_OPEN_X : 0;
+      } else if (mx < 0 && !isDrawerOpen) {
         newX = 0;
-      } else if (mx < 0) {
-        newX = 0;
-      } else if (mx > DRAWER_OPEN_X) {
+      } else if (newX > DRAWER_OPEN_X) {
         newX = DRAWER_OPEN_X;
       }
 
@@ -39,15 +38,17 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
       if (last || !active) {
         updateDrawerDragging(false);
 
-        if (mx >= DRAWER_OPEN_THRESHOLD) {
+        if (mx >= DRAWER_OPEN_THRESHOLD && !isDrawerOpen) {
           openDrawer();
+        } else if (mx <= DRAWER_OPEN_THRESHOLD * -1 && isDrawerOpen) {
+          closeDrawer();
         } else {
-          api.start({ x: 0, y: 0, immediate: false });
+          api.start({ x: isDrawerOpen ? DRAWER_OPEN_X : 0, y: 0, immediate: false });
         }
       }
     },
     {
-      enabled: isMobile && !isDrawerOpen,
+      enabled: isMobile,
       axis: 'x',
       filterTaps: true,
       preventScrollAxis: undefined,
