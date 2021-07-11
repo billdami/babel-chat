@@ -18,7 +18,11 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
   const bind = useDrag(
-    ({ active, down, movement: [mx, my], initial: [ix, iy] }) => {
+    ({ down, intentional, movement: [mx, my], initial: [ix, iy] }) => {
+      if (!intentional) {
+        return;
+      }
+
       let newX = mx;
 
       if (!down) {
