@@ -19,14 +19,22 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
 
   const bind = useDrag(
     ({ active, down, movement: [mx, my], initial: [ix, iy] }) => {
-      const newX = down ? (mx > 0 ? (mx <= DRAWER_OPEN_X ? mx : DRAWER_OPEN_X) : 0) : 0;
+      let newX = mx;
 
-      api.start({ x: newX, y: 0, immediate: down });
+      if (!down) {
+        newX = 0;
+      } else if (mx < 0) {
+        newX = 0;
+      } else if (mx > DRAWER_OPEN_X) {
+        newX = DRAWER_OPEN_X;
+      }
 
       // open the drawer if the gesture is:
       // finished, swiping right, and met the threshold
       if (!active && mx >= DRAWER_OPEN_THRESHOLD) {
         openDrawer();
+      } else {
+        api.start({ x: newX, y: 0, immediate: down });
       }
     },
     {
@@ -37,7 +45,11 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    api.start({ x: isDrawerOpen && isMobile ? DRAWER_OPEN_X : 0, y: 0, immediate: false });
+    api.start({
+      x: isDrawerOpen && isMobile ? DRAWER_OPEN_X : 0,
+      y: 0,
+      immediate: false,
+    });
   }, [api, isDrawerOpen, isMobile]);
 
   return (
