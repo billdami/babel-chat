@@ -18,7 +18,7 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
   const bind = useDrag(
-    ({ down, intentional, movement: [mx, my], initial: [ix, iy] }) => {
+    ({ down, intentional, last, active, movement: [mx, my], initial: [ix, iy] }) => {
       if (!intentional) {
         return;
       }
@@ -40,6 +40,8 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
       api.start({ x: newX, y: 0, immediate: down });
       if (!down && mx >= DRAWER_OPEN_THRESHOLD) {
         openDrawer();
+      } else if (last || !active) {
+        api.start({ x: 0, y: 0, immediate: false });
       }
     },
     {
