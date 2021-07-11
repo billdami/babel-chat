@@ -9,6 +9,7 @@ import ForceScrollable from '../../../components/ForceScrollable';
 import Icon from '../../../components/Icon';
 import NavBar from '../../../components/NavBar';
 import NotificationHeadTags from '../../../components/NotificationHeadTags';
+import Scrollable from '../../../components/Scrollable';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useAuth from '../../../hooks/useAuth';
 import useDrawer from '../../../hooks/useDrawer';
@@ -84,11 +85,7 @@ const Dashboard: FC<DashboardProps> = () => {
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
-          <div
-            className="relative flex-1 flex overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
-            ref={scrollContainer}
-            onScroll={onScroll}
-          >
+          <Scrollable className="relative flex-1 flex" ref={scrollContainer} onScroll={onScroll}>
             <div className="flex-1 flex flex-col min-w-0">
               <div className="flex-1 2xl:flex">
                 <div className="2xl:w-2/3 mx-4 mt-4">
@@ -104,7 +101,7 @@ const Dashboard: FC<DashboardProps> = () => {
               <Footer />
             </div>
             <ForceScrollable />
-          </div>
+          </Scrollable>
         </div>
         <DialogFeedback
           isOpen={isFeedbackDialogOpen}

@@ -12,7 +12,7 @@ const DRAWER_OPEN_X = 320;
 const DRAWER_OPEN_THRESHOLD = DRAWER_OPEN_X / 5;
 
 const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
-  const { isDrawerOpen, openDrawer, closeDrawer } = useDrawer();
+  const { isDrawerOpen, openDrawer, closeDrawer, updateDrawerDragging } = useDrawer();
   const { isMobile } = useMedia();
 
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
@@ -33,12 +33,12 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
         newX = DRAWER_OPEN_X;
       }
 
-      // TODO if dragging is still buggy on mobile, worst case make it swipe based:
-      // https://v10-beta--use-gesture.netlify.app/docs/state/#swipe-drag-only
-      // open the drawer if the gesture is:
-      // finished, swiping right, and met the threshold
+      updateDrawerDragging(true);
       api.start({ x: newX, y: 0, immediate: down });
+
       if (last || !active) {
+        updateDrawerDragging(false);
+
         if (mx >= DRAWER_OPEN_THRESHOLD) {
           openDrawer();
         } else {

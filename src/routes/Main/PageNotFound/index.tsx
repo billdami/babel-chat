@@ -8,6 +8,7 @@ import Icon from '../../../components/Icon';
 import Link from '../../../components/Link';
 import NavBar from '../../../components/NavBar';
 import NotificationHeadTags from '../../../components/NotificationHeadTags';
+import Scrollable from '../../../components/Scrollable';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useNotifications from '../../../hooks/useNotifications';
 import useIsScrolled from '../../../hooks/useIsScrolled';
@@ -44,11 +45,7 @@ const PageNotFound: FC<PageNotFoundProps> = () => {
         </NavBar>
         <div className="flex-1 flex relative overflow-hidden">
           <ScrollShadow isVisible={isScrolled} />
-          <div
-            className="relative flex-1 flex overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
-            ref={scrollContainer}
-            onScroll={onScroll}
-          >
+          <Scrollable className="relative flex-1 flex" ref={scrollContainer} onScroll={onScroll}>
             <div className="flex-1 flex flex-col min-w-0">
               <div className="flex-1 m-4">
                 <div className="mb-6 2xl:mb-2 p-4 rounded-lg bg-gray-50 dark:bg-gray-600 dark:bg-opacity-30">
@@ -62,7 +59,7 @@ const PageNotFound: FC<PageNotFoundProps> = () => {
               <Footer />
             </div>
             <ForceScrollable />
-          </div>
+          </Scrollable>
         </div>
       </div>
     </>
