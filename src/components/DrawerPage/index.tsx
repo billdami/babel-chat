@@ -38,10 +38,12 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
       // open the drawer if the gesture is:
       // finished, swiping right, and met the threshold
       api.start({ x: newX, y: 0, immediate: down });
-      if (!down && mx >= DRAWER_OPEN_THRESHOLD) {
-        openDrawer();
-      } else if (last || !active) {
-        api.start({ x: 0, y: 0, immediate: false });
+      if (last || !active) {
+        if (mx >= DRAWER_OPEN_THRESHOLD) {
+          openDrawer();
+        } else {
+          api.start({ x: 0, y: 0, immediate: false });
+        }
       }
     },
     {
