@@ -15,6 +15,7 @@ import { usePopper } from 'react-popper';
 
 import Backdrop from '../Backdrop';
 import useMedia from '../../hooks/useMedia';
+import useDrawer from '../../hooks/useDrawer';
 
 export interface MenuContentProps {
   isSheet?: boolean;
@@ -46,6 +47,7 @@ const Menu = <T extends MenuContentProps>({
   sheetClassName = '',
 }: PropsWithChildren<MenuProps<T>>) => {
   const { isMobile } = useMedia();
+  const { toggleDrawerDrag } = useDrawer();
 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
@@ -87,6 +89,10 @@ const Menu = <T extends MenuContentProps>({
 
     return () => document.removeEventListener('click', handleOutsideClickRef.current);
   }, [isOpen, handleOutsideClick]);
+
+  useEffect(() => {
+    toggleDrawerDrag(!isOpen);
+  }, [isOpen, toggleDrawerDrag]);
 
   return isSheet ? (
     // TODO allow closing via swipe down gesture with pmndrs/use-gesture

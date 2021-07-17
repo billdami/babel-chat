@@ -12,9 +12,9 @@ const DRAWER_OPEN_X = 320;
 const DRAWER_OPEN_THRESHOLD = DRAWER_OPEN_X / 5;
 
 const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
-  const { isDrawerOpen, openDrawer, closeDrawer, updateDrawerDragging } = useDrawer();
   const { isMobile } = useMedia();
-
+  const { isDrawerOpen, isDrawerDragEnabled, openDrawer, closeDrawer, updateDrawerDragging } =
+    useDrawer();
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
   const bind = useDrag(
@@ -48,11 +48,11 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
       }
     },
     {
-      enabled: isMobile,
+      enabled: isMobile && isDrawerDragEnabled,
       axis: 'x',
       filterTaps: true,
       preventScrollAxis: undefined,
-      threshold: 50,
+      threshold: 30,
     }
   );
 

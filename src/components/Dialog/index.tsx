@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import cn from 'classnames';
 
 import Backdrop from '../Backdrop';
+import useDrawer from '../../hooks/useDrawer';
 
 export interface DialogProps {
   isOpen?: boolean;
@@ -19,6 +20,7 @@ const Dialog: FC<DialogProps> = ({
   children,
 }) => {
   const dialogElement = useRef<HTMLDivElement | null>(null);
+  const { toggleDrawerDrag } = useDrawer();
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
@@ -64,6 +66,10 @@ const Dialog: FC<DialogProps> = ({
 
     return () => document.removeEventListener('keyup', handleEscapeKeyRef.current);
   }, [isOpen, handleEscapeKey]);
+
+  useEffect(() => {
+    toggleDrawerDrag(!isOpen);
+  }, [isOpen, toggleDrawerDrag]);
 
   // TODO don't allow tabbing to content outside of dialog (inert attributes)
   // ex: document.querySelector("#root").setAttribute("inert", isOpen);
