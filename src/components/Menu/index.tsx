@@ -12,6 +12,8 @@ import { createPortal } from 'react-dom';
 import cn from 'classnames';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
+import { animated, useSpring } from '@react-spring/web';
+import { useDrag } from '@use-gesture/react';
 
 import Backdrop from '../Backdrop';
 import useMedia from '../../hooks/useMedia';
@@ -48,6 +50,7 @@ const Menu = <T extends MenuContentProps>({
 }: PropsWithChildren<MenuProps<T>>) => {
   const { isMobile } = useMedia();
   const { toggleDrawerDrag } = useDrawer();
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
@@ -59,6 +62,40 @@ const Menu = <T extends MenuContentProps>({
     placement: placement,
     modifiers: [{ name: 'offset', options: { offset: [0, 4] } }, { name: 'flip' }],
   });
+
+  const bind = useDrag(
+    ({ down, intentional, last, active, movement: [mx, my] }) => {
+      console.log(my);
+      if (!intentional) {
+        return;
+      }
+
+      let newY = my;
+      if (!down) {
+        newY = 0;
+      } else if (my < 0) {
+        newY = 0;
+      }
+
+      api.start({ x: 0, y: newY, immediate: down });
+
+      if (last || !active) {
+        // if (mx >= DRAWER_OPEN_THRESHOLD && !isDrawerOpen) {
+        //   openDrawer();
+        // } else if (mx <= DRAWER_OPEN_THRESHOLD * -1 && isDrawerOpen) {
+        //   closeDrawer();
+        // } else {
+        //   api.start({ x: 0, y: 0, immediate: false });
+        // }
+      }
+    },
+    {
+      enabled: isSheet,
+      axis: 'y',
+      filterTaps: true,
+      preventScrollAxis: undefined,
+    }
+  );
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
@@ -107,16 +144,18 @@ const Menu = <T extends MenuContentProps>({
         createPortal(
           <>
             <Backdrop />
-            <div
+            <animated.div
+              {...bind()}
+              style={{ x, y }}
               ref={setSheetElement}
               role="menu"
               className={cn(
-                'z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
+                'touch-pan-y z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
                 sheetClassName
               )}
             >
               {createElement<T>(content, { isSheet, ...contentProps })}
-            </div>
+            </animated.div>
           </>,
           document.body
         )}
