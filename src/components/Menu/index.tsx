@@ -28,6 +28,7 @@ interface MenuProps<T extends MenuContentProps> {
   trigger: ReactNode;
   content: FunctionComponent;
   contentProps: T;
+  // TODO rename onOutsideClick => onCloseMenu
   onOutsideClick?: () => void;
   placement?: Placement;
   alwaysMenu?: boolean;
@@ -35,6 +36,8 @@ interface MenuProps<T extends MenuContentProps> {
   menuClassName?: string;
   sheetClassName?: string;
 }
+
+const MENU_SHEET_CLOSE_THRESHOLD = 60;
 
 const Menu = <T extends MenuContentProps>({
   isOpen = false,
@@ -65,28 +68,19 @@ const Menu = <T extends MenuContentProps>({
 
   const bind = useDrag(
     ({ down, intentional, last, active, movement: [mx, my] }) => {
-      console.log(my);
       if (!intentional) {
         return;
       }
 
-      let newY = my;
-      if (!down) {
-        newY = 0;
-      } else if (my < 0) {
-        newY = 0;
-      }
-
+      const newY = !down || my < 0 ? 0 : my;
       api.start({ x: 0, y: newY, immediate: down });
 
       if (last || !active) {
-        // if (mx >= DRAWER_OPEN_THRESHOLD && !isDrawerOpen) {
-        //   openDrawer();
-        // } else if (mx <= DRAWER_OPEN_THRESHOLD * -1 && isDrawerOpen) {
-        //   closeDrawer();
-        // } else {
-        //   api.start({ x: 0, y: 0, immediate: false });
-        // }
+        if (my >= MENU_SHEET_CLOSE_THRESHOLD) {
+          onOutsideClick?.();
+        } else {
+          api.start({ x: 0, y: 0, immediate: false });
+        }
       }
     },
     {
@@ -94,6 +88,7 @@ const Menu = <T extends MenuContentProps>({
       axis: 'y',
       filterTaps: true,
       preventScrollAxis: undefined,
+      threshold: 30,
     }
   );
 
@@ -150,7 +145,7 @@ const Menu = <T extends MenuContentProps>({
               ref={setSheetElement}
               role="menu"
               className={cn(
-                'touch-pan-y z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
+                'touch-none z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
                 sheetClassName
               )}
             >

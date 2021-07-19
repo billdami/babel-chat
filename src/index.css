@@ -540,6 +540,10 @@
     touch-action: pan-y;
   }
 
+  .touch-none {
+    touch-action: none;
+  }
+
   @variants responsive, dark {
     .scrollable-light::-webkit-scrollbar,
     .scrollable-dark::-webkit-scrollbar {
