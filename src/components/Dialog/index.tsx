@@ -23,9 +23,9 @@ const Dialog: FC<DialogProps> = ({
   const dialogElement = useRef<HTMLDivElement | null>(null);
   const { toggleDrawerDrag } = useDrawer();
   const transition = useTransition(isOpen, {
-    from: { opacity: 0, y: -100 },
-    enter: { opacity: 1, y: 0 },
-    leave: { opacity: 0, y: -100 },
+    from: { opacity: 0, scale: 0.5 },
+    enter: { opacity: 1, scale: 1 },
+    leave: { opacity: 0, scale: 0.5 },
   });
 
   const handleOutsideClick = useCallback(
@@ -81,10 +81,9 @@ const Dialog: FC<DialogProps> = ({
   // ex: document.querySelector("#root").setAttribute("inert", isOpen);
   // @see https://github.com/WICG/inert
   // @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert
-  // TODO animate backdrop (opacity) and modal (opacity, scale) show/hide with react-spring <Transition>
   return createPortal(
     transition(
-      ({ y, opacity }, item) =>
+      ({ opacity, scale }, item) =>
         item && (
           <animated.div className="fixed z-10 inset-0 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center md:block md:items-end md:p-0">
@@ -101,7 +100,7 @@ const Dialog: FC<DialogProps> = ({
                 role="dialog"
                 // TODO add modal={false} prop to omit backdrop, close on click outside, etc
                 aria-modal={true}
-                style={{ opacity, transform: y.to((y) => `translateY(${y}%)`) }}
+                style={{ opacity, transform: scale.to((s) => `scale(${s})`) }}
                 className={cn(
                   `relative
                 overflow-hidden
