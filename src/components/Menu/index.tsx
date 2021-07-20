@@ -35,6 +35,7 @@ interface MenuProps<T extends MenuContentProps> {
   triggerClassName?: string;
   menuClassName?: string;
   sheetClassName?: string;
+  menuTransformOrigin?: string;
 }
 
 const MENU_SHEET_CLOSE_THRESHOLD = 60;
@@ -51,14 +52,16 @@ const Menu = <T extends MenuContentProps>({
   triggerClassName = '',
   menuClassName = '',
   sheetClassName = '',
+  menuTransformOrigin = 'origin-top-right',
 }: PropsWithChildren<MenuProps<T>>) => {
   const { isMobile } = useMedia();
   const { toggleDrawerDrag } = useDrawer();
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
   const transition = useTransition(isOpen, {
-    from: { ty: 100 },
-    enter: { ty: 0 },
-    leave: { ty: 100 },
+    from: { sheetY: 100, scale: 0.85, opacity: 0 },
+    enter: { sheetY: 0, scale: 1, opacity: 1 },
+    leave: { sheetY: 100, scale: 0.85, opacity: 0 },
+    config: { tension: 320 },
   });
 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
@@ -146,10 +149,10 @@ const Menu = <T extends MenuContentProps>({
         <>
           <Backdrop isShown={isOpen} />
           {transition(
-            ({ ty }, item) =>
+            ({ sheetY }, item) =>
               item && (
                 <animated.div
-                  style={{ transform: ty.to((ty) => `translateY(${ty}%)`) }}
+                  style={{ transform: sheetY.to((y) => `translateY(${y}%)`) }}
                   className="z-50 absolute bottom-0 left-0 right-0"
                 >
                   <animated.div
@@ -176,16 +179,28 @@ const Menu = <T extends MenuContentProps>({
       <div className={triggerClassName} ref={setReferenceElement}>
         {trigger}
       </div>
-      {isOpen && (
-        <div
-          ref={setPopperElement}
-          role="menu"
-          className={cn('z-10 bg-white dark:bg-gray-600 rounded shadow-lg', menuClassName)}
-          style={styles.popper}
-          {...attributes.popper}
-        >
-          {createElement<T>(content, { isSheet, ...contentProps })}
-        </div>
+      {transition(
+        ({ scale, opacity }, item) =>
+          item && (
+            <div
+              ref={setPopperElement}
+              style={styles.popper}
+              {...attributes.popper}
+              className="z-10"
+            >
+              <animated.div
+                role="menu"
+                className={cn(
+                  'z-10 origin-top-right bg-white dark:bg-gray-600 rounded shadow-lg',
+                  menuClassName,
+                  menuTransformOrigin
+                )}
+                style={{ opacity, transform: scale.to((s) => `scale(${s})`) }}
+              >
+                {createElement<T>(content, { isSheet, ...contentProps })}
+              </animated.div>
+            </div>
+          )
       )}
     </>
   );

@@ -33,7 +33,7 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
       }
 
       updateDrawerDragging(true);
-      api.start({ x: newX, y: 0, immediate: down });
+      api.start({ x: newX, y: 0, immediate: down, config: { tension: 220, clamp: true } });
 
       if (last || !active) {
         updateDrawerDragging(false);
@@ -43,7 +43,12 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
         } else if (mx <= DRAWER_OPEN_THRESHOLD * -1 && isDrawerOpen) {
           closeDrawer();
         } else {
-          api.start({ x: isDrawerOpen ? DRAWER_OPEN_X : 0, y: 0, immediate: false });
+          api.start({
+            x: isDrawerOpen ? DRAWER_OPEN_X : 0,
+            y: 0,
+            immediate: false,
+            config: { tension: 220, clamp: true },
+          });
         }
       }
     },
@@ -61,6 +66,7 @@ const DrawerPage: FC<DrawerPageProps> = ({ children }) => {
       x: isDrawerOpen && isMobile ? DRAWER_OPEN_X : 0,
       y: 0,
       immediate: false,
+      config: { tension: 220, clamp: true },
     });
   }, [api, isDrawerOpen, isMobile]);
 

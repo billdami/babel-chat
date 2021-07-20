@@ -10,6 +10,7 @@ const Backdrop: FC<BackdropProps> = ({ isShown = false }) => {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
+    config: { tension: 320 },
   });
 
   return transition(

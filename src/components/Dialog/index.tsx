@@ -26,6 +26,7 @@ const Dialog: FC<DialogProps> = ({
     from: { opacity: 0, scale: 0.5 },
     enter: { opacity: 1, scale: 1 },
     leave: { opacity: 0, scale: 0.5 },
+    config: { tension: 320 },
   });
 
   const handleOutsideClick = useCallback(
