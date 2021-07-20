@@ -12,7 +12,7 @@ import { createPortal } from 'react-dom';
 import cn from 'classnames';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, useSpring, useTransition } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
 
 import Backdrop from '../Backdrop';
@@ -38,6 +38,7 @@ interface MenuProps<T extends MenuContentProps> {
 }
 
 const MENU_SHEET_CLOSE_THRESHOLD = 60;
+const MENU_SHEET_UP_THRESHOLD = -48;
 
 const Menu = <T extends MenuContentProps>({
   isOpen = false,
@@ -54,6 +55,11 @@ const Menu = <T extends MenuContentProps>({
   const { isMobile } = useMedia();
   const { toggleDrawerDrag } = useDrawer();
   const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
+  const transition = useTransition(isOpen, {
+    from: { ty: 100 },
+    enter: { ty: 0 },
+    leave: { ty: 100 },
+  });
 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
@@ -67,12 +73,17 @@ const Menu = <T extends MenuContentProps>({
   });
 
   const bind = useDrag(
-    ({ down, intentional, last, active, movement: [mx, my] }) => {
+    ({ down, intentional, last, active, movement: [mx, my], cancel }) => {
       if (!intentional) {
         return;
       }
 
-      const newY = !down || my < 0 ? 0 : my;
+      if (my < MENU_SHEET_UP_THRESHOLD) {
+        api.start({ x: 0, y: 0, immediate: false });
+        return cancel();
+      }
+
+      const newY = !down ? 0 : my;
       api.start({ x: 0, y: newY, immediate: down });
 
       if (last || !active) {
@@ -127,33 +138,38 @@ const Menu = <T extends MenuContentProps>({
   }, [isOpen, toggleDrawerDrag]);
 
   return isSheet ? (
-    // TODO allow closing via swipe down gesture with pmndrs/use-gesture
-    // @see https://codesandbox.io/s/zuwji
-    // @see https://use-gesture.netlify.app/docs/examples/
     <>
       <div className={triggerClassName} ref={setReferenceElement}>
         {trigger}
       </div>
-      {isOpen &&
-        // TODO animate backdrop (opacity) and sheet (slide up/down) show/hide with react-spring <Transition>
-        createPortal(
-          <>
-            <Backdrop />
-            <animated.div
-              {...bind()}
-              style={{ x, y }}
-              ref={setSheetElement}
-              role="menu"
-              className={cn(
-                'touch-none z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
-                sheetClassName
-              )}
-            >
-              {createElement<T>(content, { isSheet, ...contentProps })}
-            </animated.div>
-          </>,
-          document.body
-        )}
+      {createPortal(
+        <>
+          <Backdrop isShown={isOpen} />
+          {transition(
+            ({ ty }, item) =>
+              item && (
+                <animated.div
+                  style={{ transform: ty.to((ty) => `translateY(${ty}%)`) }}
+                  className="z-50 absolute bottom-0 left-0 right-0"
+                >
+                  <animated.div
+                    {...bind()}
+                    style={{ x, y }}
+                    ref={setSheetElement}
+                    role="menu"
+                    className={cn(
+                      'touch-none pb-16 -mb-12 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
+                      sheetClassName
+                    )}
+                  >
+                    {createElement<T>(content, { isSheet, ...contentProps })}
+                  </animated.div>
+                </animated.div>
+              )
+          )}
+        </>,
+        document.body
+      )}
     </>
   ) : (
     <>
@@ -161,7 +177,6 @@ const Menu = <T extends MenuContentProps>({
         {trigger}
       </div>
       {isOpen && (
-        // TODO animate show/hide (opacity, scale) with react-spring <Transition>
         <div
           ref={setPopperElement}
           role="menu"

@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { animated, useTransition } from '@react-spring/web';
 import cn from 'classnames';
 
 import Backdrop from '../Backdrop';
@@ -21,6 +22,11 @@ const Dialog: FC<DialogProps> = ({
 }) => {
   const dialogElement = useRef<HTMLDivElement | null>(null);
   const { toggleDrawerDrag } = useDrawer();
+  const transition = useTransition(isOpen, {
+    from: { opacity: 0, y: -100 },
+    enter: { opacity: 1, y: 0 },
+    leave: { opacity: 0, y: -100 },
+  });
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
@@ -76,22 +82,28 @@ const Dialog: FC<DialogProps> = ({
   // @see https://github.com/WICG/inert
   // @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert
   // TODO animate backdrop (opacity) and modal (opacity, scale) show/hide with react-spring <Transition>
-  return isOpen
-    ? createPortal(
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center md:block md:items-end md:p-0">
-            <Backdrop />
-            {/* this element tricks the browser into centering the modal contents */}
-            <span className="hidden md:inline-block md:align-middle md:h-screen" aria-hidden="true">
-              &#8203;
-            </span>
-            <div
-              ref={dialogElement}
-              role="dialog"
-              // TODO add modal={false} prop to omit backdrop, close on click outside, etc
-              aria-modal={true}
-              className={cn(
-                `relative
+  return createPortal(
+    transition(
+      ({ y, opacity }, item) =>
+        item && (
+          <animated.div className="fixed z-10 inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center md:block md:items-end md:p-0">
+              <Backdrop isShown={isOpen} />
+              {/* this element tricks the browser into centering the modal contents */}
+              <span
+                className="hidden md:inline-block md:align-middle md:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <animated.div
+                ref={dialogElement}
+                role="dialog"
+                // TODO add modal={false} prop to omit backdrop, close on click outside, etc
+                aria-modal={true}
+                style={{ opacity, transform: y.to((y) => `translateY(${y}%)`) }}
+                className={cn(
+                  `relative
                 overflow-hidden
                 inline-block
                 md:max-w-lg md:w-full
@@ -101,16 +113,17 @@ const Dialog: FC<DialogProps> = ({
                 rounded
                 shadow-xl
                 text-left`,
-                className
-              )}
-            >
-              {children}
+                  className
+                )}
+              >
+                {children}
+              </animated.div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )
-    : null;
+          </animated.div>
+        )
+    ),
+    document.body
+  );
 };
 
 export default Dialog;
