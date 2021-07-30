@@ -151,8 +151,8 @@ const MessageHeader: FC<MessageHeaderProps> = ({
           ) : (
             <div className="min-w-0">
               <h2 className="truncate md:leading-5 font-bold text-yellow-200">User not found</h2>
-              <h3 className="text-xs md:text-sm leading-3 text-green-200">
-                This user no longer exists.
+              <h3 className="text-xs md:text-sm leading-3 text-green-200 dark:text-gray-400">
+                This user does not exists.
               </h3>
             </div>
           ))}

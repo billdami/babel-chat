@@ -80,7 +80,11 @@ const SignIn: FC<SignInProps> = () => {
 
   const wasSignedOut = queryParams.get('signedOut') === 'true';
 
-  const onCaptchaExpired = useCallback(() => captcha.current?.reset(), [captcha]);
+  const onCaptchaExpired = useCallback(() => {
+    setCaptchaHasErrored(true);
+    setSubmitError(new ReCaptchaLoadError().message);
+    captcha.current?.reset();
+  }, [captcha]);
 
   const onCaptchaErrored = useCallback(() => {
     setCaptchaHasErrored(true);
@@ -103,6 +107,9 @@ const SignIn: FC<SignInProps> = () => {
             throw new ReCaptchaLoadError();
           }
 
+          // TODO [BUG] there may be cases where a very stale tab that has
+          // been open for a long time may result in this executeAsync()
+          // call never returning
           _captchaToken = await captcha.current.executeAsync();
           if (_captchaToken) {
             setCaptchaToken(_captchaToken);

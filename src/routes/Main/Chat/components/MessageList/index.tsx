@@ -13,6 +13,8 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import Alert from '../../../../../components/Alert';
 import Button from '../../../../../components/Button';
+import ForceScrollable from '../../../../../components/ForceScrollable';
+import Scrollable from '../../../../../components/Scrollable';
 import ScrollShadow from '../../../../../components/ScrollShadow';
 import Spinner from '../../../../../components/Spinner';
 import { useChatMessages } from '../../../../../hooks/useChatMessageRecord';
@@ -182,8 +184,8 @@ const MessageList: FC<MessageListProps> = ({
   return (
     <div className="flex-1 flex relative overflow-hidden">
       <ScrollShadow isVisible={isScrolled} />
-      <div
-        className="flex-1 flex flex-col overflow-y-auto"
+      <Scrollable
+        className="flex-1 flex flex-col relative"
         ref={containerElement}
         onScroll={onContainerScroll}
       >
@@ -260,7 +262,8 @@ const MessageList: FC<MessageListProps> = ({
           )}
           {isLoading && <Spinner className="mx-2 md:mx-3 my-1" />}
         </div>
-      </div>
+        <ForceScrollable />
+      </Scrollable>
     </div>
   );
 };

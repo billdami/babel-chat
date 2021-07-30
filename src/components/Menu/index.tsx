@@ -12,9 +12,12 @@ import { createPortal } from 'react-dom';
 import cn from 'classnames';
 import { Placement } from '@popperjs/core';
 import { usePopper } from 'react-popper';
+import { animated, useSpring, useTransition } from '@react-spring/web';
+import { useDrag } from '@use-gesture/react';
 
 import Backdrop from '../Backdrop';
 import useMedia from '../../hooks/useMedia';
+import useDrawer from '../../hooks/useDrawer';
 
 export interface MenuContentProps {
   isSheet?: boolean;
@@ -25,13 +28,18 @@ interface MenuProps<T extends MenuContentProps> {
   trigger: ReactNode;
   content: FunctionComponent;
   contentProps: T;
+  // TODO rename onOutsideClick => onCloseMenu
   onOutsideClick?: () => void;
   placement?: Placement;
   alwaysMenu?: boolean;
   triggerClassName?: string;
   menuClassName?: string;
   sheetClassName?: string;
+  menuTransformOrigin?: string;
 }
+
+const MENU_SHEET_CLOSE_THRESHOLD = 60;
+const MENU_SHEET_UP_THRESHOLD = -48;
 
 const Menu = <T extends MenuContentProps>({
   isOpen = false,
@@ -44,8 +52,17 @@ const Menu = <T extends MenuContentProps>({
   triggerClassName = '',
   menuClassName = '',
   sheetClassName = '',
+  menuTransformOrigin = 'origin-top-right',
 }: PropsWithChildren<MenuProps<T>>) => {
   const { isMobile } = useMedia();
+  const { toggleDrawerDrag } = useDrawer();
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
+  const transition = useTransition(isOpen, {
+    from: { sheetY: 100, scale: 0.85, opacity: 0 },
+    enter: { sheetY: 0, scale: 1, opacity: 1 },
+    leave: { sheetY: 100, scale: 0.85, opacity: 0 },
+    config: { tension: 320 },
+  });
 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
@@ -57,6 +74,37 @@ const Menu = <T extends MenuContentProps>({
     placement: placement,
     modifiers: [{ name: 'offset', options: { offset: [0, 4] } }, { name: 'flip' }],
   });
+
+  const bind = useDrag(
+    ({ down, intentional, last, active, movement: [mx, my], cancel }) => {
+      if (!intentional) {
+        return;
+      }
+
+      if (my < MENU_SHEET_UP_THRESHOLD) {
+        api.start({ x: 0, y: 0, immediate: false });
+        return cancel();
+      }
+
+      const newY = !down ? 0 : my;
+      api.start({ x: 0, y: newY, immediate: down });
+
+      if (last || !active) {
+        if (my >= MENU_SHEET_CLOSE_THRESHOLD) {
+          onOutsideClick?.();
+        } else {
+          api.start({ x: 0, y: 0, immediate: false });
+        }
+      }
+    },
+    {
+      enabled: isSheet,
+      axis: 'y',
+      filterTaps: true,
+      preventScrollAxis: undefined,
+      threshold: 30,
+    }
+  );
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
@@ -88,49 +136,71 @@ const Menu = <T extends MenuContentProps>({
     return () => document.removeEventListener('click', handleOutsideClickRef.current);
   }, [isOpen, handleOutsideClick]);
 
+  useEffect(() => {
+    toggleDrawerDrag(!isOpen);
+  }, [isOpen, toggleDrawerDrag]);
+
   return isSheet ? (
-    // TODO allow closing via swipe down gesture with pmndrs/use-gesture
-    // @see https://codesandbox.io/s/zuwji
-    // @see https://use-gesture.netlify.app/docs/examples/
     <>
       <div className={triggerClassName} ref={setReferenceElement}>
         {trigger}
       </div>
-      {isOpen &&
-        // TODO animate backdrop (opacity) and sheet (slide up/down) show/hide with react-spring <Transition>
-        createPortal(
-          <>
-            <Backdrop />
-            <div
-              ref={setSheetElement}
-              role="menu"
-              className={cn(
-                'z-50 absolute bottom-0 left-0 right-0 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
-                sheetClassName
-              )}
-            >
-              {createElement<T>(content, { isSheet, ...contentProps })}
-            </div>
-          </>,
-          document.body
-        )}
+      {createPortal(
+        <>
+          <Backdrop isShown={isOpen} />
+          {transition(
+            ({ sheetY }, item) =>
+              item && (
+                <animated.div
+                  style={{ transform: sheetY.to((y) => `translateY(${y}%)`) }}
+                  className="z-50 absolute bottom-0 left-0 right-0"
+                >
+                  <animated.div
+                    {...bind()}
+                    style={{ x, y }}
+                    ref={setSheetElement}
+                    role="menu"
+                    className={cn(
+                      'touch-none pb-16 -mb-12 rounded-t-lg border dark:border-gray-600 bg-white dark:bg-gray-600',
+                      sheetClassName
+                    )}
+                  >
+                    {createElement<T>(content, { isSheet, ...contentProps })}
+                  </animated.div>
+                </animated.div>
+              )
+          )}
+        </>,
+        document.body
+      )}
     </>
   ) : (
     <>
       <div className={triggerClassName} ref={setReferenceElement}>
         {trigger}
       </div>
-      {isOpen && (
-        // TODO animate show/hide (opacity, scale) with react-spring <Transition>
-        <div
-          ref={setPopperElement}
-          role="menu"
-          className={cn('z-10 bg-white dark:bg-gray-600 rounded shadow-lg', menuClassName)}
-          style={styles.popper}
-          {...attributes.popper}
-        >
-          {createElement<T>(content, { isSheet, ...contentProps })}
-        </div>
+      {transition(
+        ({ scale, opacity }, item) =>
+          item && (
+            <div
+              ref={setPopperElement}
+              style={styles.popper}
+              {...attributes.popper}
+              className="z-10"
+            >
+              <animated.div
+                role="menu"
+                className={cn(
+                  'z-10 origin-top-right bg-white dark:bg-gray-600 rounded shadow-lg',
+                  menuClassName,
+                  menuTransformOrigin
+                )}
+                style={{ opacity, transform: scale.to((s) => `scale(${s})`) }}
+              >
+                {createElement<T>(content, { isSheet, ...contentProps })}
+              </animated.div>
+            </div>
+          )
       )}
     </>
   );

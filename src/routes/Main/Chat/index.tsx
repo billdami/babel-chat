@@ -158,7 +158,7 @@ const Chat: FC<ChatProps> = () => {
     <>
       <NotificationHeadTags
         title={`${
-          userDetails ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''
+          userDetails?.nickname ? `${userDetails.nickname}#${userDetails.uuid} - ` : ''
         }chat | babel chat`}
       />
       <div className="Chat flex flex-col flex-1 min-w-0">

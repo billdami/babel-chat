@@ -534,3 +534,36 @@
       U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 }
+
+@layer utilities {
+  .touch-pan-y {
+    touch-action: pan-y;
+  }
+
+  .touch-none {
+    touch-action: none;
+  }
+
+  @variants responsive, dark {
+    .scrollable-light::-webkit-scrollbar,
+    .scrollable-dark::-webkit-scrollbar {
+      width: 0.5rem;
+    }
+
+    .scrollable-light::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .scrollable-light::-webkit-scrollbar-track {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .scrollable-dark::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .scrollable-dark::-webkit-scrollbar-track {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}

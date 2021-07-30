@@ -1,3 +1,8 @@
+import 'firebase/database';
+import 'firebase/auth';
+import 'firebase/analytics';
+
+import firebase from 'firebase/app';
 import { useCallback } from 'react';
 
 import { UserFirebaseRecord, UserRecord } from '../types/user';
@@ -17,7 +22,10 @@ const useCurrentUser = (): CurrentUserHook => {
 
   const updateUser = useCallback(
     (values: Partial<UserFirebaseRecord>) => {
-      return user?.ref?.update(values);
+      // ensure updates are only attempted if the user is logged in
+      if (firebase.auth().currentUser?.uid) {
+        return user?.ref?.update(values);
+      }
     },
     [user]
   );

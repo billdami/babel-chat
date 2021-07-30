@@ -1,19 +1,18 @@
 import React, { FC, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import cn from 'classnames';
 
-import PageNotFound from '../PageNotFound';
-import { ProvideNotifications } from '../../hooks/useNotifications';
-import useDrawer from '../../hooks/useDrawer';
+import DrawerPage from '../../components/DrawerPage';
+import useAuth from '../../hooks/useAuth';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import useBodyClass from '../../hooks/useBodyClass';
 import useInterval from '../../hooks/useInterval';
-import useCurrentUser from '../../hooks/useCurrentUser';
+import { ProvideNotifications } from '../../hooks/useNotifications';
 import { getFirebaseTimestamp } from '../../utils/firebase';
 import { ACTIVE_TICK_INTERVAL } from '../../constants/user';
-import useAuth from '../../hooks/useAuth';
 
 import Chat from './Chat';
 import Dashboard from './Dashboard';
+import PageNotFound from './PageNotFound';
 import Sidebar from './components/Sidebar';
 
 interface MainProps {}
@@ -23,7 +22,6 @@ const Main: FC<MainProps> = () => {
   // The `path` lets us build <Route> paths that are relative to the parent route,
   // while the `url` lets us build relative link, e.g. <Link to={`${url}/chat/123`}>
   const { path /*url*/ } = useRouteMatch();
-  const { isDrawerOpen, closeDrawer } = useDrawer();
   const { user, isUserLoading, updateUser } = useCurrentUser();
   const { isSigningIn, isSigningOut, hasSignedOut, signOut } = useAuth();
 
@@ -48,19 +46,7 @@ const Main: FC<MainProps> = () => {
     <ProvideNotifications>
       <div className="Main flex w-full">
         <Sidebar className="z-0 md:z-auto" />
-        <div
-          className={cn(
-            'flex-1 flex absolute md:static inset-0 transition-transform md:transition-none shadow-md md:shadow-none bg-white dark:bg-gray-700',
-            { 'transform-gpu translate-x-80 md:transform-none md:translate-x-0': isDrawerOpen }
-          )}
-        >
-          {isDrawerOpen && (
-            <div
-              role="button"
-              className="absolute inset-0 z-50 md:hidden"
-              onClick={closeDrawer}
-            ></div>
-          )}
+        <DrawerPage>
           <Switch>
             <Route exact path={path}>
               <Dashboard />
@@ -72,7 +58,7 @@ const Main: FC<MainProps> = () => {
               <PageNotFound />
             </Route>
           </Switch>
-        </div>
+        </DrawerPage>
       </div>
     </ProvideNotifications>
   );

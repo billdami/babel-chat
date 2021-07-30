@@ -1,12 +1,14 @@
+import React, { FC } from 'react';
+import { animated, useTransition } from '@react-spring/web';
 import classNames from 'classnames';
-import React, { DetailedHTMLProps, FC, HTMLAttributes } from 'react';
 
 import useDeferRender from '../../hooks/useDeferRender';
 
 type BadgeVariants = 'alert' | 'muted';
 type BadgeSizes = 'sm' | 'md' | 'lg';
 
-interface BadgeProps extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
+interface BadgeProps {
+  className?: string;
   variant?: BadgeVariants;
   size?: BadgeSizes;
   tooltip?: string;
@@ -14,6 +16,7 @@ interface BadgeProps extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, 
   bordered?: boolean;
   deferRender?: boolean;
   renderDelay?: number;
+  title?: string;
 }
 
 const sizes = {
@@ -44,35 +47,45 @@ const Badge: FC<BadgeProps> = ({
   ...rest
 }) => {
   const shouldRender = useDeferRender(!deferRender, renderDelay);
+  const transition = useTransition(shouldRender, {
+    from: { scale: 0 },
+    enter: { scale: 1 },
+    leave: { scale: 0 },
+    config: { tension: 320 },
+  });
 
-  return shouldRender ? (
-    <span
-      className={classNames('flex', sizes[size], className)}
-      // TODO make this a popper.js tooltip
-      title={tooltip}
-      {...rest}
-    >
-      {pulse && (
-        <span
-          className={classNames(
-            'animate-ping absolute inline-flex rounded-full opacity-75',
-            variantPulse[variant],
-            sizes[size]
+  return transition(
+    ({ scale }, item) =>
+      item && (
+        <animated.span
+          className={classNames('flex', sizes[size], className)}
+          style={{ transform: scale.to((s) => `scale(${s})`) }}
+          // TODO make this a popper.js tooltip
+          title={tooltip}
+          {...rest}
+        >
+          {pulse && (
+            <span
+              className={classNames(
+                'animate-ping absolute inline-flex rounded-full opacity-75',
+                variantPulse[variant],
+                sizes[size]
+              )}
+            ></span>
           )}
-        ></span>
-      )}
-      <span
-        className={classNames(
-          'relative inline-flex rounded-full border',
-          variants[variant],
-          sizes[size],
-          {
-            'border border-red-500': bordered,
-          }
-        )}
-      ></span>
-    </span>
-  ) : null;
+          <span
+            className={classNames(
+              'relative inline-flex rounded-full border',
+              variants[variant],
+              sizes[size],
+              {
+                'border border-red-500': bordered,
+              }
+            )}
+          ></span>
+        </animated.span>
+      )
+  );
 };
 
 export default Badge;

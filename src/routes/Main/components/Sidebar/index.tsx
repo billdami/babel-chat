@@ -5,6 +5,7 @@ import BetaBadge from '../../../../components/BetaBadge';
 import Button from '../../../../components/Button';
 import DialogConfirm from '../../../../components/DialogConfirm';
 import DialogFeedback from '../../../../components/DialogFeedback';
+import ForceScrollable from '../../../../components/ForceScrollable';
 import Icon from '../../../../components/Icon';
 import Link from '../../../../components/Link';
 import LogoIcon from '../../../../components/LogoIcon';
@@ -125,7 +126,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isUsersScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div className="flex-1 overflow-y-auto" ref={usersEl} onScroll={onUsersScroll}>
+        <div
+          className="relative flex-1 overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
+          ref={usersEl}
+          onScroll={onUsersScroll}
+        >
           <UsersList
             users={users}
             isLoading={isLoadingUsers}
@@ -133,6 +138,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
             activeChats={visibleChats}
             unreadChats={unreadChats}
           />
+          <ForceScrollable />
         </div>
       </TabPanel>
       <TabPanel
@@ -145,8 +151,13 @@ const Sidebar: FC<SidebarProps> = ({ className = '' }) => {
           isVisible={isChatsScrolled}
           gradClassName="from-gray-700 dark:from-gray-900"
         />
-        <div className="flex-1 overflow-y-auto" ref={chatsEl} onScroll={onChatsScroll}>
+        <div
+          className="relative flex-1 overflow-y-auto md:scrollable-dark md:dark:scrollable-light"
+          ref={chatsEl}
+          onScroll={onChatsScroll}
+        >
           <ChatsList chats={visibleChats} isLoading={isLoadingChats} />
+          <ForceScrollable />
         </div>
       </TabPanel>
       <TabList className="flex-shrink-0 flex border-b bg-gray-200 dark:bg-gray-900 border-gray-100 dark:border-gray-900 dark:border-opacity-60 dark:bg-opacity-60">
