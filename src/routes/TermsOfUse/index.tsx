@@ -290,6 +290,10 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
         As long as the website and the information and services on the website are provided free of
         charge, we will not be liable for any loss or damage of any nature.
       </p>
+
+      <p className="mb-4">
+        <Link to="/">&larr; Go to the homepage</Link>
+      </p>
     </PublicPage>
   );
 };

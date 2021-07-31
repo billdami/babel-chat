@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import Anchor from '../../components/Anchor';
+import Link from '../../components/Link';
 import PublicPage from '../../components/PublicPage';
 
 interface PrivacyPolicyProps {}
@@ -238,6 +239,10 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
         under the age of 13. If you think that your child provided this kind of information on our
         website, we strongly encourage you to contact us immediately and we will do our best efforts
         to promptly remove such information from our records.
+      </p>
+
+      <p className="mb-4">
+        <Link to="/">&larr; Go to the homepage</Link>
       </p>
     </PublicPage>
   );
