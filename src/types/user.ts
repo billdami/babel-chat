@@ -83,6 +83,7 @@ export type UserFilterProperty = 'nickname' | 'country' | 'age' | 'gender';
 export interface UserSort {
   property?: UserSortProperty;
   isDescending: boolean;
+  label?: string;
 }
 
 export interface UserNicknameFilter {

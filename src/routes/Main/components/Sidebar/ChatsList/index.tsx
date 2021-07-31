@@ -246,7 +246,7 @@ const ChatsList: FC<ChatsListProps> = ({ chats, isLoading }) => {
                 contentProps={sortMenuProps}
                 onOutsideClick={closeSortMenu}
                 menuTransformOrigin="origin-top-left"
-                menuClassName="py-2 text-sm"
+                menuClassName="py-2 text-sm max-w-72"
                 sheetClassName="py-2 text-sm"
                 triggerClassName="ml-1"
                 placement="bottom-start"

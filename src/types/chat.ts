@@ -30,4 +30,5 @@ export type ChatSortProperty = 'nickname' | 'dateLastMessage' | 'dateStarted' | 
 export interface ChatSort {
   property?: ChatSortProperty;
   isDescending: boolean;
+  label?: string;
 }
