@@ -62,8 +62,8 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
 
   return (
     <>
-      <div className="flex items-end justify-between mb-2 px-4">
-        <div className="text-gray-600 dark:text-gray-400 font-bold">Sort users by</div>
+      <div className="flex items-start justify-between mb-2 px-4">
+        <div className="text-gray-600 dark:text-gray-400 font-bold">Sort users</div>
         {isSheet && (
           <Button
             size="sm"
@@ -76,39 +76,42 @@ const SortMenu: FC<SortMenuProps> = ({ isSheet, sorts, updateSort, closeSortMenu
           </Button>
         )}
       </div>
-      <div className="border-t border-gray-100 dark:border-gray-500 dark:border-opacity-40">
+      <p className="px-4 mb-4 text-sm text-gray-400 dark:text-gray-400">
+        Set the order that users will appear in the list.
+      </p>
+      <div>
         {sorts?.map((sort, index) => (
-          <div
-            className="flex px-4 py-2 border-b border-gray-100 dark:border-gray-500 dark:border-opacity-40"
-            key={index}
-          >
-            <Select
-              className="w-full md:w-40"
-              variant="inverse"
-              inputSize="sm"
-              options={SortOptions}
-              value={sort.property}
-              onChange={(e) => onSortPropertyChange(e, sort)}
-            />
-            <Button
-              variant="secondary"
-              size="sm"
-              className="ml-2 flex-shrink-0"
-              title="Toggle sort direction"
-              onClick={(e) => onDirectionToggle(e, sort)}
-            >
-              <Icon
-                name={sort.isDescending ? 'arrow-up-wide-short' : 'arrow-down-short-wide'}
-                size="sm"
-                title="Toggle sort direction"
+          <div className="px-4 pb-4" key={index}>
+            {!!sort.label && <div className="mb-2 text-xs">{sort.label}</div>}
+            <div className="flex">
+              <Select
+                className="w-full"
+                variant="inverse"
+                inputSize="sm"
+                options={SortOptions}
+                value={sort.property}
+                onChange={(e) => onSortPropertyChange(e, sort)}
               />
-            </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="ml-2 flex-shrink-0"
+                title="Toggle sort direction"
+                onClick={(e) => onDirectionToggle(e, sort)}
+              >
+                <Icon
+                  name={sort.isDescending ? 'arrow-up-wide-short' : 'arrow-down-short-wide'}
+                  size="sm"
+                  title="Toggle sort direction"
+                />
+              </Button>
+            </div>
           </div>
         ))}
       </div>
       {isSheet && (
-        <div className="mt-4 mb-2 mx-4">
-          <Button variant="secondary" onClick={closeSortMenu} fullWidth>
+        <div className="my-2 mx-4">
+          <Button variant="primary" onClick={closeSortMenu} fullWidth>
             Done
           </Button>
         </div>

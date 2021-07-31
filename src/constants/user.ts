@@ -71,9 +71,11 @@ export const DEFAULT_USER_SORTS: UserSort[] = [
   {
     property: 'country',
     isDescending: false,
+    label: 'First sort by...',
   },
   {
     property: 'status',
     isDescending: false,
+    label: 'Then sort by...',
   },
 ];
