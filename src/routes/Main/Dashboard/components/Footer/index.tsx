@@ -16,7 +16,8 @@ const Footer: FC<FooterProps> = () => {
         &bull;{' '}
         <Link to="/terms-of-use" target="_blank">
           terms of use
-        </Link>
+        </Link>{' '}
+        &bull; <Link to="/faq">faq</Link>
       </span>
     </div>
   );

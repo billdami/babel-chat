@@ -12,6 +12,7 @@ import { ACTIVE_TICK_INTERVAL } from '../../constants/user';
 
 import Chat from './Chat';
 import Dashboard from './Dashboard';
+import Faq from './Faq';
 import PageNotFound from './PageNotFound';
 import Sidebar from './components/Sidebar';
 
@@ -53,6 +54,9 @@ const Main: FC<MainProps> = () => {
             </Route>
             <Route path={`${path}/chat/:userId`}>
               <Chat />
+            </Route>
+            <Route path={`${path}/faq`}>
+              <Faq />
             </Route>
             <Route path={`${path}/*`}>
               <PageNotFound />
