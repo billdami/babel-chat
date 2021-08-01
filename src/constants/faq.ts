@@ -11,25 +11,25 @@ export const Faqs: Faq[] = [
     slug: 'mobile-use',
     question: 'Can I use babel chat on my phone or tablet?',
     answer:
-      'Yes! Babel was designed from the ground up and optimized for use on mobile phones and tablet devices, as well as desktop PCs. ',
+      'Yes! babel chat was designed from the ground up for mobile phones and tablet devices, as well as desktop PCs. ',
   },
   {
     slug: 'need-an-account',
     question: 'Do I have to create an account?',
     answer:
-      'Nope, Babel chat is completely anonymous, and requires no registration. To start chatting, you can choose a nickname, and provide some basic information if you’d like, but even that is completely optional. ',
+      'Nope, babel chat is completely anonymous, and requires no registration. To start chatting, you can choose a nickname, and provide some basic information if you’d like, but even that is completely optional. ',
   },
   {
     slug: 'anonymous-user',
-    question: 'Why are some users have “Anonymous user” as a nickname?',
+    question: 'Why do some users have “Anonymous user” as a nickname?',
     answer:
       'babel chat does not require you to provide any personally identifying information, even a nickname is optional. So if you do not provide one, your user will be displayed to others as “Anonymous user”.',
   },
   {
     slug: 'id-tags',
-    question: 'What is the number next everyone’s nickname?',
+    question: 'What is the number next to everyone’s nickname?',
     answer:
-      'Babel chat allows users to choose any nickname they’d like, but to ensure all users have a unique name, a random four digit number, called an “ID tag”, is assigned to everyone and displayed next to their nickname, e.g. “#1234”.',
+      'babel chat allows users to choose any nickname they’d like, but to ensure all users have a unique name, a random four digit number, called an “ID tag”, is assigned to everyone and displayed next to their nickname, e.g. “#1234”.',
   },
   {
     slug: 'avatars',
@@ -41,19 +41,20 @@ export const Faqs: Faq[] = [
     slug: 'status-icons',
     question: 'What do the little green, yellow, and gray circles next everyone’s nicknames mean?',
     answer:
-      'These icons indicate the user’s active status. Green means the user is currently active, yellow means the recently became idle, and gray means they are away, and haven’t been active in awhile.',
+      'These icons indicate the user’s active status. Green means the user is currently active, yellow means they recently became idle, and gray means they are away, and haven’t been active in awhile.',
   },
   {
     slug: 'advanced-filters',
-    question: 'How can I find users from a specific country, or of a specific gender or age range?',
+    question:
+      'How can I find users from a specific country, or of a specific gender, or age range?',
     answer:
-      'You can easily filter the main users list in babel chat to only show the users you are interested in chatting with. To do so, open the “advanced filters” by tapping the button with the filter icon to the right of the search bar, and then tap “Add a filter…”. From there, you can add multiple different filters to search by nickname, country, gender, and age range, and the users list will automatically update to only show matching results.',
+      'You can easily filter the main users list in babel chat to only show the users you are interested in chatting with. To do so, open “Advanced filters” by tapping the button with the filter icon to the right of the search bar, and then tap “Add a filter…”. From there, you can add multiple different filters to search by nickname, country, gender, and age range, and the users list will automatically update to only show matching results.',
   },
   {
     slug: 'pin-chats',
     question: 'What does “Pin chat” do?',
     answer:
-      'Pinning a chat allows you to keep certain chats at the top of your Chats list, so that they are always easily accessible, no matter how many new chats you receive! You can pin a chat via the “Chat options” menu when in the main chat screen, or by tapping “Edit chats” in the main chats list (or tapping the “…” button when hovering over a chat in the list (desktop only). Pinned chats can be unpinned via this same process.',
+      'Pinning a chat allows you to keep certain chats at the top of your Chats list, so that they are always easily accessible, no matter how many new chats you receive! You can pin a chat via the “Chat options” menu when in the main chat screen, or by tapping “Edit chats” in the main chats list, or finally by tapping the “…” button when hovering over a chat in the list (desktop only). Pinned chats can be unpinned via this same process.',
   },
   {
     slug: 'block-user',
@@ -77,6 +78,6 @@ export const Faqs: Faq[] = [
     slug: 'mute-sounds',
     question: 'Can I mute notification sounds?',
     answer:
-      'Babel chat will play a sound when new messages are received, but these sounds can be disabled by clicking the “Mute” switch, which is accessible in the user menu.',
+      'babel chat will play a sound when new messages are received, but these sounds can be disabled by clicking the “Mute” switch, which is accessible in the user menu.',
   },
 ];

@@ -28,7 +28,7 @@ const Faq: FC<FaqProps> = () => {
 
   return (
     <>
-      <NotificationHeadTags title="Home | babel chat" />
+      <NotificationHeadTags title="FAQ | babel chat" />
       <div className="flex flex-col flex-1 min-w-0">
         <NavBar>
           <DrawerToggleButton />
@@ -55,7 +55,9 @@ const Faq: FC<FaqProps> = () => {
                   <h3 className="text-xl text-gray-600 dark:text-gray-400 mb-2">
                     Frequently asked questions
                   </h3>
-                  <FaqList />
+                  <div className="max-w-4xl">
+                    <FaqList />
+                  </div>
                   <p className="mb-4">
                     Still need help or have more questions? Find us on Twitter at{' '}
                     <Anchor target="_blank" href={TWITTER_URL}>
