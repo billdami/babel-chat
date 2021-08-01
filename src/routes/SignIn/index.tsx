@@ -266,14 +266,8 @@ const SignIn: FC<SignInProps> = () => {
           </form>
           <div className="text-sm text-gray-400 dark:text-gray-600 text-center">
             {COPYRIGHT_LINE}
-            <br />{' '}
-            <Link to="/privacy-policy" target="_blank">
-              privacy policy
-            </Link>{' '}
-            &bull;{' '}
-            <Link to="/terms-of-use" target="_blank">
-              terms of use
-            </Link>
+            <br /> <Link to="/privacy-policy">privacy policy</Link> &bull;{' '}
+            <Link to="/terms-of-use">terms of use</Link> &bull; <Link to="/faq">faq</Link>
           </div>
           {isMobile && (
             <div className="flex justify-center mt-4">

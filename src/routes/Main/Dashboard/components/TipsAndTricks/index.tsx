@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import Anchor from '../../../../../components/Anchor';
 import Icon from '../../../../../components/Icon';
+import Link from '../../../../../components/Link';
 import { TWITTER_URL, TWITTER_USER } from '../../../../../constants/app';
 
 interface TipsAndTricksProps {}
@@ -39,11 +40,12 @@ const TipsAndTricks: FC<TipsAndTricksProps> = () => {
         </li>
       </ul>
       <p className="mb-4 text-gray-800 dark:text-gray-300 max-w-3xl">
-        Want to get in touch with us? Find us on Twitter at{' '}
+        Have more questions? Check out the <Link to="/main/faq">FAQ</Link>. Or, if you'd rather get
+        in touch with us, find us on Twitter at{' '}
         <Anchor target="_blank" href={TWITTER_URL}>
           {TWITTER_USER}
         </Anchor>
-        .
+        . We'd love to hear from you!
       </p>
     </div>
   );

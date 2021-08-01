@@ -8,6 +8,7 @@ import Splash from '../Splash';
 import UnprotectedRoute from '../UnprotectedRoute';
 import About from '../../routes/About';
 import Main from '../../routes/Main';
+import Faq from '../../routes/Faq';
 import PageNotFound from '../../routes/PageNotFound';
 import PrivacyPolicy from '../../routes/PrivacyPolicy';
 import SignIn from '../../routes/SignIn';
@@ -52,6 +53,9 @@ const App: FC<AppProps> = () => {
             </Route>
             <Route path="/about">
               <About />
+            </Route>
+            <Route path="/faq">
+              <Faq />
             </Route>
             <Route path="*">
               <PageNotFound />

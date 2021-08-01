@@ -28,6 +28,9 @@ const About: FC<AboutProps> = () => {
         chat with. babel chat features private, one-on-one chats only, where you won't get lost in
         massive and noisy group chatrooms.
       </p>
+      <p className="mb-4">
+        Want to know more? Check out the <Link to="/faq">FAQ</Link>.
+      </p>
       <h3 className="font-bold text-lg text-gray-600 dark:text-gray-500 mb-4">Beta Disclaimer</h3>
       <p className="mb-4">
         The current version of babel chat is "beta" software, which means it is new, and is still
