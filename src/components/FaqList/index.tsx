@@ -8,9 +8,9 @@ const FaqList: FC<FaqListProps> = () => {
   return (
     <div>
       {Faqs.map((faq) => (
-        <div key={faq.slug}>
-          <div>{faq.question}</div>
-          <div>{faq.answer}</div>
+        <div key={faq.slug} className="mb-5">
+          <h4 className="font-bold mb-1">{faq.question}</h4>
+          <p>{faq.answer}</p>
         </div>
       ))}
     </div>

@@ -13,8 +13,10 @@ import Scrollable from '../../../components/Scrollable';
 import ScrollShadow from '../../../components/ScrollShadow';
 import useNotifications from '../../../hooks/useNotifications';
 import useIsScrolled from '../../../hooks/useIsScrolled';
+import { TWITTER_URL, TWITTER_USER } from '../../../constants/app';
 
 import Footer from '../Dashboard/components/Footer';
+import Anchor from '../../../components/Anchor';
 
 interface FaqProps {}
 
@@ -54,6 +56,13 @@ const Faq: FC<FaqProps> = () => {
                     Frequently asked questions
                   </h3>
                   <FaqList />
+                  <p className="mb-4">
+                    Still need help or have more questions? Find us on Twitter at{' '}
+                    <Anchor target="_blank" href={TWITTER_URL}>
+                      {TWITTER_USER}
+                    </Anchor>
+                    .
+                  </p>
                   <p className="mb-4">
                     <Link to="/">&larr; Go to the homepage</Link>
                   </p>
