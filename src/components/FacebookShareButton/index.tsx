@@ -17,14 +17,14 @@ const FacebookShareButton: FC<FacebookShareButtonProps> = () => {
     <div ref={container}>
       <div
         className="fb-share-button"
-        data-href="https://babelchat.online/"
+        data-href="https://babel-chat-online.web.app/"
         data-layout="button_count"
         data-size="large"
       >
         <a
           target="_blank"
           rel="noreferrer"
-          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbabelchat.online%2F&amp;src=sdkpreparse"
+          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbabel-chat-online.web.app%2F&amp;src=sdkpreparse"
           className="fb-xfbml-parse-ignore"
         >
           Share

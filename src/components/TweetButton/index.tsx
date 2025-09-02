@@ -22,7 +22,7 @@ const TweetButton: FC<TweetButtonProps> = () => {
         className="twitter-share-button"
         data-size="large"
         data-text="Check out babel chat! A new, 100% anonymous and free chat app, no registration required."
-        data-url="https://babelchat.online/"
+        data-url="https://babel-chat-online.web.app/"
         data-via="babelChatOnline"
         data-show-count="false"
       >

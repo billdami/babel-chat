@@ -13,7 +13,7 @@ const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
 
       <p className="mb-4">
         At babel chat, accessible from{' '}
-        <Anchor href="https://babelchat.online">https://babelchat.online</Anchor>, one of our main
+        <Anchor href="https://babel-chat-online.web.app">https://babel-chat-online.web.app</Anchor>, one of our main
         priorities is the privacy of our visitors. This Privacy Policy document contains types of
         information that is collected and recorded by babel chat and how we use it.
       </p>

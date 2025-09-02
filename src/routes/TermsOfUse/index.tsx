@@ -16,7 +16,7 @@ const TermsOfService: FC<TermsOfServiceProps> = () => {
       <p className="mb-4">
         These terms and conditions outline the rules and regulations for the use of babel chat's
         Website, located at{' '}
-        <Anchor href="https://babelchat.online">https://babelchat.online</Anchor>.
+        <Anchor href="https://babel-chat-online.web.app">https://babel-chat-online.web.app</Anchor>.
       </p>
 
       <p className="mb-4">
